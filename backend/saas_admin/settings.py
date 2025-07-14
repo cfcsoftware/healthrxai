@@ -21,8 +21,8 @@ load_dotenv(dotenv_path=".env")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-
+# SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = config("SECRET_KEY", default="", cast=str)
 
 # cloudflare settings
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -30,9 +30,12 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 
-ALLOWED_HOSTS = ["*",'localhost', '127.0.0.1',"healthsrx.com","www.healthsrx.com","https://healthsrx.com","https://www.healthsrx.com"]
+# ALLOWED_HOSTS = ["*",'localhost', '127.0.0.1',"healthsrx.com","www.healthsrx.com","https://healthsrx.com","https://www.healthsrx.com"]
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 
-DEBUG = os.getenv("DEBUG")
+
+# DEBUG = os.getenv("DEBUG")
+DEBUG = config("DEBUG", default=False, cast=bool)
 
 # Application definition
 
@@ -110,39 +113,47 @@ ROOT_URLCONF = "saas_admin.urls"
 WSGI_APPLICATION = "saas_admin.wsgi.application"
 ASGI_APPLICATION = "saas_admin.asgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django_tenants.postgresql_backend",
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django_tenants.postgresql_backend",
         
-        # Local
-        # "NAME": os.getenv("DATABASE_NAME"),
-        # "USER": os.getenv("DATABASE_USER"),
-        # "PASSWORD": os.getenv("DATABASE_PASSWORD"), 
-        # "HOST": os.getenv("DATABASE_HOST"),
-        # "PORT": os.getenv("DATABASE_PORT"),
+#         # Local
+#         # "NAME": os.getenv("DATABASE_NAME"),
+#         # "USER": os.getenv("DATABASE_USER"),
+#         # "PASSWORD": os.getenv("DATABASE_PASSWORD"), 
+#         # "HOST": os.getenv("DATABASE_HOST"),
+#         # "PORT": os.getenv("DATABASE_PORT"),  
+        
+#         'ATOMIC_REQUESTS': True 
+        
+#     }
+# }
 
-        # live
-        # 'NAME': 'healthrx_db',
-        # 'USER': 'healthrxuser',
-        # 'PASSWORD': 'Healthrx@#2025', 
-        # 'HOST':'206.72.195.183',  
-        # 'PORT': '5432',     
-        
-        'ATOMIC_REQUESTS': True 
-        
-    }
+
+DATABASES = {
+    "default": config(
+        "DATABASE_URL",
+        default="postgres://postgres:postgres@127.0.0.1:5432/healthrxuser",
+        cast=db_url,
+    )
 }
+
+# Override engine to support django-tenants
+DATABASES["default"]["ENGINE"] = "django_tenants.postgresql_backend"
+
+# Optional: Enable atomic requests
+DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 
 # Email settings
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "mail@healthrx.com")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "Healthrx@#2025")
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
+# EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+# EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "mail@healthrx.com")
+# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "Healthrx@#2025")
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 
