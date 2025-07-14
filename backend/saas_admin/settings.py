@@ -13,7 +13,9 @@ import os
 from datetime import timedelta
 from dotenv import load_dotenv
 from pathlib import Path
-
+import configparser
+from dj_database_url import parse as db_url
+from decouple import config, Csv
 
 load_dotenv(dotenv_path=".env")
 
@@ -113,11 +115,11 @@ DATABASES = {
         "ENGINE": "django_tenants.postgresql_backend",
         
         # Local
-        "NAME": os.getenv("DATABASE_NAME"),
-        "USER": os.getenv("DATABASE_USER"),
-        "PASSWORD": os.getenv("DATABASE_PASSWORD"), 
-        "HOST": os.getenv("DATABASE_HOST"),
-        "PORT": os.getenv("DATABASE_PORT"),
+        # "NAME": os.getenv("DATABASE_NAME"),
+        # "USER": os.getenv("DATABASE_USER"),
+        # "PASSWORD": os.getenv("DATABASE_PASSWORD"), 
+        # "HOST": os.getenv("DATABASE_HOST"),
+        # "PORT": os.getenv("DATABASE_PORT"),
 
         # live
         # 'NAME': 'healthrx_db',
@@ -144,7 +146,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 
 # Domain work
