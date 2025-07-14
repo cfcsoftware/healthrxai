@@ -1,0 +1,80 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<div class="mx-4">
+  <div class="card border-0">
+       <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-0">
+        Discharge Certificates
+      </h5>
+      {% if 'discharge-certificate-add' in request.session.user_permissions %}
+      <a href="/certificate/discharge-certificate/add" class="btn btn-primary">
+        Add Certificate
+      </a>
+      {% endif %}
+      </div>
+      
+      <div class="card-body px-0">
+        <div class="table-responsive">
+          <table id="example" class="table table-striped table-hover align-middle">
+            <thead class="table-secondary text-dark">
+              <tr>
+                <th class="text-center rounded-start"></th>
+                <th>Patient Name</th>
+                <th>Guardian Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Admission Date</th>
+                <th>Discharge Date</th>
+                <th>Address</th>
+                <th>District</th>
+                <th>State</th>
+                <th>Pin Code</th>
+                <th class="text-center rounded-end" style="width: 160px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for d in discharge %}
+              <tr>
+                <td class="text-center fw-semibold text-primary">DC-00{{ forloop.counter }}</td>
+                <td>{{ d.patient.name }}</td>
+                <td>{{ d.patient.guardian_name }}</td>
+                <td>{{ d.patient.age }}</td>
+                <td>{{ d.patient.gender|title }}</td>
+                <td>{{ d.admission_date }}</td>
+                <td>{{ d.discharge_date }}</td>
+                <td>{{ d.patient.address }}</td>
+                <td>{{ d.district }}</td>
+                <td>{{ d.state }}</td>
+                <td>{{ d.pincode }}</td>
+                <td class="text-center">
+                  {% if 'discharge-certificate-view' in request.session.user_permissions %}
+                  <a href="{% url 'certificate:discharge_certificate_view' d.id %}" class="btn btn-outline-secondary btn-sm me-1" title="View">
+                    <i class="bi bi-eye-fill"></i>
+                  </a>
+                  {% endif %}
+                  {% if 'discharge-certificate-edit' in request.session.user_permissions %}
+                  <a href="{% url 'certificate:discharge_certificate_edit' d.id %}" class="btn btn-outline-primary btn-sm me-1" title="Edit">
+                    <i class="bi bi-pencil-fill"></i>
+                  </a>
+                  {% endif %}
+                  {% if 'discharge-certificate-delete' in request.session.user_permissions %}
+                  <a href="{% url 'certificate:discharge_certificate_delete' d.id %}" class="btn btn-outline-danger btn-sm" title="Delete" onclick="return confirm('Are you sure you want to delete this certificate?');">
+                    <i class="bi bi-trash-fill"></i>
+                  </a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+</div>
+
+
+
+{% endblock %}

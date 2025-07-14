@@ -1,0 +1,189 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="px-4">
+  <div class="bg-primary text-light rounded-top p-3 mb-0">
+    <h5 class="mb-0 text-light">Update Pathology Test</h5>
+  </div>
+  <div class="card-dark shadow-sm p-4">
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="container mt-3">
+              <div class="row">
+                <!-- Test Name -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Test Name <span class="text-danger">*</span></label>
+                    <input type="text" name="test_name" class="form-control" value="{{ pathology_test.test_name }}" required>
+                  </div>
+                </div>
+    
+                <!-- Short Name -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Shortcut</label>
+                    <input type="text" name="short_name" class="form-control" value="{{ pathology_test.short_name }}">
+                  </div>
+                </div>
+    
+                <!-- Sample Type -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Sample Type <span class="text-danger">*</span></label>
+                    <select name="sample_type" class="form-control" required>
+                      <option value="">Select Sample Type</option>
+                      <option value="Blood" {% if pathology_test.sample_type == "Blood" %}selected{% endif %}>Blood</option>
+                      <option value="Urine" {% if pathology_test.sample_type == "Urine" %}selected{% endif %}>Urine</option>
+                      <option value="Stool" {% if pathology_test.sample_type == "Stool" %}selected{% endif %}>Stool</option>
+                      <option value="Saliva" {% if pathology_test.sample_type == "Saliva" %}selected{% endif %}>Saliva</option>
+                      <option value="Tissue" {% if pathology_test.sample_type == "Tissue" %}selected{% endif %}>Tissue</option>
+                      <option value="Sputum" {% if pathology_test.sample_type == "Sputum" %}selected{% endif %}>Sputum</option>
+                      <option value="Swab" {% if pathology_test.sample_type == "Swab" %}selected{% endif %}>Swab</option>
+                      <option value="Other" {% if pathology_test.sample_type == "Other" %}selected{% endif %}>Other</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+    
+              <div class="row mt-3">
+                <!-- Price -->
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" name="total_amount" class="form-control" value="{{ pathology_test.total_amount }}">
+                  </div>
+                </div>
+    
+                <!-- Precaution -->
+                <div class="col-sm-9">
+                  <div class="form-group">
+                    <label>Precautions</label>
+                    <textarea name="precaution" class="form-control" rows="3">{{ pathology_test.precaution }}</textarea>
+                  </div>
+                </div>
+              </div>
+    
+              <!-- Test Parameters Table -->
+              <div class="table-responsive mt-5">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6>Test Component</h6>
+                  <div>
+                    <button type="button" id="addRowTitleupdate-{{ pathology_test.id }}" class="btn btn-primary me-2">
+                      <i class="bi bi-plus"></i> Title
+                    </button>
+                    <button type="button" id="addRowComponentUpdate-{{ pathology_test.id }}" class="btn btn-primary">
+                      <i class="bi bi-plus"></i> Component
+                    </button>
+                  </div>
+                </div>
+    
+                <table class="table table-bordered mt-3 text-center align-middle">
+                  <thead>
+                    <tr>
+                      <td>Name</td>
+                      <td>Unit</td>
+                      <td>Result</td>
+                      <td>Male Reference Range</td>
+                      <td>Female Reference Range</td>                      
+                      <td>Status</td>
+                      <td>Action</td>
+                    </tr>
+                  </thead>
+                  
+                  <tbody id="test-tbody-{{ pathology_test.id }}">
+                    {% for name, unit, result,male_reference_range,female_reference_range , status in components %}
+                    <tr>
+                      <td><input type="text" name="component_name[]" class="form-control" value="{{ name }}"></td>
+                      <td>
+                        <select name="component_unit[]" class="form-control">
+                          <option value="mg/dL" {% if unit == "mg/dL" %}selected{% endif %}>mg/dL</option>
+                          <option value="g/L" {% if unit == "g/L" %}selected{% endif %}>g/L</option>
+                          <option value="mmol/L" {% if unit == "mmol/L" %}selected{% endif %}>mmol/L</option>
+                          <option value="IU/L" {% if unit == "IU/L" %}selected{% endif %}>IU/L</option>
+                          <option value="%" {% if unit == "%" %}selected{% endif %}>%</option>
+                          <option value="mEq/L" {% if unit == "mEq/L" %}selected{% endif %}>mEq/L</option>
+                          <option value="ng/mL" {% if unit == "ng/mL" %}selected{% endif %}>ng/mL</option>
+                          <option value="pg/mL" {% if unit == "pg/mL" %}selected{% endif %}>pg/mL</option>
+                          <option value="U/L" {% if unit == "U/L" %}selected{% endif %}>U/L</option>
+                          <option value="cells/uL" {% if unit == "cells/uL" %}selected{% endif %}>cells/uL</option>
+                          <!-- Add more options as needed -->
+                        </select>
+                      </td>
+                      <td><input type="text" name="component_result[]" class="form-control" value="{{ result }}"></td>
+                      <td><input type="text" name="male_reference_range[]" class="form-control" value="{{ male_reference_range }}"></td>
+                      <td><input type="text" name="female_reference_range[]" class="form-control" value="{{ female_reference_range }}"></td>
+
+                      <td><input type="text" name="test_status[]" class="form-control" value="{{ status }}"></td>
+                      <td><button type="button" class="btn btn-danger btn-sm remove-row">x</button></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+    
+            <div class="modal-footer d-flex justify-content-center">
+              <button type="submit" class="btn btn-primary">Update Details</button>
+            </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const ptId = "{{ pathology_test.id }}";
+                    const tbody = document.getElementById(`test-tbody-${ptId}`);
+                
+                    document.getElementById(`addRowComponentUpdate-${ptId}`).addEventListener("click", function () {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><input type="text" name="component_name[]" class="form-control" /></td>
+                        <td>
+                            <select name="component_unit[]" class="form-control">
+                                <option value="mg/dL">mg/dL</option>
+                                <option value="g/L">g/L</option>
+                                <option value="mmol/L">mmol/L</option>
+                                <option value="IU/L">IU/L</option>
+                                <option value="%">%</option>
+                                <option value="mEq/L">mEq/L</option>
+                                <option value="ng/mL">ng/mL</option>
+                                <option value="pg/mL">pg/mL</option>
+                                <option value="U/L">U/L</option>
+                                <option value="cells/uL">cells/uL</option>
+                                <!-- Add more options as needed -->
+                            </select>
+                        </td>
+                        <td><input type="text" name="component_result[]" class="form-control" /></td>
+                        <td><input type="text" name="male_reference_range[]" class="form-control" /></td>
+                        <td><input type="text" name="female_reference_range[]" class="form-control" /></td>
+                        <td><input type="text" name="test_status[]" class="form-control" /></td>
+                        <td><button type="button" class="btn btn-danger btn-sm remove-row">x</button></td>
+                    `;
+                    tbody.appendChild(row);
+                    row.querySelector(".remove-row").addEventListener("click", () => row.remove());
+                    });
+                
+                    document.getElementById(`addRowTitleupdate-${ptId}`).addEventListener("click", function () {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td colspan="5"><input type="text" name="title[]" class="form-control fw-bold" placeholder="Title" /></td>
+                        <td><button type="button" class="btn btn-danger btn-sm remove-row">x</button></td>
+                    `;
+                    tbody.appendChild(row);
+                    row.querySelector(".remove-row").addEventListener("click", () => row.remove());
+                    });
+                
+                    // Attach remove handler to existing rows
+                    tbody.querySelectorAll(".remove-row").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        btn.closest("tr").remove();
+                    });
+                    });
+                });
+              </script>
+        </form>
+    </div>
+    </div>
+      
+
+
+{% endblock %}

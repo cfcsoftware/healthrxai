@@ -1,0 +1,97 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="p-0 p-md-5">
+    <h2><b>Reports / Insurance Report</b></h2> <hr>
+    
+    <div class="card-body">
+         <!-- Add Filter Form -->
+         <form id="filter-form" class="mb-3">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="patient-name">Patient Name:</label>
+                    <input type="text" id="patient-name" class="form-control" placeholder="Search by patient name">
+                </div>
+                <div class="col-md-3">
+                    <label for="doctor-name">Insurance Provider:</label>
+                    <input type="text" id="doctor-name" class="form-control" placeholder="Search by doctor name">
+                </div>
+                <div class="col-md-3">
+                    <label for="appointment-priority">Priority:</label>
+                    <select id="appointment-priority" class="form-control">
+                        <option value="">All</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="appointment-status">Status:</label>
+                    <select id="appointment-status" class="form-control">
+                        <option value="">All</option>
+                        <option value="approved ">Approved </option>
+                        <option value="reject">Reject</option>
+                        <option value="pending ">Pending </option>
+                    </select>
+                </div>
+            </div>
+        </form>
+        <table class="table table-striped" id="example">
+        <thead>
+            <tr>
+                <th scope="col" class="rounded-start">S.No.</th>
+                <th scope="col">Patient Name</th>
+                <!-- <th scope="col">Date of Admission</th> -->
+                <th scope="col">Date of Discharge</th>
+                <th scope="col">Insurance Provider</th>
+                <!-- <th scope="col">Coverage Amount</th> -->
+                <th scope="col">Claimed Amount</th>
+                <th scope="col">Approved Amount</th>
+                <th scope="col">Claim Status</th>
+                <th scope="col">Patient Payable Amount</th>
+                <th scope="col" class="rounded-end">Action</th>
+            </tr>
+        </thead>
+        <tbody> 
+            {% for appointment in all_appointments %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ appointment.patient.email }}</td>
+                <td>{{ appointment.doctor.email }}</td>
+                <td>{{ appointment.appointment_date }}</td>
+                <td>{{ appointment.appointment_time }}</td>
+                <td>{{ appointment.priority }}</td>
+                <td>{{ appointment.status }}</td>
+                <td>{{ appointment.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Include DataTables JS & CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable
+        var table = $('#appointments-table').DataTable({
+            paging: true,
+            searching: false, // Disable default search
+        });
+
+        // Filter logic
+        $('#filter-form input, #filter-form select').on('input change', function () {
+            table.columns(1).search($('#patient-name').val());
+            table.columns(2).search($('#doctor-name').val());
+            table.columns(5).search($('#appointment-priority').val());
+            table.columns(6).search($('#appointment-status').val());
+            table.draw();
+        });
+    });
+</script>
+
+{% endblock %}

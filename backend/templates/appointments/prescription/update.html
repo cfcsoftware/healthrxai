@@ -1,0 +1,355 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container my-5">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h3 class="section__title">Update Prescription</h3> 
+    <!--     <div class="mb-3">
+      <label for="medicine-search" class="form-label">Search Medicine</label>
+      <input type="text" id="medicine-search" class="form-control" placeholder="Type to search medicines...">
+    </div> <br> -->
+    
+    <!-- Medicines Section -->
+    <div class="container pb-5 pt-4">
+      <h4 class="mb-4"><strong>Medicines</strong></h4>
+
+      <!-- Render existing medicine entries -->
+      <div id="medicine-section">
+        {% if prescription_data.medicines %}
+          {% for med in prescription_data.medicines %}
+            <div class="row g-2 align-items-end mb-3 medicine-entry">
+              <div class="col-md-3">
+                <label class="form-label">Medicine</label>
+                <input type="text" class="form-control medicine-name" placeholder="Medicine Name" value="{{ med.medicine }}" name="medicine_name[]" >
+              </div>
+              <div class="col-md-1">
+                <label class="form-label">Dosage</label>
+                <select name="dosage[]" class="form-control">
+                  {% for opt in dosage_options %}
+                  <option value="{{ opt }}" {% if med.dosage == opt %}selected{% endif %}>{{ opt }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-1">
+                <label class="form-label">Duration</label>
+                <select name="duration[]" class="form-control">
+                  {% for opt in duration_options %}
+                  <option value="{{ opt }}" {% if med.duration == opt %}selected{% endif %}>{{ opt }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-1">
+                <label class="form-label">Time</label>
+                <select name="time[]" class="form-control">
+                  {% for opt in time_options %}
+                  <option value="{{ opt }}" {% if med.time == opt %}selected{% endif %}>{{ opt }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Composition</label>
+                <input name="composition[]" class="form-control composition-field" placeholder="Composition details" value="{{ med.composition }}" readonly>
+              </div>
+              <div class="col-md-1">
+                <label class="form-label">Stock</label>
+                <input name="stock[]" class="form-control stock-field" placeholder="Stock" value="{{ med.stock }}" readonly>
+              </div>
+              <div class="col-md-1 text-center mb-2 pb-2">
+                <button type="button" class="btn btn-danger-light remove-medicine py-2 px-3"><i class="bi bi-trash"></i></button>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="row g-2 align-items-end mb-3 medicine-entry">
+            <div class="col-md-3">
+              <label class="form-label">Medicine</label>
+              <input type="text" class="form-control medicine-name" placeholder="Medicine Name" name="medicine_name[]" >
+            </div>
+            <div class="col-md-1">
+              <label class="form-label">Dosage</label>
+              <select name="dosage[]" class="form-control">
+                {% for opt in dosage_options %}
+                <option value="{{ opt }}">{{ opt }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-1">
+              <label class="form-label">Duration</label>
+              <select name="duration[]" class="form-control">
+                {% for opt in duration_options %}
+                <option value="{{ opt }}">{{ opt }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-1">
+              <label class="form-label">Time</label>
+              <select name="time[]" class="form-control">
+                {% for opt in time_options %}
+                <option value="{{ opt }}">{{ opt }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Composition</label>
+              <input name="composition[]" class="form-control composition-field" placeholder="Composition details" readonly>
+            </div>
+            <div class="col-md-1">
+              <label class="form-label">Stock</label>
+              <input name="stock[]" class="form-control stock-field" placeholder="Stock" readonly>
+            </div>
+            <div class="col-md-1 text-center mb-2 pb-2">
+              <button type="button" class="btn btn-danger-light remove-medicine py-2 px-3"><i class="bi bi-trash"></i></button>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Add Button -->
+      <button type="button" class="btn btn-primary btn-sm mt-3" id="add-medicine">Insert New Medicine</button>
+
+      <!-- Hidden Template -->
+      <template id="medicine-template">
+        <div class="row g-2 align-items-end mb-3 medicine-entry">
+          <div class="col-md-3">
+            <label class="form-label">Medicine</label>
+            <input type="text" class="form-control medicine-name" placeholder="Medicine Name" name="medicine_name[]" required>
+          </div>
+          <div class="col-md-1">
+            <label class="form-label">Dosage</label>
+            <select name="dosage[]" class="form-control">
+              {% for opt in dosage_options %}
+              <option value="{{ opt }}">{{ opt }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-1">
+            <label class="form-label">Duration</label>
+            <select name="duration[]" class="form-control">
+              {% for opt in duration_options %}
+              <option value="{{ opt }}">{{ opt }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-1">
+            <label class="form-label">Time</label>
+            <select name="time[]" class="form-control">
+              {% for opt in time_options %}
+              <option value="{{ opt }}">{{ opt }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Composition</label>
+            <input name="composition[]" class="form-control composition-field" placeholder="Composition details" readonly>
+          </div>
+          <div class="col-md-1">
+            <label class="form-label">Stock</label>
+            <input name="stock[]" class="form-control stock-field" placeholder="Stock" readonly>
+          </div>
+          <div class="col-md-1 text-center mb-2 pb-2">
+            <button type="button" class="btn btn-danger-light remove-medicine py-2 px-3"><i class="bi bi-trash"></i></button>
+          </div>
+        </div>
+      </template>
+
+    </div>
+
+
+
+
+    <!-- Physical Information Section -->
+    <h5 class="mb-3">Physical Information</h5>
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <label for="food_allergies" class="form-label">Food Allergies</label>
+        <input name="food_allergies" id="food_allergies" class="form-control" placeholder="Specify any food allergies" value="{{ prescription_data.physical_info.food_allergies }}">
+      </div>
+      <div class="col-md-3">
+        <label for="tendency_bleed" class="form-label">Tendency to Bleed</label>
+        <input name="tendency_bleed" id="tendency_bleed" class="form-control" placeholder="Yes/No or details" value="{{ prescription_data.physical_info.tendency_bleed }}">
+      </div>
+      <div class="col-md-3">
+        <label for="heart_disease" class="form-label">Heart Disease</label>
+        <input name="heart_disease" id="heart_disease" class="form-control" placeholder="Specify if any" value="{{ prescription_data.physical_info.heart_disease }}">
+      </div>
+      <div class="col-md-3">
+        <label for="blood_pressure" class="form-label">Blood Pressure</label>
+        <input name="blood_pressure" id="blood_pressure" class="form-control" placeholder="e.g. 120/80 mmHg" value="{{ prescription_data.physical_info.blood_pressure }}">
+      </div>
+      <div class="col-md-3">
+        <label for="diabetic" class="form-label">Diabetes</label>
+        <input name="diabetic" id="diabetic" class="form-control" placeholder="Yes/No or details" value="{{ prescription_data.physical_info.diabetic }}">
+      </div>
+      <div class="col-md-3">
+        <label for="surgery" class="form-label">History of Surgery</label>
+        <input name="surgery" id="surgery" class="form-control" placeholder="Specify if any" value="{{ prescription_data.physical_info.surgery }}">
+      </div>
+      <div class="col-md-3">
+        <label for="accident" class="form-label">History of Accident</label>
+        <input name="accident" id="accident" class="form-control" placeholder="Specify if any" value="{{ prescription_data.physical_info.accident }}">
+      </div>
+      <div class="col-md-3">
+        <label for="others" class="form-label">Other Conditions</label>
+        <input name="others" id="others" class="form-control" placeholder="Specify if any" value="{{ prescription_data.physical_info.others }}">
+      </div>
+      <div class="col-md-3">
+        <label for="medical_history" class="form-label">Medical History</label>
+        <input name="medical_history" id="medical_history" class="form-control" placeholder="Brief medical history" value="{{ prescription_data.physical_info.medical_history }}">
+      </div>
+      <div class="col-md-3">
+        <label for="current_medication" class="form-label">Current Medication</label>
+        <input name="current_medication" id="current_medication" class="form-control" placeholder="List current medications" value="{{ prescription_data.physical_info.current_medication }}">
+      </div>
+      <div class="col-md-3">
+        <label for="female_pregnancy" class="form-label">Pregnancy Status</label>
+        <input name="female_pregnancy" id="female_pregnancy" class="form-control" placeholder="Applicable for female patients" value="{{ prescription_data.physical_info.female_pregnancy }}">
+      </div>
+      <div class="col-md-3">
+        <label for="breast_feeding" class="form-label">Breastfeeding</label>
+        <input name="breast_feeding" id="breast_feeding" class="form-control" placeholder="Applicable for female patients" value="{{ prescription_data.physical_info.breast_feeding }}">
+      </div>
+      <div class="col-md-3">
+        <label for="pulse_rate" class="form-label">Pulse Rate</label>
+        <input name="pulse_rate" id="pulse_rate" class="form-control" placeholder="e.g. 72 bpm" value="{{ prescription_data.physical_info.pulse_rate }}">
+      </div>
+      <div class="col-md-3">
+        <label for="temperature" class="form-label">Temperature</label>
+        <input name="temperature" id="temperature" class="form-control" placeholder="e.g. 98.6°F / 37°C" value="{{ prescription_data.physical_info.temperature }}">
+      </div>
+    </div>
+
+    <!-- Clinical Assessment & Recommendations -->
+    <h5>Clinical Assessment & Recommendations</h5> <br>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label class="form-label">Patient Complaints</label>
+          <div>
+            <div class="card shadow-sm rounded mb-3 bg-white">
+              <div class="card-body">
+                <textarea name="problem" class="form-control" rows="8" cols="50"  style="height: 160px;">{{ prescription_data.problem }}
+                </textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+          <div class="mb-3">
+            <label class="form-label">Investigations </label>
+            <div>
+              <div class="card shadow-sm rounded mb-3 bg-white">
+                <div class="card-body">
+                  <textarea name="tests" class="form-control text-uppercase" rows="8" cols="50" style="height: 160px;" list="investigations-list" autocomplete="off">{{ prescription_data.tests|upper }}</textarea>
+                </div>
+              </div>
+            </div>
+          
+            <datalist id="investigations-list">
+              <option value="CBC">
+              <option value="X-Ray">
+              <option value="LFT">
+              <option value="KFT">
+              <option value="Blood Sugar">
+              <option value="ECG">
+              <option value="MRI">
+              <option value="CT Scan">
+              <option value="Urine Routine">
+              <option value="Lipid Profile">
+              <option value="Thyroid Profile">
+              <option value="Ultrasound">
+              <!-- Add more common investigations as needed -->
+            </datalist>
+           
+          </div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Clinical Advice / Recommendations</label>
+      <textarea name="advice" class="form-control" rows="5" cols="40" style="height: 140px;" placeholder="Provide professional medical advice or follow-up instructions">{{ prescription_data.advice }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Diagnosis</label>
+      <textarea name="diagnosis" class="form-control" rows="5" cols="40" style="height: 140px;" placeholder="Provide professional medical diagnosis">{{ prescription_data.diagnosis }}</textarea>
+    </div>    
+    <!-- Next Visit -->
+    <div class="mb-3">
+      <label class="form-label">Next Visit (Days)</label>
+      <input name="next_visit_days" type="number" class="form-control" style="max-width: 200px;" value="{{ prescription_data.next_visit_days|default:1 }}" min="1">
+    </div>
+
+    <!-- Save -->
+    <div class="text-end">
+      <button type="submit" class="btn btn-success">Save</button>
+    </div>
+  </form>
+  
+  
+</div>
+
+<script>
+  function initializeAutocomplete(input) {
+    $(input).autocomplete({
+      source: function (request, response) {
+        $.ajax({
+          url: "/pharmacy/search-medicine-names",
+          type: "GET",
+          data: { term: request.term },
+          success: function (data) {
+            response(data.map(item => ({
+              label: item.medicine_name,
+              value: item.medicine_name,
+              composition: item.composition,
+              stock: item.stock
+            })));
+          }
+        });
+      },
+      minLength: 2,
+      select: function (event, ui) {
+        const row = $(this).closest(".medicine-entry");
+        row.find("input[name='composition[]']").val(ui.item.composition || '');
+        row.find("input[name='stock[]']").val(ui.item.stock || '');
+      }
+    });
+  }
+
+  $(document).ready(function () {
+    const templateHtml = document.getElementById('medicine-template').innerHTML;
+
+    // Initialize autocomplete for existing fields
+    $('.medicine-name').each(function () {
+      initializeAutocomplete(this);
+    });
+
+    // Add new row
+    $('#add-medicine').on('click', function () {
+      const template = document.getElementById('medicine-template');
+      const clone = $(template.content.cloneNode(true));
+
+      // Append first to the DOM
+      $('#medicine-section').append(clone);
+
+      // Then initialize autocomplete
+      $('#medicine-section .medicine-name').last().each(function () {
+        initializeAutocomplete(this);
+      });
+    });
+
+    // Remove row
+    $(document).on('click', '.remove-medicine', function () {
+      if ($('.medicine-entry').length > 1) {
+        $(this).closest('.medicine-entry').remove();
+      }
+    });
+  });
+</script>
+
+
+
+
+{% endblock %}

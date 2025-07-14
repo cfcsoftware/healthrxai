@@ -1,0 +1,379 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<div class="mx-4">   
+    <div class="card border-0">        
+    <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0">
+                Appointment List
+            </h5>
+        </div>
+      <div class="card-body px-0">
+        <div class="table-responsive">
+          <table id="example" class="table text-start table-striped table-hover align-middle" style="white-space:nowrap;">
+            <thead class="table-secondary text-start text-dark" style="white-space:nowrap;">
+            <tr>
+                <th></th>
+                <th class="text-center">S.No.</th>
+                <th class="text-center">Appointment Date</th>   
+                <th class="text-center">Time</th>
+                <th class="text-center">Appointment ID</th>
+                <th class="text-center">Patient Name</th>
+                <th class="text-center">Doctor Name</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody> 
+            {% for appointment in all_appointments %}
+            <tr>
+                <td></td>
+                <td class="text-center">{{ forloop.counter }}</td>
+                <td class="text-center">{{ appointment.appointment_date }}</td>
+                <td class="text-center">{{ appointment.appointment_time }}</td>
+                <td class="text-center">
+                    <a href="{% url 'appointments:appointment-update' appointment.id %}" class="btn btn-primary py-1 px-2" style="font-size: 0.75rem;">
+                    {{ appointment.appointment_record_id }}
+                </td>
+                <td class="text-center">{{ appointment.patient.name }}</td>
+                <td class="text-center">{{ appointment.doctor.name }}</td>
+                <td class="text-center">                   
+                    <!-- Dark Purple Button -->
+                    <a href="{% url 'appointments:appointment-transcription' appointment.id %}" 
+                    class="btn btn-xs btn-sm py-2 px-3" 
+                    style="background-color: #67318e; color: #fff; font-size: 0.75rem;">
+                    AI SOAP
+                    </a>
+
+                    <!-- Dark Blue Button -->
+                    <a href="{% url 'appointments:prescription-view' appointment.id %}" 
+                    class="btn btn-xs btn-sm py-2 px-3" 
+                    style="background-color: #3c3cce; color: #fff; font-size: 0.75rem;">
+                    Prescription
+                    </a>
+
+                    <!-- Dark Green Button -->
+                    <a href="/appointments/convert_appointment_to_ipd/{{ appointment.id }}" 
+                    class="btn btn-xs btn-sm py-2 px-3" 
+                    style="background-color: #367436; color: #fff; font-size: 0.75rem;">
+                    Move to IPD
+                    </a>
+                </td>
+
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="addappointmentsModal"  tabindex="-1" aria-labelledby="addappointmentsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title  w-100 text-center" id="addappointmentsModalLabel">
+            Add Appointment
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="p-0 p-md-4">
+          <div class="container">
+            <form method="POST" action="/appointments/appointment/add/" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- User Details -->
+                    <div class="col-md-4 mb-3">
+                        <label for="name" class="form-label ">Patient Name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Patient Name" required />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="phone" class="form-label ">Phone Number<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter Patient Phone No." required />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="gender" class="form-label ">Patient Gender<span class="text-danger">*</span></label>
+                        <select class="form-select" id="gender" name="gender" required>
+                            <option value="">Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+            
+                    <!-- Patient Details -->            
+                    <div class="col col-md-4 mb-3">
+                        <label for="age" class="form-label ">Patient Age</label>
+                        <input type="number" class="form-control" id="age" name="age"  placeholder="Enter Patient Age" required>
+                    </div>
+
+                    <div class="col col-md-4 mb-3">
+                        <label for="aadhar_card_no" class="form-label ">Patient Aadhar No.</label>
+                        <input type="number" class="form-control" id="aadhar_card_no" name="aadhar_card_no"  placeholder="Enter Aadhar No." required>
+                    </div>            
+            
+                    <div class="col col-md-4 mb-3">
+                        <label for="guardian_name" class="form-label ">Guardian Name</label>
+                        <input type="text" class="form-control" id="guardian_name" name="guardian_name" placeholder="Enter Guardian Name" value="{{ patient.guardian_name }}" required>
+                    </div>
+            
+                    <div class="col col-md-4 mb-3">
+                        <label for="guardian_phone" class="form-label ">Guardian Phone No.</label>
+                        <input type="number" class="form-control" id="guardian_phone" name="guardian_phone" placeholder="Enter Guardian Phone No." value="{{ patient.guardian_phone }}" required>
+                    </div>
+
+                    
+                    <div class="col col-md-8 mb-3">
+                        <label for="address" class="form-label ">Patient Address</label>
+                        <textarea class="form-control" id="address" rows="3" name="address" placeholder="Enter Address" required>{{ patient.address }}</textarea>
+                    </div>
+            
+                    <div class="col col-md-4 mb-3">
+                        <label for="doctor" class="form-label ">Doctor</label>
+                        <select class="form-control select2-dropdown" name="doctor" id="doctor" required>
+                            <option value="">Select Doctor</option>
+                            {% for doctor in doctors %}
+                            <option value="{{ doctor.id }}" data-fees="{{doctor.fees}}" >{{ doctor.name }}({{ doctor.staff_member_id }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col col-md-4 mb-3">
+                        <label for="fees" class="form-label ">Doctor Fees</label>
+                        <input type="number" class="form-control" id="fees" name="fees" value="0.00" placeholder="Enter Fees" required>
+                    </div>
+            
+            
+                    <div class="col col-md-3 mb-3">
+                        <label for="shift" class="form-label ">Shift</label>
+                        <select class="form-control" id="shift" name="shift">
+                            <option value="" disabled selected>Select Shift</option>
+                            <option value="Morning">Morning</option>
+                            <option value="Evening">Evening</option>
+                        </select>
+                    </div>
+            
+                    <div class="col col-md-3 mb-3">
+                        <label for="appointment_date" class="form-label ">Appointment Date</label>
+                        <input type="date" class="form-control" id="appointment_date" name="appointment_date" >
+                    </div>
+            
+                    <div class="col col-md-3 mb-3">
+                        <label for="appointment_time" class="form-label ">Appointment Time</label>
+                        <input type="time" class="form-control" id="appointment_time" name="appointment_time" >
+                    </div>
+            
+                    {% comment %} <div class="col col-md-3 mb-3">
+                        <label for="priority" class="form-label ">Appointment Priority</label>
+                        <select class="form-control" id="priority" name="priority" >
+                            <option value="" disabled selected>Select Priority</option>
+                            <option value="Normal">Normal</option>
+                            <option value="High">High</option>
+                            <option value="Very High">Very High</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div> {% endcomment %}
+            
+                    <div class="col col-md-4 mb-3">
+                        <label for="payment_mode" class="form-label ">Payment Mode</label>
+                        <select class="form-control" id="payment_mode" name="payment_mode" required>
+                            <option value="" disabled selected>Select Payment Mode</option>
+                            <option value="Cash">Cash</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Credit Card">Credit Card</option>
+                            <option value="Debit Card">Debit Card</option>
+                            <option value="Transfer to Bank A/C">Transfer to Bank A/C</option>
+                            <option value="Ayushman Card">Ayushman Card</option>
+                            <option value="ABHA Card">ABHA Card</option>
+                            <option value="Insurance">Insurance</option>
+                        </select>
+                    </div>
+
+                    <!-- UPI Field -->
+                    <div class="col col-md-4 mb-3" id="upi_field" style="display: none;">
+                        <label for="upi_id" class="form-label ">UPI ID</label>
+                        <input type="text" class="form-control" id="upi_id" name="upi_id" placeholder="Enter UPI ID">
+                    </div>
+
+                    <!-- Credit Card Field -->
+                    <div class="col col-md-4 mb-3" id="credit_card_field" style="display: none;">
+                        <label for="credit_card_no" class="form-label ">Credit Card No.</label>
+                        <input type="number" class="form-control" id="credit_card_no" name="credit_card_no" placeholder="Enter Credit Card No.">
+                    </div>
+
+                    <!-- Debit Card Field -->
+                    <div class="col col-md-4 mb-3" id="debit_card_field" style="display: none;">
+                        <label for="debit_card_no" class="form-label ">Debit Card No.</label>
+                        <input type="number" class="form-control" id="debit_card_no" name="debit_card_no" placeholder="Enter Debit Card No.">
+                    </div>
+
+                    <!-- Bank Transfer Field -->
+                   
+                    <div class="col col-md-4 mb-3 bank_transfer_field" id="" style="display: none;">
+                        <label for="bank_name" class="form-label ">Bank Name</label>
+                        <input type="text" class="form-control" id="bank_name" name="bank_name" placeholder="Enter Bank Name">
+                    </div>
+
+                    <div class="col col-md-4 mb-3 bank_transfer_field" id="" style="display: none;">
+                        <label for="bank_acc_no" class="form-label ">Bank Account No.</label>
+                        <input type="number" class="form-control" id="bank_acc_no" name="bank_acc_no" placeholder="Enter Bank Account No.">
+                    </div>
+
+                    <div class="col col-md-4 mb-3 bank_transfer_field" id="" style="display: none;">
+                        <label for="acc_holder_name" class="form-label ">Bank A/C Holder Name</label>
+                        <input type="text" class="form-control" id="acc_holder_name" name="acc_holder_name" placeholder="Enter AC Holder Name">
+                    </div>
+
+                    <div class="col col-md-4 mb-3" id="aabha_card_field" style="display: none;">
+                        <label for="aabha_card_no" class="form-label ">Aabha Card No.</label>
+                        <input type="number" class="form-control" id="aabha_card_no" name="aabha_card_no"  placeholder="Enter Aabha No." >
+                    </div> 
+
+                    <div class="col col-md-4 mb-3" id="ayushman_card_field" style="display: none;">
+                        <label for="ayushman_card_no" class="form-label ">Ayushman Card No.</label>
+                        <input type="number" class="form-control" id="ayushman_card_no" name="ayushman_card_no"  placeholder="Enter Ayushman No." >
+                    </div> 
+
+                    <div class="col col-md-4 mb-3" id="insurance_field" style="display: none;">
+                        <label for="insurance_policy_no" class="form-label ">Insurance No.</label>
+                        <input type="number" class="form-control" id="insurance_policy_no" name="insurance_policy_no"  placeholder="Enter Insurance Policy No." >
+                    </div> 
+
+                    <div class="col col-md-4 mb-3">
+                        <label for="advance_payment" class="form-label ">Advance Payment</label>
+                        <input type="number" class="form-control" id="advance_payment" name="advance_payment" value="0" placeholder="Advance Payment" required>
+                    </div> 
+
+                    <div class="col col-md-4 mb-3">
+                        <label for="total_payment" class="form-label ">Total Payment</label>
+                        <input type="number" class="form-control" id="total_payment" name="total_payment"  placeholder="Total Payment" readonly>
+                    </div> 
+
+                    <div class="col col-md-4 mb-3">
+                        <label for="due_payment" class="form-label ">Dues</label>
+                        <input type="number" class="form-control" id="due_payment" name="due_payment" placeholder="Enter Due.." readonly>
+                    </div>                     
+            
+                    <div class="col col-md-12 mb-3">
+                        <label for="notes" class="form-label ">Prescription</label>
+                        <textarea class="form-control" id="notes" rows="3" name="notes" placeholder="Enter any notes/Doctor's Prescriptions"></textarea>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+            
+            
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#doctor").change(function () {
+            var doctorId = $(this).val(); // Get selected doctor's ID
+            
+            if (doctorId) {
+                $.ajax({
+                    url: "/appointments/appointment/get-doctor-fees/" + doctorId + "/", // API endpoint to get doctor fees
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.fees) {
+                            $("#fees").val(data.fees); // Update the fees input field
+                        } else {
+                            $("#fees").val(""); // Clear the field if no fees found
+                        }
+                    },
+                    error: function () {
+                        alert("Error fetching doctor fees. Please try again.");
+                    }
+                });
+            } else {
+                $("#fees").val(""); // Clear fees if no doctor is selected
+            }
+        });
+    });
+</script>
+
+
+<script>
+    document.getElementById("payment_mode").addEventListener("change", function () {
+        var selectedValue = this.value;
+        
+        document.getElementById("upi_field").style.display = "none";
+        document.getElementById("credit_card_field").style.display = "none";
+        document.getElementById("debit_card_field").style.display = "none";
+        var bankTransferFields = document.getElementsByClassName("bank_transfer_field");
+        for (var i = 0; i < bankTransferFields.length; i++) {
+            bankTransferFields[i].style.display = "none";
+        }
+        document.getElementById("aabha_card_field").style.display = "none";
+        document.getElementById("ayushman_card_field").style.display = "none";
+        document.getElementById("insurance_field").style.display = "none";
+        
+        if (selectedValue === "UPI") {
+            document.getElementById("upi_field").style.display = "block";
+        } else if (selectedValue === "Debit Card"){
+            document.getElementById("debit_card_field").style.display = "block";
+        } else if (selectedValue === "Credit Card") {
+            document.getElementById("credit_card_field").style.display = "block";
+        }else if (selectedValue === "Transfer to Bank A/C") {
+            for (var i = 0; i < bankTransferFields.length; i++) {
+                bankTransferFields[i].style.display = "block";
+            }
+        } else if (selectedValue === "ABHA Card") {
+            document.getElementById("aabha_card_field").style.display = "block";
+        } else if (selectedValue === "Ayushman Card") {
+            document.getElementById("ayushman_card_field").style.display = "block";
+        } else if (selectedValue === "Insurance") {
+            document.getElementById("insurance_field").style.display = "block";
+        }
+    });
+</script>
+
+<script>
+    document.getElementById("doctor").addEventListener("change", function() {
+        var selectedDoctor = this.options[this.selectedIndex];
+        var doctorFees = parseFloat(selectedDoctor.getAttribute("data-fees")) || 0;
+        document.getElementById("fees").value = doctorFees.toFixed(2);
+        calculatePayments();
+    });
+
+    document.getElementById("advance_payment").addEventListener("input", function() {
+        calculatePayments();
+    });
+
+    function calculatePayments() {
+        var doctorFees = parseFloat(document.getElementById("fees").value) || 0;
+        var advancePayment = parseFloat(document.getElementById("advance_payment").value) || 0;
+        var totalPayment = doctorFees;
+        var duePayment = totalPayment - advancePayment;
+        
+        document.getElementById("total_payment").value = totalPayment.toFixed(2);
+        document.getElementById("due_payment").value = duePayment.toFixed(2);
+    }
+</script>
+
+<script>
+    $(document).ready(function() {        
+         $('#addappointmentsModal').on('shown.bs.modal', function () {
+             $('.select2-dropdown').select2({
+                 dropdownParent: $('#addappointmentsModal') 
+             });
+         });                
+     });
+ </script>
+{% endblock %}

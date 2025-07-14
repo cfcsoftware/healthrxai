@@ -1,0 +1,94 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="p-0 p-md-5">
+    <h2><tr>Reports / Account Report</tr></h2> <hr>
+    <div class="card-body ">
+         <!-- Add Filter Form -->
+         <form id="filter-form" class="mb-3">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="patient-name">Patient Name:</label>
+                    <input type="text" id="patient-name" class="form-control" placeholder="Search by patient name">
+                </div>
+                <div class="col-md-3">
+                    <label for="doctor-name">Doctor Name:</label>
+                    <input type="text" id="doctor-name" class="form-control" placeholder="Search by doctor name">
+                </div>
+                <div class="col-md-3">
+                    <label for="account-priority">Banking:</label>
+                    <select id="account-priority" class="form-control">
+                        <option value="">None</option>
+                        <option value="cash">Cash</option>
+                        <option value="banking">Bank</option>
+                        <!-- <option value="Low">Low</option> -->
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="account-status">Status:</label>
+                    <select id="account-status" class="form-control">
+                        <option value="">None</option>
+                        <option value="unpaid">Unpaid</option>
+                        <option value="Paid">Paid</option>
+                        <!-- <option value="Cancelled">Cancelled</option> -->
+                    </select>
+                </div>
+            </div>
+        </form>
+        <table class="table table-striped" id="example">
+        <thead>
+            <tr>
+                <th scope="col" class="rounded-start">S.No.</th>
+                <th scope="col">Patient Name</th>
+                <th scope="col">Doctor Name</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Payment Mode</th>
+                <th scope="col">Created</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="rounded-end">Action</th>
+            </tr>
+        </thead>
+        <tbody> 
+            {% for account in all_account %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ account.patient.name }}</td>
+                <td>{{ account.patient.email }}</td>
+                <td>{{ account.doctor.email }}</td>
+                <td>{{ account.account_date }}</td>
+                <td>{{ account.account_time }}</td>
+                <td>{{ account.priority }}</td>
+                <td>{{ account.status }}</td>
+                <td>{{ account.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Include DataTables JS & CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable
+        var table = $('#account-table').DataTable({
+            paging: true,
+            searching: false, // Disable default search
+        });
+
+        // Filter logic
+        $('#filter-form input, #filter-form select').on('input change', function () {
+            table.columns(1).search($('#patient-name').val());
+            table.columns(2).search($('#doctor-name').val());
+            table.columns(5).search($('#account-priority').val());
+            table.columns(6).search($('#account-status').val());
+            table.draw();
+        });
+    });
+</script>
+
+{% endblock %}

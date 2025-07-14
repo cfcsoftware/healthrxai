@@ -1,0 +1,43 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient background -->
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e6f7ff"/>
+      <stop offset="100%" stop-color="#c2e9f9"/>
+    </linearGradient>
+
+    <!-- Hexagon shape -->
+    <polygon id="hex" points="50,0 100,29 100,87 50,116 0,87 0,29"/>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="url(#grad)" />
+
+  <!-- Light outlined hexagons -->
+  <g stroke="#007acc" stroke-width="1" fill="none" opacity="0.1">
+    <use href="#hex" transform="translate(200,200) scale(1.5)" />
+    <use href="#hex" transform="translate(600,300) scale(1)" />
+    <use href="#hex" transform="translate(800,100) scale(1.3)" />
+    <use href="#hex" transform="translate(1200,400) scale(2)" />
+    <use href="#hex" transform="translate(1600,200) scale(1.8)" />
+    <use href="#hex" transform="translate(400,600) scale(1.1)" />
+    <use href="#hex" transform="translate(1000,700) scale(1.5)" />
+    <use href="#hex" transform="translate(1400,800) scale(1.2)" />
+  </g>
+
+  <!-- Filled hexagons with varying opacities -->
+  <g fill="#007acc" opacity="0.06">
+    <use href="#hex" transform="translate(250,250) scale(1.4)" />
+    <use href="#hex" transform="translate(650,400) scale(1.2)" />
+    <use href="#hex" transform="translate(900,200) scale(1)" />
+    <use href="#hex" transform="translate(1300,500) scale(1.7)" />
+    <use href="#hex" transform="translate(1700,300) scale(1.3)" />
+  </g>
+
+  <!-- Faint far hexagons (background layer) -->
+  <g fill="#007acc" opacity="0.03">
+    <use href="#hex" transform="translate(100,800) scale(0.8)" />
+    <use href="#hex" transform="translate(700,900) scale(1.2)" />
+    <use href="#hex" transform="translate(1500,950) scale(1.1)" />
+  </g>
+</svg>

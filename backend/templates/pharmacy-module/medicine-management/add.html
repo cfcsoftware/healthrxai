@@ -1,0 +1,215 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="px-4">
+  <div class="card h-100">
+    <div class="card-header bg-primary text-center">
+      <h3 class="text-light mb-0 text-capitalize">Add New Medicine</h3>
+    </div>
+    <div class="card-body bg-dark pt-0 m-3">
+      <div class="container">
+        <form action="/pharmacy/medicine/add" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="medicineName">Medicine Name <span class="text-danger">*</span></label>
+              <input id="medicineName" name="medicine_name" type="text" class="form-control" required>
+            </div>
+            <div class="col-md-3">
+              <label for="category">Meidicine Category <span class="text-danger">*</span></label>
+              <select id="category" name="category" class="form-control" required>
+                <option value="">Select Category</option>
+                  <option value="Analgesic">Analgesic</option>
+                  <option value="Antibiotic">Antibiotic</option>
+                  <option value="Antiviral">Antiviral</option>
+                  <option value="Antifungal">Antifungal</option>
+                  <option value="Antiseptic">Antiseptic</option>
+                  <option value="Antipyretic">Antipyretic</option>
+                  <option value="Antacid">Antacid</option>
+                  <option value="Antihistamine">Antihistamine</option>
+                  <option value="Antidepressant">Antidepressant</option>
+                  <option value="Antipsychotic">Antipsychotic</option>
+                  <option value="Anti-inflammatory">Anti-inflammatory</option>
+                  <option value="Anticoagulant">Anticoagulant</option>
+                  <option value="Anticonvulsant">Anticonvulsant</option>
+                  <option value="Antiemetic">Antiemetic</option>
+                  <option value="Antimalarial">Antimalarial</option>
+                  <option value="Antidiabetic">Antidiabetic</option>
+                  <option value="Antihypertensive">Antihypertensive</option>
+                  <option value="Cardiovascular">Cardiovascular</option>
+                  <option value="Corticosteroid">Corticosteroid</option>
+                  <option value="Diuretic">Diuretic</option>
+                  <option value="Expectorant">Expectorant</option>
+                  <option value="Laxative">Laxative</option>
+                  <option value="Sedative">Sedative</option>
+                  <option value="Vaccine">Vaccine</option>
+                  <option value="Vitamin Supplement">Vitamin Supplement</option>
+                  <option value="Hormone Replacement">Hormone Replacement</option>
+                  <option value="Immunosuppressant">Immunosuppressant</option>
+                  <option value="Bronchodilator">Bronchodilator</option>
+                  <option value="Ophthalmic">Ophthalmic</option>
+                  <option value="Dermatological">Dermatological</option>
+                  <option value="Gastrointestinal">Gastrointestinal</option>
+                  <option value="Antiparasitic">Antiparasitic</option>
+                  <option value="Muscle Relaxant">Muscle Relaxant</option>
+                  <option value="Oral Contraceptive">Oral Contraceptive</option>
+                  <option value="Anesthetic">Anesthetic</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="type">Medicine Type <span class="text-danger">*</span></label>
+              <select id="type" name="types" class="form-control" required>
+                <option value="">Select Type</option>
+                <option value="Tablet">Tablet</option>
+                <option value="Capsule">Capsule</option>
+                <option value="Syrup">Syrup</option>
+                <option value="Injection">Injection</option>
+                <option value="Ointment">Ointment</option>
+                <option value="Cream">Cream</option>
+                <option value="Gel">Gel</option>
+                <option value="Lotion">Lotion</option>
+                <option value="Powder">Powder</option>
+                <option value="Drops">Drops (Eye/Ear/Nasal)</option>
+                <option value="Suppository">Suppository</option>
+                <option value="Spray">Spray</option>
+                <option value="Patch">Transdermal Patch</option>
+                <option value="Inhaler">Inhaler</option>
+                <option value="Granules">Granules</option>
+                <option value="Elixir">Elixir</option>
+                <option value="Suspension">Suspension</option>
+                <option value="Emulsion">Emulsion</option>
+                <option value="Lozenge">Lozenge</option>
+                <option value="Solution">Solution</option>
+                <option value="Infusion">Infusion</option>
+                <option value="Mouthwash">Mouthwash</option>
+                <option value="Shampoo">Medicated Shampoo</option>
+                <option value="Paste">Paste</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="composition">Composition<span class="text-danger">*</span></label>
+              <textarea id="composition" name="composition" class="form-control" rows="1" required></textarea>
+            </div>
+           
+          </div>
+        
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="batch">Batch No. <span class="text-danger">*</span></label>
+              <input id="batch" name="batch" type="text" class="form-control" required>
+            </div>
+            <div class="col-md-3">
+              <label for="strength">Strength (mg/ml)</label>
+              <input id="strength" name="strength" type="text" class="form-control">
+            </div>
+            <div class="col-md-3">
+              <label for="manufacturering_date">Manufacture Date</label>
+              <input id="manufacturering_date" name="manufacturering_date" type="date" class="form-control">
+            </div>
+            <div class="col-md-3">
+              <label for="expiry_date">Expiry Date</label>
+              <input id="expiry_date" name="expiry_date" type="date" class="form-control">
+            </div>
+          </div>
+
+          <div class="row mb-3">      
+            <div class="col-md-3">
+              <label for="unit_cost">Purchase Price</label>
+              <input id="unit_cost" name="unit_cost" type="number" class="form-control" step="0.01" oninput="calculateTotal()">
+            </div>
+            <div class="col-md-3">
+              <label for="manufacturer_price">Sales Price (MRP)</label>
+              <input id="manufacturer_price" name="manufacturer_price" type="number" class="form-control" step="0.01">
+            </div>
+            <div class="col-md-3">
+              <label for="qty">Quantity</label>
+              <input id="qty" name="qty" type="number" class="form-control" oninput="calculateTotal()">
+            </div>
+            <div class="col-md-3">
+              <label for="total_cost">Total Cost</label>
+              <input id="total_cost" name="total_cost" type="number" class="form-control" readonly>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="low_stock">Low Stock Quanity</label>
+              <input id="low_stock" name="low_stock" type="number" class="form-control" placeholder="Re-order Point">
+            </div>
+            <div class="col-md-3">
+              <label for="box_size">Box/Leaf/strip Size</label>
+              <input id="box_size" name="box_size" type="text" class="form-control" placeholder="e.g., 1*1">
+            </div>
+            <div class="col-md-3">
+              <label for="units">Units</label>
+              <select id="units" name="units" class="form-control">
+                <option value="">Select Unit</option>
+                <option value="mg">mg (milligram)</option>
+                <option value="g">g (gram)</option>
+                <option value="mcg">mcg (microgram)</option>
+                <option value="kg">kg (kilogram)</option>
+                <option value="ml">ml (milliliter)</option>
+                <option value="l">l (liter)</option>
+                <option value="IU">IU (International Unit)</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="storage">Storage Instructions</label>
+              <input id="storage" name="storage" type="text" class="form-control">
+            </div>
+            <div class="col-md-3">
+              <label for="shelf">Shelf</label>
+              <input id="shelf" name="shelf" type="text" class="form-control">
+            </div>
+           
+            <div class="col-md-3">
+              <label for="manufacturer_name">Manufacturer</label>
+              <input id="manufacturer_name" name="manufacturer_name" type="text" class="form-control">
+            </div>
+            <div class="col-md-3">
+              <label for="vendor">Vendor</label>
+              <input id="vendor" name="vendor" type="text" class="form-control">
+            </div>
+            <div class="col-md-3">
+              <label for="gst">Vendor GST No.</label>
+              <input id="gst" name="gst" type="text" class="form-control">
+            </div>
+          </div>
+
+
+          <div class="row mb-3">
+            
+            <div class="col-md-3">
+              <label for="image">Medicine Image</label>
+              <input id="image" name="image" type="file" class="form-control">
+            </div>
+            <div class="col-md-3">
+              <label for="bar_code">Bar/QR Code</label>
+              <input id="bar_code" name="bar_code" type="file" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label for="description">Description</label>
+              <textarea id="description" name="description" class="form-control" rows="1"></textarea>
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Add Medicine</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function calculateTotal() {
+    const cost = parseFloat(document.getElementById('unit_cost').value) || 0;
+    const qty = parseFloat(document.getElementById('qty').value) || 0;
+    document.getElementById('total_cost').value = (cost * qty).toFixed(2);
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% block content %}   
+
+<div class="container">
+    <h2 class="main-title">Admin Dashboard</h2>
+
+  <div class="container">
+    <!-- Top Cards -->
+    <div class="row mb-4">
+      <!-- Today Patients -->
+      <div class="col-md-3">
+      <div class="card text-center border-0 shadow shadow-lg">
+        <div class="card-body">
+        <h5 class="card-title mb-2">Total Patients</h5>
+        <p class="card-summary text-primary fw-bold display-6 mb-1">{{patients_count}}</p>
+        <div class="progress mb-2" style="height: 6px;">
+          <div class="progress-bar bg-primary" role="progressbar" style="width: 80%;" aria-valuenow="24" aria-valuemin="0" aria-valuemax="30"></div>
+        </div>
+        <small class="text-muted">80% of daily target</small>
+        </div>
+      </div>
+      </div>
+      <!-- Today Appointments -->
+      <div class="col-md-3">
+      <div class="card text-center border-0 shadow shadow-lg">
+        <div class="card-body">
+        <h5 class="card-title mb-2">Total Appointments</h5>
+        <p class="card-summary text-success fw-bold display-6 mb-1">{{appointments_count}}</p>
+        <div class="progress mb-2" style="height: 6px;">
+          <div class="progress-bar bg-success" role="progressbar" style="width: 62%;" aria-valuenow="31" aria-valuemin="0" aria-valuemax="50"></div>
+        </div>
+        <small class="text-muted">62% booked</small>
+        </div>
+      </div>
+      </div>
+      <!-- Today Episode -->
+      <div class="col-md-3">
+      <div class="card text-center border-0 shadow shadow-lg">
+        <div class="card-body">
+        <h5 class="card-title mb-2">Total Staffs</h5>
+        <p class="card-summary text-warning fw-bold display-6 mb-1">{{staff_count}}</p>
+        <div class="progress mb-2" style="height: 6px;">
+          <div class="progress-bar bg-warning" role="progressbar" style="width: 40%;" aria-valuenow="12" aria-valuemin="0" aria-valuemax="30"></div>
+        </div>
+        <small class="text-muted">40% completed</small>
+        </div>
+      </div>
+      </div>
+      <!-- Today Collection -->
+      <div class="col-md-3">
+      <div class="card text-center border-0 shadow shadow-lg">
+        <div class="card-body">
+        <h5 class="card-title mb-2">Total Collection</h5>
+        <p class="card-summary text-danger fw-bold display-6 mb-1">₹ {{total_bill_sum}}</p>
+        <div class="progress mb-2" style="height: 6px;">
+          <div class="progress-bar bg-danger" role="progressbar" style="width: 55%;" aria-valuenow="12500" aria-valuemin="0" aria-valuemax="23000"></div>
+        </div>
+        <small class="text-muted">55% of target</small>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    
+    <!-- <div class="row mb-4">
+      <div class="col-md-3">
+      <div class="card text-center border-0 shadow shadow-lg">
+        <div class="card-body">
+        <h5 class="card-title mb-2">Total IPD</h5>
+        <p class="card-summary text-primary fw-bold display-6 mb-1">{{patients_count}}</p>
+        <div class="progress mb-2" style="height: 6px;">
+          <div class="progress-bar bg-primary" role="progressbar" style="width: 80%;" aria-valuenow="24" aria-valuemin="0" aria-valuemax="30"></div>
+        </div>
+        </div>
+      </div>
+      </div>
+      <div class="col-md-3">
+      <div class="card text-center border-0 shadow shadow-lg">
+        <div class="card-body">
+        <h5 class="card-title mb-2">Total Surgery </h5>
+        <p class="card-summary text-success fw-bold display-6 mb-1">{{appointments_count}}</p>
+        <div class="progress mb-2" style="height: 6px;">
+          <div class="progress-bar bg-success" role="progressbar" style="width: 62%;" aria-valuenow="31" aria-valuemin="0" aria-valuemax="50"></div>
+        </div>
+        </div>
+      </div>
+      </div>
+      <div class="col-md-3">
+      <div class="card text-center border-0 shadow shadow-lg">
+        <div class="card-body">
+        <h5 class="card-title mb-2">Total Pathology</h5>
+        <p class="card-summary text-warning fw-bold display-6 mb-1">{{staff_count}}</p>
+        <div class="progress mb-2" style="height: 6px;">
+          <div class="progress-bar bg-warning" role="progressbar" style="width: 40%;" aria-valuenow="12" aria-valuemin="0" aria-valuemax="30"></div>
+        </div>
+        </div>
+      </div>
+      </div>
+      <div class="col-md-3">
+      <div class="card text-center border-0 shadow shadow-lg">
+        <div class="card-body">
+        <h5 class="card-title mb-2">Today Radiology</h5>
+        <p class="card-summary text-danger fw-bold display-6 mb-1">₹ {{final_bill_count}}</p>
+        <div class="progress mb-2" style="height: 6px;">
+          <div class="progress-bar bg-danger" role="progressbar" style="width: 55%;" aria-valuenow="12500" aria-valuemin="0" aria-valuemax="23000"></div>
+        </div>
+        </div>
+      </div>
+      </div>
+    </div>  -->
+
+  </div>
+
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,166 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="px-4">    
+    <form method="post" action="#" enctype="multipart/form-data">
+      {% csrf_token %}
+        <h4 class="d-flex  justify-content-center">
+            <b>UPDATE APPOINTMENT</b>
+        </h4> <br>
+
+      <div class="card shadow mb-4">
+        <div class="card-header bg-primary">
+          <h5 class="mb-0" style="color: white;"><i class="fas fa-user-injured me-2" style="color: white;"></i>Patient &amp; Appointment Information</h5>
+        </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle mb-0">
+              <tbody>
+                <tr>
+                  <th>Patient Name</th>
+                  <td>{{ appointment.patient.name }}</td>
+                  <th>Age</th>
+                  <td>{{ appointment.patient.age }}</td>
+                  <th>Gender</th>
+                  <td>{{ appointment.patient.gender }}</td>
+                  <th>Phone</th>
+                  <td>{{ appointment.patient.phone }}</td>
+                </tr>
+                <tr>
+                  <th>Guardian Name</th>
+                  <td>{{ appointment.patient.guardian_name }}</td>
+                  <th>Guardian Phone</th>
+                  <td>{{ appointment.patient.guardian_phone }}</td>
+                  <th>Blood Group</th>
+                  <td>{{ appointment.patient.blood_group }}</td>
+                  <th>Marital Status</th>
+                  <td>{{ appointment.patient.marital_status }}</td>
+                </tr>
+                <tr>
+                  <th>Email</th>
+                  <td>{{ appointment.patient.email }}</td>
+                  <th>City</th>
+                  <td>{{ appointment.patient.city }}</td>
+                  <th>State</th>
+                  <td>{{ appointment.patient.state }}</td>
+                  <th>Zip</th>
+                  <td>{{ appointment.patient.zip }}</td>
+                </tr>
+                <tr>
+                  <th>TPA ID</th>
+                  <td>{{ appointment.patient.tpa_id }}</td>
+                  <th>TPA Validity</th>
+                  <td>{{ appointment.patient.tpa_validity }}</td>
+                  <th>Fees</th>
+                  <td>{{ appointment.fees }}</td>
+                  <th>Shift</th>
+                  <td>{{ appointment.shift }}</td>
+                </tr>
+                <tr>
+                  <th>Appointment Type</th>
+                  <td>{{ appointment.appointment_type }}</td>
+                  <th>Priority</th>
+                  <td>{{ appointment.priority }}</td>
+                  <th>Payment Mode</th>
+                  <td>{{ appointment.payment_mode }}</td>
+                  <th>Advance Payment</th>
+                  <td>{{ appointment.advance_payment }}</td>
+                </tr>
+                <tr>
+                  <th>Total Payment</th>
+                  <td>{{ appointment.total_payment }}</td>
+                  <th>Due Payment</th>
+                  <td>{{ appointment.due_payment }}</td>
+                  <th>Aadhar Card No</th>
+                  <td>{{ appointment.aadhar_card_no }}</td>
+                  <th>Ayushman Card No</th>
+                  <td>{{ appointment.ayushman_card_no }}</td>
+                </tr>
+                <tr>
+                  <th>Aabha Card No</th>
+                  <td>{{ appointment.aabha_card_no }}</td>
+                  <th>Insurance Policy No</th>
+                  <td>{{ appointment.insurance_policy_no }}</td>
+                  <td colspan="4"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+       
+      </div>
+
+      <!-- Doctor Information Card -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary">
+          <h5 class="mb-0" style="color: white;"><i class="bi bi-person-badge me-2" style="color: white;"></i>Doctor Information</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-4 align-items-end">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold"><i class="bi bi-person-circle me-1"></i>Doctor Name</label>
+              <input type="text" class="form-control-plaintext ps-2" value="{{ appointment.doctor.name }}" readonly>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold"><i class="bi bi-calendar-event me-1"></i>Appointment Date</label>
+              <input type="date" class="form-control-plaintext ps-2" name="appointment_date" value="{{ appointment.appointment_date }}" readonly>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold"><i class="bi bi-clock me-1"></i>Appointment Time</label>
+              <input type="time" class="form-control-plaintext ps-2" name="appointment_time" value="{{ appointment.appointment_time }}" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- General Information Card -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary">
+          <h5 class="mb-0" style="color: white;"><i class="bi bi-clipboard2-pulse me-2" style="color: white;"></i>General Information</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-4">
+            <div class="col-md-3">
+              <label class="form-label fw-semibold"><i class="bi bi-arrows-collapse-vertical me-1"></i>Height (cm)</label>
+              <input type="number" min="0" step="0.1" name="height" class="form-control" value="{{ appointment.height }}" placeholder="e.g. 170">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold"><i class="bi bi-person-fill-up me-1"></i>Weight (kg)</label>
+              <input type="number" min="0" step="0.1" name="weight" class="form-control" value="{{ appointment.weight }}" placeholder="e.g. 65">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold"><i class="bi bi-heart-pulse me-1"></i>Blood Pressure</label>
+              <input type="text" name="bp" class="form-control" value="{{ appointment.bp }}" placeholder="e.g. 120/80">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold"><i class="bi bi-activity me-1"></i>Pulse (bpm)</label>
+              <input type="number" min="0" name="pulse" class="form-control" value="{{ appointment.pulse }}" placeholder="e.g. 72">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold"><i class="bi bi-thermometer-half me-1"></i>Temperature (°C)</label>
+              <input type="number" min="0" step="0.1" name="temperature" class="form-control" value="{{ appointment.temperature }}" placeholder="e.g. 36.6">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold"><i class="bi bi-droplet-half me-1"></i>SpO₂ (%)</label>
+              <input type="number" min="0" max="100" step="0.1" name="spo2" class="form-control" value="{{ appointment.spo2 }}" placeholder="e.g. 98">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold"><i class="bi bi-capsule-pill me-1"></i>RBS (mg/dL)</label>
+              <input type="number" min="0" name="rbs" class="form-control" value="{{ appointment.rbs }}" placeholder="e.g. 110">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="d-flex justify-content-center mb-4">
+        <button type="submit" class="btn btn-primary btn-lg px-5 shadow">
+          <i class="bi bi-save me-2"></i>Update
+        </button>
+      </div>
+    </form>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="px-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 text-light">
+                
+                Update Discharge Certificate
+            </h5>
+        </div>
+        <div class="card-body">
+            <form id="dischargeForm" method="post" enctype="multipart/form-data" autocomplete="off">
+                {% csrf_token %}
+                <!-- Hidden ID for update -->
+                <input type="hidden" name="id" value="{{ discharge.id }}">
+                <div class="row g-4">
+                    <div class="col-md-2">
+                        <label class="form-label" for="patient_mobile">Patient Mobile <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                            <input type="number" class="form-control" id="patient_mobile" name="patient_mobile" placeholder="Enter Patient Mobile No." value="{{ discharge.patient_mobile }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="patient_name">Patient Name <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                            <input type="text" class="form-control" id="patient_name" name="patient_name" placeholder="Enter Patient Name" value="{{ discharge.patient_name }}">
+                            <input type="hidden" id="patient_id" value="{{ discharge.patient_id }}" name="patient">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="admission_date">Admission Date <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar-fill"></i></span>
+                            <input type="date" class="form-control" id="admission_date" name="admission_date" required value="{{ discharge.admission_date }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="discharge_date">Discharge Date <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar-check-fill"></i></span>
+                            <input type="date" class="form-control" id="discharge_date" name="discharge_date" required value="{{ discharge.discharge_date }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="state">State <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-geo"></i></span>
+                            <select class="form-select" id="state" name="state">
+                                <option value="">Select State</option>
+                                <option value="Andhra Pradesh" {% if discharge.state == "Andhra Pradesh" %}selected{% endif %}>Andhra Pradesh</option>
+                                <option value="Arunachal Pradesh" {% if discharge.state == "Arunachal Pradesh" %}selected{% endif %}>Arunachal Pradesh</option>
+                                <option value="Assam" {% if discharge.state == "Assam" %}selected{% endif %}>Assam</option>
+                                <option value="Bihar" {% if discharge.state == "Bihar" %}selected{% endif %}>Bihar</option>
+                                <option value="Chhattisgarh" {% if discharge.state == "Chhattisgarh" %}selected{% endif %}>Chhattisgarh</option>
+                                <option value="Goa" {% if discharge.state == "Goa" %}selected{% endif %}>Goa</option>
+                                <option value="Gujarat" {% if discharge.state == "Gujarat" %}selected{% endif %}>Gujarat</option>
+                                <option value="Haryana" {% if discharge.state == "Haryana" %}selected{% endif %}>Haryana</option>
+                                <option value="Himachal Pradesh" {% if discharge.state == "Himachal Pradesh" %}selected{% endif %}>Himachal Pradesh</option>
+                                <option value="Jharkhand" {% if discharge.state == "Jharkhand" %}selected{% endif %}>Jharkhand</option>
+                                <option value="Karnataka" {% if discharge.state == "Karnataka" %}selected{% endif %}>Karnataka</option>
+                                <option value="Kerala" {% if discharge.state == "Kerala" %}selected{% endif %}>Kerala</option>
+                                <option value="Madhya Pradesh" {% if discharge.state == "Madhya Pradesh" %}selected{% endif %}>Madhya Pradesh</option>
+                                <option value="Maharashtra" {% if discharge.state == "Maharashtra" %}selected{% endif %}>Maharashtra</option>
+                                <option value="Manipur" {% if discharge.state == "Manipur" %}selected{% endif %}>Manipur</option>
+                                <option value="Meghalayah" {% if discharge.state == "Meghalayah" %}selected{% endif %}>Meghalayah</option>
+                                <option value="Mizoram" {% if discharge.state == "Mizoram" %}selected{% endif %}>Mizoram</option>
+                                <option value="Odisha" {% if discharge.state == "Odisha" %}selected{% endif %}>Odisha</option>
+                                <option value="Punjab" {% if discharge.state == "Punjab" %}selected{% endif %}>Punjab</option>
+                                <option value="Rajasthan" {% if discharge.state == "Rajasthan" %}selected{% endif %}>Rajasthan</option>
+                                <option value="Sikkim" {% if discharge.state == "Sikkim" %}selected{% endif %}>Sikkim</option>
+                                <option value="Tamil" {% if discharge.state == "Tamil" %}selected{% endif %}>Tamil Nadu</option>
+                                <option value="Tripura" {% if discharge.state == "Tripura" %}selected{% endif %}>Tripura</option>
+                                <option value="Uttar Pradesh" {% if discharge.state == "Uttar Pradesh" %}selected{% endif %}>Uttar Pradesh</option>
+                                <option value="Uttarakhand" {% if discharge.state == "Uttarakhand" %}selected{% endif %}>Uttarakhand</option>
+                                <option value="West Bengal" {% if discharge.state == "West Bengal" %}selected{% endif %}>West Bengal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="district">District</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-pin-map-fill"></i></span>
+                            <input type="text" class="form-control" id="district" name="district" placeholder="Enter District" value="{{ discharge.district }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="city">City</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-pin-map-fill"></i></span>
+                            <input type="text" class="form-control" id="city" name="city" placeholder="Enter City" value="{{ discharge.city }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="pincode">Pin Code</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-geo"></i></span>
+                            <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Enter Pincode" value="{{ discharge.pincode }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="discharge_certificate">Discharge Certificate (if physical copy)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-file-earmark-text-fill"></i></span>
+                            <input type="file" class="form-control" id="discharge_certificate" name="discharge_certificate" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            {% if discharge.discharge_certificate %}
+                                <a href="{{ discharge.discharge_certificate.url }}" target="_blank" class="ms-2">View Current</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12  text-center">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() { 
+        $('#patient_mobile').on('input', function() {
+            var phone = $(this).val();
+            if (phone.length == 10) {
+                $('#patientError').text('');
+                $.ajax({
+                    url: '/billing/get_patient_by_phone',
+                    method: 'GET',
+                    data: { phone: phone },
+                    success: function(response) {
+                        if (response.success) {
+                            $('#patient_id').val(response.patient.id);
+                            $('#patient_name').val(response.patient.name);
+                            $('#address').text(response.patient.address);
+                            $("input[name='gender'][value='" + response.patient.gender + "']").prop('checked', true);
+                            $('#guardian_name').val(response.patient.guardian_name);
+                            $('#city').val(response.patient.city);
+                        } else {
+                            $('#patient_id').val('');
+                            $('#patient_name').val('');
+                            $('#age').val('');
+                            $('#address').text('');
+                            $('#guardian_name').val('');
+                            $('#city').val('');
+                        }
+                    }
+                });
+            } else {
+                $('#patientError').text('Please enter a valid phone number.');
+            }
+        });
+    }); 
+</script>
+
+{% endblock %}

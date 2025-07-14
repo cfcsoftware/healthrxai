@@ -1,0 +1,127 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% block content %}   
+
+<div class="container">
+    <h2 class="main-title">Radiologist's Dashboard</h2>
+    <div class="row stat-cards">
+      <div class="col-md-6 col-xl-3">
+        <article class="stat-cards-item">
+          <div class="stat-cards-icon primary">
+            <i data-feather="bar-chart-2" aria-hidden="true"></i>
+          </div>
+          <div class="stat-cards-info">
+            <p class="stat-cards-info__num">25,600</p>
+            <p class="stat-cards-info__title">Total Patients</p>
+            <p class="stat-cards-info__progress">
+              <span class="stat-cards-info__profit success">
+                <i data-feather="trending-up" aria-hidden="true"></i>4.07%
+              </span>
+              Last month
+            </p>
+          </div>
+        </article>
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <article class="stat-cards-item">
+          <div class="stat-cards-icon warning">
+            <i data-feather="file" aria-hidden="true"></i>
+          </div>
+          <div class="stat-cards-info">
+            <p class="stat-cards-info__num">42</p>
+            <p class="stat-cards-info__title">Total Pending Test</p>
+            <p class="stat-cards-info__progress">
+              <span class="stat-cards-info__profit success">
+                <i data-feather="trending-up" aria-hidden="true"></i>0.24%
+              </span>
+              Last month
+            </p>
+          </div>
+        </article>
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <article class="stat-cards-item">
+          <div class="stat-cards-icon purple">
+            <i data-feather="file" aria-hidden="true"></i>
+          </div>
+          <div class="stat-cards-info">
+            <p class="stat-cards-info__num">468</p>
+            <p class="stat-cards-info__title">Total Reports</p>
+            <p class="stat-cards-info__progress">
+              <span class="stat-cards-info__profit danger">
+                <i data-feather="trending-down" aria-hidden="true"></i>1.64%
+              </span>
+              Last month
+            </p>
+          </div>
+        </article>
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <article class="stat-cards-item">
+          <div class="stat-cards-icon success">
+            <i data-feather="feather" aria-hidden="true"></i>
+          </div>
+          <div class="stat-cards-info">
+            <p class="stat-cards-info__num">₹14,78,286</p>
+            <p class="stat-cards-info__title">Monthly Earnings</p>
+            <p class="stat-cards-info__progress">
+              <span class="stat-cards-info__profit warning">
+                <i data-feather="trending-up" aria-hidden="true"></i>0.00%
+              </span>
+              Last month
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Main Content Row -->
+    <div class="row">
+      <!-- Left: Appointment Calendar -->
+      <div class="col-md-6">
+        <div class="card shadow-sm mb-4 h-100" style="min-height: 650px;">
+          <div class="card-header bg-white fw-bold">Appointment Calendar</div>
+          <div class="card-body p-0" style="height: 100%;">
+            <!-- Calendar -->
+            <div id="calendar" style="height: 100%; min-height: 500px;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Right: Today's Appointment List -->
+      <div class="col-md-6">
+        <div class="card shadow-sm mb-4 h-100" style="min-height: 650px;">
+          <div class="card-header bg-white fw-bold d-flex justify-content-between">
+            Today's Appointment List
+            <!-- <button class="btn btn-primary">+ Add</button> -->
+          </div>
+          <div class="card-body" style="height: 500px; overflow-y: auto;">
+            <table class="table table-bordered align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>DateTime</th>
+                  <th>Patient Name</th>
+                  <th>Mobile</th>
+                  <th>Consultant</th>
+                  <th>Age/Gender</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for appointment in today_appointment_data %}
+                <tr>
+                  <td>{{ appointment.appointment_date}} {{ appointment.appointment_time }}</td>
+                  <td>{{ appointment.patient.name }}</td> 
+                  <td>{{ appointment.patient.phone }}</td>
+                  <td>{{ appointment.doctor.name }}</td>
+                  <td>{{ appointment.patient.age }} / {{ appointment.patient.gender}} </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+   
+</div>
+
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}CMS Dashboard - {{ website_settings.site_title|default:"Hospital Management System" }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="bi bi-globe2"></i> Website CMS Dashboard</h4>
+                    <a href="/" target="_blank" class="btn btn-outline-primary">
+                        <i class="bi bi-eye"></i> View Website
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6>Total Pages</h6>
+                                            <h3>{{ stats.total_pages }}</h3>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="bi bi-file-text fs-2"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6>Published Pages</h6>
+                                            <h3>{{ stats.published_pages }}</h3>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="bi bi-check-circle fs-2"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card bg-info text-white">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6>Features</h6>
+                                            <h3>{{ stats.total_features }}</h3>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="bi bi-star fs-2"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card bg-warning text-white">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6>Contact Submissions</h6>
+                                            <h3>{{ stats.contact_submissions }}</h3>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="bi bi-envelope fs-2"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-light">Recent Pages</h5>
+                    <a href="{% url 'cms:pages' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_pages %}
+                        <div class="list-group list-group-flush">
+                            {% for page in recent_pages %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">{{ page.title }}</h6>
+                                    <small class="text-muted">Updated: {{ page.updated_at|date:"M d, Y" }}</small>
+                                </div>
+                                <div>
+                                    {% if page.is_published %}
+                                        <span class="badge bg-success">Published</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Draft</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No pages created yet.</p>
+                        <a href="{% url 'cms:page_create' %}" class="btn btn-primary">Create First Page</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-light">Recent Contact Submissions</h5>
+                    <a href="{% url 'cms:contacts' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_contacts %}
+                        <div class="list-group list-group-flush">
+                            {% for contact in recent_contacts %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">{{ contact.name }}</h6>
+                                    <small class="text-muted">{{ contact.subject }}</small><br>
+                                    <small class="text-muted">{{ contact.created_at|date:"M d, Y H:i" }}</small>
+                                </div>
+                                <div>
+                                    {% if not contact.is_read %}
+                                        <span class="badge bg-danger">New</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Read</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No contact submissions yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 text-light">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'cms:settings' %}" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-gear"></i> Website Settings
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'cms:menu_builder' %}" class="btn btn-outline-success w-100">
+                                <i class="bi bi-list"></i> Menu Builder
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'cms:page_create' %}" class="btn btn-outline-info w-100">
+                                <i class="bi bi-plus-circle"></i> Create Page
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'cms:features' %}" class="btn btn-outline-warning w-100">
+                                <i class="bi bi-star"></i> Manage Features
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

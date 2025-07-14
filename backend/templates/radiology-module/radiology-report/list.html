@@ -1,0 +1,316 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="mx-4">   
+    <div class="card border-0">        
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0">
+                Radiology Reports
+            </h5>
+            <!--     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Add Bill
+            </button> -->
+        </div>
+      <div class="card-body px-0">
+        <div class="table-responsive">
+          <table id="example" class="table text-start table-striped table-hover align-middle" style="white-space:nowrap;">
+            <thead class="table-secondary text-start text-dark" style="white-space:nowrap;">
+            <tr>
+              <th></th>
+              <th>Bill No.</th>
+              <th>Patient Name</th>
+              <th>Test Name</th>
+              <th>Doctor Name</th>
+              <th>Report Days</th>
+              <th>Billing Status</th>
+              <th>Amount</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody> 
+            {% for rb in radiology_reports %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>RadioBill - #000{{ rb.id }}</td>
+                <td>{{ rb.patient.name }}</td>
+                <td>{{ rb.service }}</td>
+                <td>{{ rb.referral_doctor.name }}</td>
+                <td class="text-center">{{ rb.report_days }}</td>
+                <td class="text-center">{{ rb.payment_status }}</td>
+                <td class="text-center">{{ rb.total_amonut }}</td>
+                <td>
+                    {% if 'radiology-report-edit' in request.session.user_permissions %}
+                    <a href="/radiology/reports/update/{{rb.id}}" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
+                    {% endif %}
+                    
+                    {% if 'radiology-report-delete' in request.session.user_permissions %}
+                    <!-- <a href="/radiology/reports/delete/{{rb.id}}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a> -->
+                    {% endif%}
+
+                    {% if 'radiology-report-view' in request.session.user_permissions %}
+                    <a href="/radiology/reports/view/{{rb.id}}" class="btn btn-warning btn-sm"><i class="bi bi-eye"></i></a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        
+        
+        </table>
+      </div>
+    </div>
+</div>
+
+
+
+ <!-- Modal -->
+ <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-light">
+      <h5 class="modal-title text-center" id="exampleModalLabel">Add Report</h5>
+      <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST" action="/radiology/radiology-bill/add">
+      {% csrf_token %}
+        <div class="container mt-3">
+            <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label>Bill No.<span class="text-danger">*</span></label>
+                    <input id="bill_no" name="bill_no" placeholder="#Bill-No" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="">Patient<span class="text-danger">*</span></label>
+                    <select name="patient" class="form-control multi-select"  required="" >
+                        <option value="">Select</option>
+                        {% for p in patients %}
+                        <option value="{{p.id}}">{{p.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label> Referral Doctor<span class="text-danger">*</span></label>
+                    <select class="form-control doctor multi-select" name="referral_doctor">
+                        <option value="" >Select</option>
+                        {% for d in doctors %}
+                        <option value="{{d.id}}">{{d.name}}</option>
+                        {% endfor %}
+                    </select>
+                  
+                </div>
+            </div>
+
+              <div class="col-sm-3">
+                  <div class="form-group">
+                      <label> Laboratory (Doctor)<span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" name="laboratory_doctor" value="Dr. Rakesh Kaur" required="">
+                  
+                  </div>
+              </div>
+
+                <div class="col-sm-12">
+                    
+                    <table class="table" id="testTable">
+                        <thead>
+                            <tr>
+                                <th>Test Name</th>
+                                <th>Report Days</th>
+                                <th>Report Date</th>
+                                <th>Tax(%)</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <!-- <select class="form-control test_name" name="test_name[]" id="test_name" required> -->
+                                    <select class="form-control test_name" name="test_name" id="test_name" required>
+                                        <option value="">Select</option>
+                                        {% for rt in radiology_tests %}
+                                        <option value="{{rt.id}}">{{rt.test_name}}</option>
+                                        {% endfor %}
+                                        <!-- <option value="1">Abdomen X-rays ( AX)</option>
+                                        <option value="2">Cardiopulmonary Exercise Test (CPET)</option>
+                                        <option value="3">Functional MRI (RI) (FMRI)</option>
+                                        <option value="4">Magnetic resonance imaging  (MR)</option>
+                                        <option value="5">Resting 12-lead EKG (RLE)</option> -->
+                                    </select>
+                                </td>
+                                <!-- <td><input type="number" name="report_days[]" class="form-control"></td> -->
+                                <td><input type="number" name="report_days" class="form-control"></td>
+                                <!-- <td><input type="date" name="report_date[]" class="form-control"></td> -->
+                                <td><input type="date" name="report_date" class="form-control"></td>
+                                <!-- <td><input type="text" name="tax[]" class="form-control tax" oninput="calculateTotal()"></td> -->
+                                <td><input type="text" name="tax" class="form-control tax" oninput="calculateTotal()"></td>
+                                <!-- <td><input type="text" name="amount[]" class="form-control amount" oninput="calculateTotal()"></td> -->
+                                <td><input type="text" name="amount" class="form-control amount" oninput="calculateTotal()"></td>
+                                <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-success" id="addRow">Add Row</button>
+            
+                </div>
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label>Note</label>
+                    <textarea class="form-control note" name="note"></textarea>
+                </div>
+            </div>
+            <div class="col-sm-12">
+
+                <table class="printablea4" width="100%">
+                    <tbody>
+                        <tr>
+                            <th width="40%">Total Amount </th>
+                            <td width="60%" colspan="2" class="text-right ipdbilltable">
+                                <input type="text" id="total_amount" name="total_amount" class="form-control total_amount" readonly>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Discount </th>
+                            <td class="text-right ipdbilltable">
+                                <h4 style="float: right;font-size: 12px; padding-left: 5px;">%</h4>
+                                <input type="text" id="discount_percent" name="discount_percent" class="form-control discount_percent" oninput="calculateTotal()">
+                            </td>
+
+                            <td class="text-right ipdbilltable">
+                                <input type="text" id="discount" name="discount" class="form-control discount" readonly>
+                            </td>
+                        </tr>
+
+                        <tr>
+                        <th>Tax </th>
+                        <td class="text-right ipdbilltable"></td>
+
+                        <td class="text-right ipdbilltable">
+                            <input type="text" id="tax_amount" name="total_tax_amount" class="form-control total_tax_amount" readonly>
+                            
+                        </td>
+                        </tr>
+                        <tr>
+                            <th>Net Amount </th>
+                            <td colspan="2" class="text-right ipdbilltable">
+                                <input type="text" id="net_amount" name="net_amount" class="form-control net_amount" readonly>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row">
+                    <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Payment Mode</label>
+                        <select class="form-control payment_mode" name="payment_mode">
+                            <option value="Cash">Cash</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="transfer_to_bank_account">Transfer to Bank Account</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Other">Other</option>
+                            <option value="Online">Online</option>
+                        </select>
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Payable Amount </label>
+                        <input type="text" name="payable_amount" id="payable_amount" class="form-control payable_amount text-right">
+                        
+                    </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>      
+      </form>
+    </div> 
+  </div>
+</div>
+
+
+<script>
+    document.getElementById('addRow').addEventListener('click', function () {
+        let table = document.getElementById('testTable').getElementsByTagName('tbody')[0];
+        let newRow = table.insertRow();
+        /*newRow.innerHTML = `
+            <td>
+                <select class="form-control test_name" name="test_name[]" id="test_name">
+                    <option value="">Select</option>
+                    {% for rt in radiology_tests %}
+                    <option value="{{rt.id}}">{{rt.test_name}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td><input type="number" name="report_days[]" class="form-control"></td>
+            <td><input type="date" name="report_date[]" class="form-control"></td>
+            <td><input type="text" name="tax[]" class="form-control tax" oninput="calculateTotal()"></td>
+            <td><input type="text" name="amount[]" class="form-control amount" oninput="calculateTotal()"></td>
+            <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+        `;*/
+
+
+        newRow.innerHTML = `
+            <td>
+                <select class="form-control test_name" name="test_name" id="test_name">
+                    <option value="">Select</option>
+                    {% for rt in radiology_tests %}
+                    <option value="{{rt.id}}">{{rt.test_name}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td><input type="number" name="report_days" class="form-control"></td>
+            <td><input type="date" name="report_date" class="form-control"></td>
+            <td><input type="text" name="tax" class="form-control tax" oninput="calculateTotal()"></td>
+            <td><input type="text" name="amount" class="form-control amount" oninput="calculateTotal()"></td>
+            <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+        `;
+
+    });
+    
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-row')) {
+            e.target.closest('tr').remove();
+            calculateTotal();
+        }
+    });
+    
+    function calculateTotal() {
+        let amounts = document.querySelectorAll('.amount');
+        let taxes = document.querySelectorAll('.tax');
+        let total = 0;
+        let taxTotal = 0;
+        amounts.forEach((amt, index) => {
+            let value = parseFloat(amt.value) || 0;
+            let tax = parseFloat(taxes[index].value) || 0;
+            total += value;
+            taxTotal += (value * tax) / 100;
+        });
+        let discountPercent = parseFloat(document.getElementById('discount_percent').value) || 0;
+        let discountAmount = (total * discountPercent) / 100;
+        document.getElementById('total_amount').value = total.toFixed(2);
+        document.getElementById('discount').value = discountAmount.toFixed(2);
+        document.getElementById('tax_amount').value = taxTotal.toFixed(2);
+        document.getElementById('net_amount').value = (total - discountAmount + taxTotal).toFixed(2);
+        document.getElementById('payable_amount').value = (total - discountAmount + taxTotal).toFixed(2);
+    }
+</script>
+
+{% endblock %}

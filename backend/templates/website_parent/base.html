@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="{% static 'assets_superadmin/css/front-style.css' %}" rel="stylesheet"></link>
+    <link href="{% static 'assets_superadmin/css/bootstrap.min.css' %}" rel="stylesheet"></link>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">  
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <!-- Logo aligned to far left -->
+      <a class="navbar-brand fw-bold text-primary p-0" href="#">
+        <img src="{% static 'images/main_logo2.png' %}" alt="Healthsrx Logo" class="me-2" style="height: 70px;"></a>
+
+      <!-- Mobile Toggle Button -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar Content -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Menu and buttons grouped right -->
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+          <li class="nav-item ms-3">
+            <a href="https://calendly.com/cfcsoftwares/30min" class="btn btn-primary btn-sm border-0"><i class="bi bi-telephone me-2"></i>Book a Call</a>
+          </li>
+          <!-- <li class="nav-item ms-2">
+            <a href="/tenant/register" class="btn btn-primary btn-sm border-0">Register</a>
+          </li> -->
+          <!-- <li class="nav-item ms-3">
+            <button id="themeToggle" class="btn rounded-pill border-0 px-1">🌙</button>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+   
+        <div>
+          {% block content %}
+      
+          {% endblock %}
+        </div>
+   
+
+
+
+<!-- Footer -->
+<footer class="footer" >
+  <div class="container">
+    <div class="row gy-4">
+      <!-- About -->
+      <div class="col-md-5 pe-md-5">
+        <div class="footer-content pe-md-5">
+          <img src="https://healthsrx.com/static/images/main_logo2.png" alt="Healthsrx Logo" class="mb-3" style="width: 150px;">
+          <p>A cloud-based SaaS platform simplifying hospital operations, enhancing patient care, and boosting administrative efficiency through smart, scalable tech.</p>
+          <div class="d-flex gap-3">
+            <a href="#" class="text-white fs-5"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-white fs-5"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-white fs-5"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="text-white fs-5"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-2">
+        <div class="footer-links">
+          <h6 class="fw-bold">Quick Links</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="footer-link">Home</a></li>
+            <li><a href="#" class="footer-link">Features</a></li>
+            <li><a href="#" class="footer-link">Pricing</a></li>
+            <li><a href="#" class="footer-link">FAQs</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Resources -->
+      <div class="col-md-2">        
+        <div class="footer-links">
+          <h6 class="fw-bold">Resources</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="footer-link">Blog</a></li>
+            <li><a href="#" class="footer-link">Documentation</a></li>
+            <li><a href="#" class="footer-link">Support</a></li>
+            <li><a href="#" class="footer-link">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="col-md-3">
+        <div class="footer-links">
+          <h6 class="fw-bold">Contact Us</h6>
+          <p><i class="fas fa-envelope me-2"></i>info@healthsrx.com</p>
+          <p><i class="fas fa-phone-alt me-2"></i>+91 97133 55495</p>
+          <p><i class="fas fa-map-marker-alt me-2"></i>123 Health St, Mumbai, India</p>
+        </div>
+      </div>
+    </div>
+
+    
+
+    <!-- Bottom Note -->
+    <div class="text-center pt-4">
+      <hr class="border-top border-secondary my-4">
+     <div class="d-md-flex align-items-center justify-content-between">
+       <small>&copy; {% now "Y" %} <strong>HealthRx</strong>. All rights reserved. </small>
+      <small> Designed and developed by <a href="#" target="_blank" class="text-primary fw-bold">CFC Software</a>  </small>
+     </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="{% static 'assets_superadmin/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+  AOS.init();
+</script>
+
+  <script>
+    const pricingData = {
+      usd: {
+        monthly: [
+          { name: 'Basic', price: 19, features: ['Patient Records', 'Appointment Scheduling', 'Basic Reporting','AI Report'] },
+          { name: 'Premium', price: 29, features: ['Everything in Basic', 'EHR Integration', 'Custom Dashboards', 'Telemedicine Tools'] },
+          { name: 'Gold', price: 49, features: ['Everything in Premium', 'Advanced Analytics', 'Priority Support', 'White-Label Branding'] },
+        ],
+        yearly: [
+          { name: 'Basic', price: 199, features: ['Patient Records', 'Appointment Scheduling', 'Basic Reporting','AI Report'] },
+          { name: 'Premium', price: 299, features: ['Everything in Basic', 'EHR Integration', 'Custom Dashboards', 'Telemedicine Tools'] },
+          { name: 'Gold', price: 499, features: ['Everything in Premium', 'Advanced Analytics', 'Priority Support', 'White-Label Branding'] },
+        ]
+      },
+      inr: {
+        monthly: [
+          { name: 'Basic', price: 999, features: ['Patient Records', 'Appointment Scheduling', 'Basic Reporting','AI Report'] },
+          { name: 'Premium', price: 1499, features: ['Everything in Basic', 'EHR Integration', 'Custom Dashboards', 'Telemedicine Tools'] },
+          { name: 'Gold', price: 1999, features: ['Everything in Premium', 'Advanced Analytics', 'Priority Support', 'White-Label Branding'] },
+        ],
+        yearly: [
+          { name: 'Basic', price: 9999, features: ['Patient Records', 'Appointment Scheduling', 'Basic Reporting','AI Report'] },
+          { name: 'Premium', price: 14999, features: ['Everything in Basic', 'EHR Integration', 'Custom Dashboards', 'Telemedicine Tools'] },
+          { name: 'Gold', price: 19999, features: ['Everything in Premium', 'Advanced Analytics', 'Priority Support', 'White-Label Branding'] },
+        ]
+      }
+    };
+  
+    const renderPricing = () => {
+      const currency = document.getElementById("currencySelect").value;
+      const isYearly = document.getElementById("toggleBilling").checked;
+      const pricingCards = document.getElementById("pricingCards");
+      pricingCards.innerHTML = "";
+  
+      const symbol = currency === "usd" ? "$" : "₹";
+      const plans = isYearly ? pricingData[currency].yearly : pricingData[currency].monthly;
+  
+      plans.forEach(plan => {
+        const features = plan.features.map(f => `<li>✔ ${f}</li>`).join("");
+        const card = document.createElement("div");
+        card.className = "col-12 col-md-6 col-lg-4";
+        card.innerHTML = `
+          <div class="pricing-card p-4 rounded text-center h-100">
+            <h6 class="fw-bold mb-2">${plan.name}</h6>
+            <h3 class="fw-bold">${symbol}${plan.price} <span class="fs-6 text-muted">${isYearly ? '/yr' : '/mo'}</span></h3>
+            <ul class="list-unstyled my-3">${features}</ul>
+            <button class="btn btn-outline-primary rounded-pill w-100 choose-btn" data-plan="${plan.name}" data-price="${symbol}${plan.price}">${plan.name === 'Gold' ? 'Go Gold' : 'Choose ' + plan.name}</button>
+          </div>
+        `;
+        pricingCards.appendChild(card);
+      });
+  
+      addCardEvents();
+    };
+  
+    const addCardEvents = () => {
+      document.querySelectorAll('.pricing-card').forEach(card => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.pricing-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+        });
+      });
+  
+      document.querySelectorAll('.choose-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const plan = btn.dataset.plan;
+          const price = btn.dataset.price;
+          document.getElementById("modalPlanText").textContent = `You selected the "${plan}" plan at ${price}.`;
+          new bootstrap.Modal(document.getElementById('planModal')).show();
+          e.stopPropagation();
+        });
+      });
+    };
+  
+    document.getElementById("toggleBilling").addEventListener("change", renderPricing);
+    document.getElementById("currencySelect").addEventListener("change", renderPricing);
+  
+    // Initial render
+    renderPricing();
+  </script>
+  
+  <script>
+    const html = document.documentElement;
+    const themeToggle = document.getElementById("themeToggle");
+  
+    // Load from localStorage if available
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      html.setAttribute("data-bs-theme", savedTheme);
+      themeToggle.textContent = savedTheme === "dark" ? "☀️" : "🌙";
+    }
+  
+    // Toggle and persist
+    themeToggle.addEventListener("click", () => {
+      const current = html.getAttribute("data-bs-theme");
+      const newTheme = current === "dark" ? "light" : "dark";
+      html.setAttribute("data-bs-theme", newTheme);
+      localStorage.setItem("theme", newTheme);
+      themeToggle.textContent = newTheme === "dark" ? "☀️" : "🌙";
+    });
+  </script>
+
+  <script>
+    // Autoplay scroll
+    const carousel = document.getElementById('reviewCarousel');
+    let scrollSpeed = 1;
+  
+    let autoScroll = setInterval(() => {
+      carousel.scrollLeft += scrollSpeed;
+      if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth) {
+        carousel.scrollLeft = 0; // loop
+      }
+    }, 30);
+  
+    carousel.addEventListener("mouseenter", () => clearInterval(autoScroll));
+    carousel.addEventListener("mouseleave", () => {
+      autoScroll = setInterval(() => {
+        carousel.scrollLeft += scrollSpeed;
+        if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth) {
+          carousel.scrollLeft = 0;
+        }
+      }, 30);
+    });
+  
+    // Lightbox feature
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightboxImage");
+    const closeBtn = document.querySelector(".close-lightbox");
+  
+    document.querySelectorAll(".lightbox-img").forEach(img => {
+      img.addEventListener("click", () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.remove("d-none");
+      });
+    });
+  
+    closeBtn.addEventListener("click", () => {
+      lightbox.classList.add("d-none");
+      lightboxImg.src = "";
+    });
+  </script>
+  
+
+  
+  <script>
+    const counters = document.querySelectorAll('.counter');
+    const options = { threshold: 0.7 };
+  
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const end = parseInt(el.textContent.replace(/\D/g, ''));
+          let current = 0;
+  
+          const update = () => {
+            const increment = Math.ceil(end / 50);
+            current += increment;
+            if (current >= end) {
+              el.textContent = el.textContent.includes('K') ? `${end}K+` : `${end}+`;
+              observer.unobserve(el);
+            } else {
+              el.textContent = el.textContent.includes('K') ? `${current}K+` : `${current}+`;
+              requestAnimationFrame(update);
+            }
+          };
+  
+          update();
+        }
+      });
+    }, options);
+  
+    counters.forEach(counter => observer.observe(counter));
+  </script>
+  
+  <!-- WhatsApp Floating Button -->
+<a href="https://wa.me/919713355495" class="whatsapp-float" target="_blank" title="Chat on WhatsApp">
+  <img src="{% static 'images/whatsapp.png' %} " alt="WhatsApp" />
+</a>
+</body>
+</html>

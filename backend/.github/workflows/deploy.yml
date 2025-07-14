@@ -1,0 +1,31 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main  # your deployment branch
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy Django App
+        run: |
+          source /opt/myproject/bin/activate
+          cd /opt/myproject/myproject/healthrx_backend
+
+          git config --global --add safe.directory /opt/myproject/myproject/healthrx_backend
+          git stash || true
+          git pull origin main
+
+          pip install -r requirements.txt
+
+          python manage.py migrate --noinput
+          python manage.py collectstatic --noinput
+
+          # Restart gunicorn via systemd
+          sudo systemctl restart gunicorn

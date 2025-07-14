@@ -1,0 +1,325 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="p-0 p-md-4">
+    <div class="card h-100 ">
+        <div class="card-header bg-dark text-center">
+            <span class="display-6 text-white mb-0 text-capitalize">Update Pharmacy Bill</span>
+        </div>
+        <div class="card-body bg-dark pt-0">
+          <div class="container">
+            <form action="/pharmacy/pharmacy-bill/update/{{ pharmacy_bill.id }}" method="POST">
+                {% csrf_token %}
+              <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="pharmacyNo" class="form-label">Pharmacy Bill No.</label>
+                        <input type="text" class="form-control" id="pharmacyNo" name="pharmacy_bill_no" value="{{ pharmacy_bill.pharmacy_bill_no }}" placeholder="PHARMA#000001">
+                    </div>
+                    <div class="mb-3">
+                        <label for="regNo" class="form-label">Reg No.</label>
+                        <input type="text" class="form-control" id="regNo" name="reg_no" value="{{ pharmacy_bill.reg_no }}" placeholder="R000632">
+                    </div>
+                    <div class="mb-3">
+                        <label for="patient_id" class="form-label">Patient <span class="text-danger">*</span></label>
+                        <select class="form-select select2" id="patient_id" name="patient" required>
+                            <option value="">Select Patient</option>
+                            <!-- Dynamic options can be added here -->
+                            {% for patient in patient_list %}
+                                <option value="{{ patient.id }}" {% if pharmacy_bill.patient_id == patient.id %} selected {% endif %}>{{ patient.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="age" class="form-label">Age</label>
+                        <input type="number" class="form-control" id="age" name="patient_age"  value="{{ pharmacy_bill.patient_age }}" placeholder="23">
+                    </div>
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">Gender</label>
+                        <select class="form-select select2" id="gender" name="patient_gender">
+                            <option value="Male" {% if pharmacy_bill.gender == "Male" %} selected {% endif %}>Male</option>
+                            <option value="Female" {% if pharmacy_bill.gender == "Female" %} selected {% endif %}>Female</option>
+                            <option value="Not Specified" {% if pharmacy_bill.gender == "Not Specified" %} selected {% endif %}>Not Specified</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="doctor_id" class="form-label">Consultant Dr. <span class="text-danger">*</span></label>
+                        <select class="form-select" id="doctor_id" name="doctor" required>
+                            <option value="">Select Doctor</option>
+                            {% for doctor in doctor_list %}
+                                <option value="{{ doctor.id }}" {% if pharmacy_bill.doctor_id == doctor.id %} selected {% endif %}>{{ doctor.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="admissionPurpose" class="form-label">Admission Purpose</label>
+                        <input type="text" class="form-control" id="admissionPurpose" value="{{ pharmacy_bill.admission_purpose }}" name="admission_purpose" placeholder="Medical and Surgical">
+                    </div>
+                    <div class="mb-3">
+                        <label for="dischargeStatus" class="form-label">Discharge Status</label>
+                        <input type="text" class="form-control" id="dischargeStatus" value="{{ pharmacy_bill.discharge_status }}" name="discharge_status" placeholder="Admitted">
+                    </div>
+                    <div class="mb-3">
+                        <label for="wardDetails" class="form-label">Ward Details</label>
+                        <input type="text" class="form-control" id="wardDetails" name="ward_details" value="{{ pharmacy_bill.ward_details }}"  placeholder="1st Floor, Dialysis">
+                    </div>
+                </div>
+              </div>
+
+              <!-- Table Section -->
+              <div class="row">
+                <div class="col-lg-12">
+                    <table class="table table-hover" id="medicineTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Medicine Name</th>
+                                <th>Medicine Category</th>
+                                <th>Qty</th>
+                                <th>Unit Cost</th>
+                                <th>Amount</th>
+                                <th>Tax (%)</th>
+                                <th>Tax Amount</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detail in pharmacy_bill.medicine_details %}
+                            <tr>
+                                <td>#</td>
+                                <td>
+                                    <select class="form-select select2" name="medicine_name[]" required>
+                                        <option value="">Select</option>
+                                        {% for medicine in medicine_list %}
+                                            <option value="{{ medicine.id }}" {% if detail.medicine_name_id|add:0 == medicine.id|add:0 %} selected {% endif %} >{{ medicine.medicine_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-select select2" name="medicine_category[]" required>
+                                        <option value="">Select</option>
+                                        {% for category in medicine_category_list %}
+                                        <option value="{{ category.id }}" {% if detail.medicine_category_id|add:0 == category.id|add:0 %} selected {% endif %} >{{ category.name }}</option>
+
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                
+                                
+                                <td>
+                                    <input type="number" class="form-control qty" name="qty[]" value="{{detail.qty}}" placeholder="Qty" min="1" value="1" required>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control cost" name="cost[]" value="{{detail.cost}}" placeholder="Cost" required>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control amount" name="amount[]" value="{{detail.amount}}" placeholder="Amount" readonly>
+                                </td>
+                                <td>
+                                    <select class="form-select tax" name="tax[]" required>
+                                        <option value="0" {% if detail.tax == "0" %} selected {% endif %}>No Tax</option>
+                                        <option value="18" {% if detail.tax == "18" %} selected {% endif %}>GST(18%)</option>
+                                        <option value="5" {% if detail.tax == "5" %} selected {% endif %}>GST(5%)</option>
+                                        <option value="12" {% if detail.tax == "12" %} selected {% endif %}>GST(12%)</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control tax_amount" name="tax_amount[]" value="{{detail.tax_amount}}"  placeholder="Tax Amount" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control total_amount" name="total_amount[]"  value="{{detail.total_amount}}" placeholder="Total Amount" readonly>
+                                </td>
+                                <td><button type="button" class="btn btn-danger btn-sm removeRow ">Remove</button></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button type="button" id="addRow" class="btn btn-success btn-sm">Add Row</button>
+                </div>
+              </div>
+
+              <!-- Payment & Note Section -->
+              <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="paymentMode" class="form-label">Payment Mode</label>
+                        <select class="form-select" name="payment_mode" id="paymentMode">
+                            <option value="Cash"  {% if pharmacy_bill.payment_mode == "Cash" %} selected {% endif %}>Cash</option>
+                            <option value="Cheque" {% if pharmacy_bill.payment_mode == "Cheque" %} selected {% endif %}>Cheque</option>
+                            <option value="Transfer to Bank Account" {% if pharmacy_bill.payment_mode == "Transfer to Bank Account" %} selected {% endif %}>Transfer to Bank Account</option>
+                            <option value="UPI" {% if pharmacy_bill.payment_mode == "UPI" %} selected {% endif %}>UPI</option>
+                            <option value="Online" {% if pharmacy_bill.payment_mode == "Online" %} selected {% endif %}>Online</option>
+                            <option value="Other" {% if pharmacy_bill.payment_mode == "Other" %} selected {% endif %}>Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="notes" id="notes" placeholder="Enter any additional notes">{{ pharmacy_bill.notes }}</textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="subTotal" class="form-label">Subtotal</label>
+                        <input type="text" class="form-control" id="subTotal" name="subtotal" value="{{ pharmacy_bill.subtotal }}" readonly >
+                    </div>
+                    <div class="mb-3">
+                        <label for="discount" class="form-label">Less Discount</label>
+                        <input type="text" class="form-control" id="discount" name="discount" value="{{ pharmacy_bill.discount }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="advanceAmount" class="form-label">Advance Amount</label>
+                        <input type="text" class="form-control" id="advanceAmount" name="advance_amount" value="{{ pharmacy_bill.advance_amount }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="netAmountPayable" class="form-label">Net Amount Payable</label>
+                        <input type="text" class="form-control" id="netAmountPayable" name="payable_amount" value="{{ pharmacy_bill.payable_amount }}" readonly>
+                    </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="row">
+                  <div class="col text-end">
+                      <button type="submit" class="btn btn-primary">Update Bill</button>
+                      <button type="reset" class="btn btn-secondary">Cancel</button>
+                  </div>
+              </div>
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+         // Example for a specific dropdown
+        $('#patient_id').select2({
+            placeholder: "Select Patient",
+            allowClear: true
+        });
+
+        $('#doctor_id').select2({
+            placeholder: "Select Doctor",
+            allowClear: true
+            
+        });
+    }); 
+
+    function updateRowNumbers() {
+        $('#medicineTable tbody tr').each(function (index) {
+            $(this).find('td:first').text(index + 1);
+        });
+    }
+
+    // Function to enable/disable remove buttons
+    function toggleRemoveButtons() {
+        const rowCount = $('#medicineTable tbody tr').length;
+        if (rowCount === 1) {
+            $('.removeRow').prop('disabled', true); // Disable remove button for single row
+        } else {
+            $('.removeRow').prop('disabled', false); // Enable remove button if multiple rows exist
+        }
+    }
+
+        // Add Row
+        $(document).on('click', '#addRow', function () {
+            const newRow = `
+                        <tr>
+                            <td>#</td>
+                            
+                            <td>
+                                <select class="form-select select2" name="medicine_name[]" required>
+                                    <option value="">Select</option>
+                                    {% for medicine in medicine_list %}
+                                        <option value="{{ medicine.id }}">{{ medicine.medicine_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-select select2" name="medicine_category[]" required>
+                                    <option value="">Select</option>
+                                    {% for category in medicine_category_list %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><input type="number" class="form-control qty" name="qty[]" placeholder="Qty" min="1" value="1" required></td>
+                            <td><input type="number" class="form-control cost" name="cost[]" placeholder="Cost" required></td>
+                            <td><input type="text" class="form-control amount" name="amount[]" placeholder="Amount" readonly></td>
+                            <td>
+                                <select class="form-select tax" name="tax[]" required>
+                                    <option value="0">No Tax</option>
+                                    <option value="5">GST(5%)</option>
+                                    <option value="12">GST(12%)</option>
+                                    <option value="18">GST(18%)</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control tax_amount" name="tax_amount[]" placeholder="Tax Amount" readonly></td>
+                            <td><input type="text" class="form-control total_amount" name="total_amount[]" placeholder="Total Amount" readonly></td>
+                            <td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button></td>
+                        </tr>`;
+            $("#medicineTable tbody").append(newRow);
+        });
+
+        // Remove Row Functionality
+        $(document).on("click", ".removeRow", function () {
+            $(this).closest("tr").remove();
+            calculateTotals();
+        });
+
+
+        // Dynamic Calculations
+        $(document).on("input", ".cost, .qty, .tax", function () {
+            const row = $(this).closest("tr");
+            const cost = parseFloat(row.find(".cost").val()) || 0;
+            const qty = parseFloat(row.find(".qty").val()) || 0;
+            const tax = parseFloat(row.find(".tax").val()) || 0;
+
+            const amount = cost * qty;
+            const taxAmount = (amount * tax) / 100;
+            const totalAmount = amount + taxAmount;
+
+            row.find(".amount").val(amount.toFixed(2));
+            row.find(".tax_amount").val(taxAmount.toFixed(2));
+            row.find(".total_amount").val(totalAmount.toFixed(2));
+
+            calculateTotals();
+        });
+
+        // Calculate Totals
+        function calculateTotals() {
+            let subtotal = 0;
+            $(".amount").each(function () {
+                subtotal += parseFloat($(this).val()) || 0;
+            });
+
+            let totalBillAmount = 0;
+            $(".total_amount").each(function () {
+                totalBillAmount += parseFloat($(this).val()) || 0;
+            });
+
+            const discount = parseFloat($("#discount").val()) || 0;
+            const advanceAmount = parseFloat($("#advanceAmount").val()) || 0;
+
+            const netAmountPayable = totalBillAmount - discount - advanceAmount;
+
+            $("#subTotal").val(subtotal.toFixed(2));
+            $("#totalBillAmount").val(totalBillAmount.toFixed(2));
+            $("#netAmountPayable").val(netAmountPayable.toFixed(2));
+        }
+
+        // Recalculate totals on discount/advance input
+        $("#discount, #advanceAmount").on("input", calculateTotals);
+
+
+</script>
+{% endblock %}

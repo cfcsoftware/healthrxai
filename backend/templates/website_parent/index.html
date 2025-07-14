@@ -1,0 +1,939 @@
+{% extends 'website_parent/base.html' %} {% load static %} {% block content %}
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="container text-center">
+      <img
+        src="{% static 'images/hero2.svg' %}"
+        alt="HealthRx Logo"
+        class="w-100 mb-3 heartbeat"
+      />
+      <h1
+        class="pt-4"
+        data-aos="fade-up"
+        data-aos-duration="1500"
+        data-aos-delay="200"
+      >
+        Smart AI Hospital <br />
+        Management with HealthRx
+      </h1>
+      <p
+        class="lead mt-3"
+        data-aos="fade-up"
+        data-aos-duration="2000"
+        data-aos-delay="300"
+      >
+        Streamline patient records, appointments, billing & more — all in one
+        secure platform.
+      </p>
+      <a
+        href="#"
+        class="btn btn-light mt-4"
+        data-aos="fade-up"
+        data-aos-duration="3000"
+        data-aos-delay="400"
+        ><i class="bi bi-telephone me-2"></i> Request a Demo</a
+      >
+    </div>
+  </div>
+</section>
+<div class="partnerlogo">
+  <!-- Marquee-style rows -->
+  <div class="container overflow-hidden">
+    <!-- Row 1 -->
+    <div class="scroll-row d-flex gap-5 py-2 mb-md-4">
+      <div class="partner-logo-text">Cardiology</div>
+      <div class="partner-logo-text">Dermatology</div>
+      <div class="partner-logo-text">Neurology</div>
+      <div class="partner-logo-text">Pediatrics</div>
+      <div class="partner-logo-text">Orthopedics</div>
+      <div class="partner-logo-text">ENT</div>
+      <div class="partner-logo-text">Ophthalmology</div>
+      <div class="partner-logo-text">Gynecology</div>
+      <div class="partner-logo-text">Cardiology</div>
+      <!-- repeated for loop effect -->
+      <div class="partner-logo-text">Dermatology</div>
+    </div>
+  </div>
+</div>
+<div class="home2">
+  <div class="container">
+    <img
+      src="{% static 'images/dashboard.webp' %}"
+      alt="Hero Image"
+      class="w-100 rounded-4"
+      data-aos="fade-up"
+      data-aos-duration="2000"
+      data-aos-delay="200"
+    />
+  </div>
+</div>
+<div class="home2 py-0">
+  <div class="container">
+    <div class="row justify-content-between align-items-center">
+      <div
+        class="col-lg-5 col-md-6"
+        data-aos="fade-right"
+        data-aos-duration="2000"
+        data-aos-delay="200"
+      >
+        <h5 class="sub-heading text-primary mb-3">About Us</h5>
+        <h1 class="heading">AI-Powered Platform for Smarter Consultations</h1>
+        <p class="">
+          HealthRx is an innovative hospital consultation system built with AI
+          integration at its core. It empowers doctors with real-time tools to
+          provide faster and better care while giving patients a smooth and
+          transparent consultation experience.
+        </p>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <img
+          src="{% static 'images/storyblok.webp' %}"
+          alt="Hero Image"
+          class="img-fluid"
+          data-aos="fade-up"
+          data-aos-duration="2000"
+          data-aos-delay="200"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div class="home2 pt-0">
+  <div class="container">
+    <div class="row justify-content-between align-items-center">
+      <div class="col-lg-6 col-md-6">
+        <img
+          src="{% static 'images/storyblok2.webp' %}"
+          alt="Hero Image"
+          class="img-fluid"
+          data-aos="fade-up"
+          data-aos-duration="2000"
+          data-aos-delay="200"
+        />
+      </div>
+      <div
+        class="col-lg-5 col-md-6"
+        data-aos="fade-left"
+        data-aos-duration="2000"
+        data-aos-delay="200"
+      >
+        <h5 class="sub-heading text-danger mb-3">Mission</h5>
+        <h1 class="heading">Smarter Care. Seamless Consultations.</h1>
+        <p class="">
+          At HealthRx, our mission is to revolutionize the way hospitals manage
+          doctor-patient consultations by integrating intelligent, AI-powered
+          solutions. We aim to simplify healthcare delivery, enhance doctor
+          efficiency, and improve patient experiences through seamless digital
+          workflows — from symptom entry to prescription.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<section class="services">
+  <div
+    class="container"
+    data-aos="fade-up"
+    data-aos-duration="2000"
+    data-aos-delay="200"
+  >
+    <div class="text-center pb-5">
+      <h5 class="sub-heading mb-3 text-primary">Our Services</h5>
+      <h3 class="heading mt-3 mb-3">
+        Tailored Services for your healthcare tech needs
+      </h3>
+      <p>
+        At HealthRx, we offer a suite of intelligent, AI-powered services that
+        transform how hospitals operate. From faster doctor consultations to
+        instant digital prescriptions and real-time patient records — our tools
+        are designed to save time, reduce errors, and deliver better care.
+      </p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="100">
+        <div class="service-box">
+          <div class="card-body text-center">
+            <i class="bi bi-person mb-3 text-primary"> </i>
+            <h5 class="card-title fw-bold">Patient Management</h5>
+            <p class="card-text">
+              Efficiently manage patient records, appointments, and medical
+              history.
+            </p>
+            <a href="">Book A Call <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="200">
+        <div class="service-box">
+          <div class="card-body text-center">
+            <i class="bi bi-activity mb-3 text-primary"></i>
+            <h5 class="card-title fw-bold">Real-Time Data Sync</h5>
+            <p class="card-text">
+              All departments stay connected with live updates
+            </p>
+            <a href="">Book A Call <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="300">
+        <div class="service-box">
+          <div class="card-body text-center">
+            <i class="bi bi-card-list mb-3 text-primary"></i>
+            <h5 class="card-title fw-bold">Patient Medical Records</h5>
+            <p class="card-text">
+              Securely maintain and access complete patient history
+            </p>
+            <a href="">Book A Call <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="400">
+        <div class="service-box">
+          <div class="card-body text-center">
+            <i class="bi bi-kanban mb-3 text-primary"></i>
+            <h5 class="card-title fw-bold">Employees Management</h5>
+            <p class="card-text">Efficiently manage Employees records.</p>
+            <a href="">Book A Call <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="500">
+        <div class="service-box">
+          <div class="card-body text-center">
+            <i class="bi bi-receipt-cutoff mb-3 text-primary"></i>
+            <h5 class="card-title fw-bold">Billing & Invoicing</h5>
+            <p class="card-text">
+              Automate billing processes and generate invoices seamlessly.
+            </p>
+            <a href="">Book A Call <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="600">
+        <div class="service-box">
+          <div class="card-body text-center">
+            <i class="bi bi-bar-chart-line mb-3 text-primary"></i>
+            <h5 class="card-title fw-bold">AI Analytics & Reporting</h5>
+            <p class="card-text">
+              Gain insights with comprehensive analytics and reporting tools.
+            </p>
+            <a href="">Book A Call <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>     
+    </div>
+  </div>
+</section>
+
+<div class="case-study">
+  <div class="container">
+    <div class="row g-3 g-lg-4">
+      <div class="col-lg-12 mb-5" data-aos="fade-up" data-aos-duration="2000">
+        <h5 class="sub-heading text-warning mb-3 text-center">Testimonials</h5>
+        <h1 class="heading text-center">Customers Love HMSAI</h1>
+      </div>
+      <div
+        class="col-lg-4 col-md-4 col-sm-6"
+        data-aos="fade-up"
+        data-aos-duration="2000"
+        data-aos-delay="200"
+      >
+        <div class="testimonial-box">
+          <div class="rating mb-3">
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <p class="author">For <span class="fw-bold">Good Services</span></p>
+          <p class="description">
+            HealthRx has completely transformed my consultation process. The AI
+            suggestions save me time and help ensure accurate prescriptions
+            every time.
+          </p>
+          <p class="author">By <span class="fw-bold"> Samar Mehta</span></p>
+        </div>
+      </div>
+      <div
+        class="col-lg-4 col-md-4 col-sm-6"
+        data-aos="fade-up"
+        data-aos-duration="2000"
+        data-aos-delay="300"
+      >
+        <div class="testimonial-box">
+          <div class="rating mb-3">
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <p class="author">For <span class="fw-bold">Good Services</span></p>
+          <p class="description">
+            Earlier we were juggling between paper records and manual entries.
+            With HealthRx, everything is now digital, fast, and in sync across
+            departments.
+          </p>
+          <p class="author">By <span class="fw-bold">Durgesh Rajak</span></p>
+        </div>
+      </div>
+      <div
+        class="col-lg-4 col-md-4 col-sm-6"
+        data-aos="fade-up"
+        data-aos-duration="2000"
+        data-aos-delay="400"
+      >
+        <div class="testimonial-box">
+          <div class="rating mb-3">
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <p class="author">For <span class="fw-bold">Good Services</span></p>
+          <p class="description">
+            he voice input and multilingual support make it easy to use, even
+            during a busy OPD. It truly feels made for Indian doctors
+          </p>
+          <p class="author">By <span class="fw-bold">Rajiv Mehta</span></p>
+        </div>
+      </div>
+      <div
+        class="col-lg-4 col-md-4 col-sm-6"
+        data-aos="fade-up"
+        data-aos-duration="2000"
+        data-aos-delay="500"
+      >
+        <div class="testimonial-box">
+          <div class="rating mb-3">
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <p class="author">For <span class="fw-bold">Good Services</span></p>
+          <p class="description">
+            Updating patient records and prescriptions has never been easier.
+            The interface is clean and user-friendly—even for non-technical
+            staff
+          </p>
+          <p class="author">By <span class="fw-bold">Dr. Amit Joshi</span></p>
+        </div>
+      </div>
+      <div
+        class="col-lg-4 col-md-4 col-sm-6"
+        data-aos="fade-up"
+        data-aos-duration="2000"
+        data-aos-delay="600"
+      >
+        <div class="testimonial-box">
+          <div class="rating mb-3">
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <p class="author">For <span class="fw-bold">Good Services</span></p>
+          <p class="description">
+            We were looking for a scalable solution for our multi-branch setup.
+            HealthRx fits perfectly, and the analytics dashboard is a bonus!
+          </p>
+          <p class="author">By <span class="fw-bold">Nurse Priya R.</span></p>
+        </div>
+      </div>
+      <div
+        class="col-lg-4 col-md-4 col-sm-6"
+        data-aos="fade-up"
+        data-aos-duration="2000"
+        data-aos-delay="700"
+      >
+        <div class="testimonial-box">
+          <div class="rating mb-3">
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <p class="author">For <span class="fw-bold">Good Services</span></p>
+          <p class="description">
+            We were looking for a scalable solution for our multi-branch setup.
+            HealthRx fits perfectly, and the analytics dashboard is a bonus!
+          </p>
+          <p class="author">By <span class="fw-bold">Anjali Verma</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pricing -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 pb-5" data-aos="fade-up" data-aos-duration="2000">
+        <h5 class="sub-heading text-danger mb-3 text-center">Pricing</h5>
+        <h1 class="heading text-center mb-4">
+          Simple, Transparent Pricing for Every Practice
+        </h1>
+      </div>
+    </div>
+    <div class="col-lg-12" data-aos="fade-up" data-aos-duration="2000">
+      <div class="table-wrapper">
+        <div
+          class="table innerAnimated fadeInUp"
+          data-animation="innerAnimated fadeInUp"
+          data-delay="300"
+        >
+          <ul class="table-header">
+            <li>Features</li>
+            <li class="text-center">
+              Basic
+              <h2 class="fw-bold text-white mt-2">
+                ₹ 999 <span class="fs-6 text-primary">/ mo</span>
+              </h2>
+            </li>
+            <li class="text-center">
+              Premium
+              <h2 class="fw-bold text-white mt-2">
+                ₹ 1499 <span class="fs-6 text-primary">/ mo</span>
+              </h2>
+            </li>
+            <li class="text-center">
+              Gold
+              <h2 class="fw-bold text-white mt-2">
+                ₹ 2499 <span class="fs-6 text-primary">/ mo</span>
+              </h2>
+            </li>
+          </ul>
+          <ul class="table-item">
+            <li>
+              <p>Patient Records</p>
+            </li>
+            <li class="text-center">
+              <i class="bi bi-check2 text-success"></i>
+            </li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+          </ul>
+          <ul class="table-item">
+            <li>
+              <p>Appointment Scheduling</p>
+            </li>
+            <li class="text-center">
+              <i class="bi bi-check2 text-success"></i>
+            </li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+          </ul>
+          <ul class="table-item">
+            <li>
+              <p>Basic Reporting</p>
+            </li>
+            <li class="text-center">
+              <i class="bi bi-check2 text-success"></i>
+            </li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+          </ul>
+          <ul class="table-item">
+            <li>
+              <p>AI Report</p>
+            </li>
+            <li class="text-center">
+              <i class="bi bi-check2 text-success"></i>
+            </li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+          </ul>
+          <ul class="table-item">
+            <li>
+              <p>Everything in Basic</p>
+            </li>
+            <li class="text-center">
+              <i class="bi bi-check2 text-success"></i>
+            </li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+          </ul>
+          <ul class="table-item">
+            <li>
+              <p>EHR Integration</p>
+            </li>
+            <li class="text-center">
+              <i class="bi bi-check2 text-success"></i>
+            </li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+          </ul>
+          <ul class="table-item">
+            <li>
+              <p>Custom Dashboards</p>
+            </li>
+            <li class="text-center">
+              <i class="bi bi-check2 text-success"></i>
+            </li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+          </ul>
+          <ul class="table-item">
+            <li>
+              <p>Telemedicine Tools</p>
+            </li>
+            <li class="text-center">
+              <i class="bi bi-check2 text-success"></i>
+            </li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+          </ul>
+          <ul class="table-item">
+            <li>
+              <p>Everything in Premium</p>
+            </li>
+            <li class="text-center">
+              <i class="bi bi-check2 text-success"></i>
+            </li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+          </ul>
+          <ul class="table-item">
+            <li>
+              <p>Advanced Analytics</p>
+            </li>
+            <li class="text-center">
+              <i class="bi bi-check2 text-success"></i>
+            </li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+          </ul>
+          <ul class="table-item">
+            <li>
+              <p>Priority Support</p>
+            </li>
+            <li class="text-center">
+              <i class="bi bi-check2 text-success"></i>
+            </li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+          </ul>
+          <ul class="table-item">
+            <li>
+              <p>White-Label Branding</p>
+            </li>
+            <li class="text-center">
+              <i class="bi bi-check2 text-success"></i>
+            </li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+            <li class="text-center"><i class="bi bi-x-lg text-danger"></i></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="d-flex justify-content-center align-items-center my-4">
+          <div class="form-check form-switch text-white">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="toggleBilling"
+            />
+            <label class="form-check-label text-warning" for="toggleBilling"
+              >Bill Yearly (Save 20%)</label
+            >
+          </div>
+          <select id="currencySelect" class="form-select w-auto ms-3">
+            <option value="inr">₹ INR</option>
+            <option value="usd">$ USD</option>
+          </select>
+        </div> -->
+    <!-- <div class="row g-4 justify-content-center" id="pricingCards"></div> -->
+  </div>
+</section>
+
+<!-- FAQs -->
+
+<section class="faq-section">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up" data-aos-duration="2000">
+      <h5 class="sub-heading text-primary mb-3">FAQs</h5>
+      <h1 class="heading">Frequently Asked Questions</h1>
+      <p class="tagline">
+        Here are some of the most common questions we receive about HealthRx.
+        <br />
+        If you have any other questions, feel free to contact us.
+      </p>
+    </div>
+
+    <div class="accordion accordion-flush" id="faqAccordion">
+      <!-- FAQ 1 -->
+      <div class="accordion-item" data-aos="fade-up" data-aos-duration="2000" data-delay="100">
+        <h2 class="accordion-header" id="faq1">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#answer1"
+            aria-expanded="false"
+          >
+            What is HealthRx and who is it for?
+          </button>
+        </h2>
+        <div
+          id="answer1"
+          class="accordion-collapse collapse"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            HealthRx is a cloud-based SaaS platform designed for hospitals,
+            clinics, and solo practitioners to manage patient records,
+            appointments, billing, and more with ease.
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 2 -->
+      <div class="accordion-item" data-aos="fade-up" data-aos-duration="2000" data-delay="200">
+        <h2 class="accordion-header" id="faq2">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#answer2"
+            aria-expanded="false"
+          >
+            Is HealthRx compliant with data privacy regulations?
+          </button>
+        </h2>
+        <div
+          id="answer2"
+          class="accordion-collapse collapse"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            Yes. HealthRx is built with compliance in mind, including HIPAA,
+            GDPR, and applicable national health data protection laws.
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 3 -->
+      <div class="accordion-item" data-aos="fade-up" data-aos-duration="2000" data-delay="300">
+        <h2 class="accordion-header" id="faq3">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#answer3"
+            aria-expanded="false"
+          >
+            Do I need to install any software?
+          </button>
+        </h2>
+        <div
+          id="answer3"
+          class="accordion-collapse collapse"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            No installation is required. HealthRx runs entirely in the cloud and
+            can be accessed via any modern web browser.
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 4 -->
+      <div class="accordion-item" data-aos="fade-up" data-aos-duration="2000" data-delay="400">
+        <h2 class="accordion-header" id="faq4">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#answer4"
+            aria-expanded="false"
+          >
+            Can I customize the platform for my clinic?
+          </button>
+        </h2>
+        <div
+          id="answer4"
+          class="accordion-collapse collapse"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            Absolutely. We offer custom modules and workflows tailored to your
+            clinic's needs, whether you're a single practitioner or a
+            multi-specialty hospital.
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 5 -->
+      <div class="accordion-item" data-aos="fade-up" data-aos-duration="2000" data-delay="500">
+        <h2 class="accordion-header" id="faq5">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#answer5"
+            aria-expanded="false"
+          >
+            How secure is my data on HealthRx?
+          </button>
+        </h2>
+        <div
+          id="answer5"
+          class="accordion-collapse collapse"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            We use end-to-end encryption, regular audits, and secure cloud
+            hosting to ensure your data remains safe and confidential.
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 6 -->
+      <div class="accordion-item" data-aos="fade-up" data-aos-duration="2000" data-delay="600">
+        <h2 class="accordion-header" id="faq6">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#answer6"
+            aria-expanded="false"
+          >
+            Is there mobile support for doctors and patients?
+          </button>
+        </h2>
+        <div
+          id="answer6"
+          class="accordion-collapse collapse"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            Yes, HealthRx is mobile-optimized, and we offer dedicated apps for
+            both practitioners and patients for Android and iOS.
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 7 -->
+      <div class="accordion-item" data-aos="fade-up" data-aos-duration="2000" data-delay="700">
+        <h2 class="accordion-header" id="faq7">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#answer7"
+            aria-expanded="false"
+          >
+            How long does implementation take?
+          </button>
+        </h2>
+        <div
+          id="answer7"
+          class="accordion-collapse collapse"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            Implementation depends on the size and customization required, but
+            most clinics are up and running within 7–14 business days.
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 8 -->
+      <div class="accordion-item" data-aos="fade-up" data-aos-duration="2000" data-delay="800">
+        <h2 class="accordion-header" id="faq8">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#answer8"
+            aria-expanded="false"
+          >
+            Can I migrate data from my existing system?
+          </button>
+        </h2>
+        <div
+          id="answer8"
+          class="accordion-collapse collapse"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            Yes, our team will assist in securely migrating your data from any
+            existing EHR or legacy system.
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 9 -->
+      <div class="accordion-item" data-aos="fade-up" data-aos-duration="2000" data-delay="900">
+        <h2 class="accordion-header" id="faq9">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#answer9"
+            aria-expanded="false"
+          >
+            Do you offer training and support?
+          </button>
+        </h2>
+        <div
+          id="answer9"
+          class="accordion-collapse collapse"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            Yes, we offer comprehensive onboarding, video tutorials, and 24/7
+            customer support via chat, email, and phone.
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ 10 -->
+      <div class="accordion-item" data-aos="fade-up" data-aos-duration="2000" data-delay="1000">
+        <h2 class="accordion-header" id="faq10">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#answer10"
+            aria-expanded="false"
+          >
+            What are the pricing plans available?
+          </button>
+        </h2>
+        <div
+          id="answer10"
+          class="accordion-collapse collapse"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            We offer Basic, Premium, and Enterprise pricing plans depending on
+            the size of your clinic and feature requirements. Contact us for a
+            personalized quote.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Our Specialties -->
+<section class="our-specialities">
+  <div class="container pb-md-5">
+    <div class="text-center mb-5" data-aos="fade-up" data-aos-duration="2000">
+      <h5 class="sub-heading text-warning mb-4">Our Specialties</h5>
+      <h2 class="heading">Supporting a Range of Healthcare Specialties</h2>
+      <p class="tagline">
+        Our software services are tailored to meet the unique needs of small to
+        medium clinics and <br />
+        practices across various healthcare specialties. Here are some of them:
+      </p>
+    </div>
+  </div>
+  <div class="container-fluid pb-md-3" data-aos="fade-up" data-aos-duration="2000">
+    <!-- Marquee-style rows -->
+    <div class="overflow-hidden">
+      <!-- Row 1 -->
+      <div class="scroll-row d-flex gap-5 py-2 mb-4">
+        <div class="speciality-card">Cardiology</div>
+        <div class="speciality-card">Dermatology</div>
+        <div class="speciality-card">Neurology</div>
+        <div class="speciality-card">Pediatrics</div>
+        <div class="speciality-card">Orthopedics</div>
+        <div class="speciality-card">ENT</div>
+        <div class="speciality-card">Ophthalmology</div>
+        <div class="speciality-card">Gynecology</div>
+        <div class="speciality-card">Cardiology</div>
+        <!-- repeated for loop effect -->
+        <div class="speciality-card">Dermatology</div>
+      </div>
+
+      <!-- Row 2 (opposite direction) -->
+      <div class="scroll-row reverse d-flex gap-5 py-2">
+        <div class="speciality-card">Urology</div>
+        <div class="speciality-card">Oncology</div>
+        <div class="speciality-card">Psychiatry</div>
+        <div class="speciality-card">Pathology</div>
+        <div class="speciality-card">Anesthesiology</div>
+        <div class="speciality-card">Radiology</div>
+        <div class="speciality-card">Dentistry</div>
+        <div class="speciality-card">Emergency</div>
+        <div class="speciality-card">Urology</div>
+        <!-- repeated -->
+        <div class="speciality-card">Oncology</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust-section">
+  <div class="container text-center">
+    <div class="row justify-content-center g-lg-4 g-3">
+      <div class="col-md-3 col-6" data-aos="fade-up" data-aos-duration="2000" data-delay="100">
+        <div class="trust-box">
+          <h1 class="fw-bold counter">70K+</h1>
+          <p class="tagline">
+            HealthRx is trusted by thousands of practitioners
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6" data-aos="fade-up" data-aos-duration="2000" data-delay="200">
+        <div class="trust-box">
+          <h1 class="fw-bold counter">4.8★</h1>
+          <p class="tagline">
+            Average review by users on our healthcare service
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6" data-aos="fade-up" data-aos-duration="2000" data-delay="300">
+        <div class="trust-box">
+          <h1 class="fw-bold counter">2895+</h1>
+          <p class="tagline">Healthcare businesses built with our product</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6" data-aos="fade-up" data-aos-duration="2000" data-delay="400">
+        <div class="trust-box">
+          <h1 class="fw-bold counter">266+</h1>
+          <p class="tagline">Custom healthcare projects we’ve delivered</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End to end Solution -->
+<div class="container my-5 d-none">
+  <div class="highlight-btn text-center p-5 rounded-4 shadow">
+    <h3 class="fw-bold mb-3">We Don’t Just Know Healthcare — We Live It.</h3>
+    <h5 class="fw-normal">
+      We are creators of <strong>HealthRx</strong> – Most affordable and simple
+      HMS solution on Python-Django Platform.
+    </h5>
+    <br />
+
+    <div class="row">
+      <div class="col text-center">
+        <a href="#" class="btn btn-primary me-2">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+        /></a>
+        <a href="#" class="btn btn-secondary">
+          <img
+            src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+        /></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

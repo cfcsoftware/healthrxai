@@ -1,0 +1,222 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<div class="mx-4">
+  <div class="card border-0">
+       <div class="d-flex justify-content-between align-items-center mb-2">
+      <h4 class="mb-0">
+        Service List
+      </h4>
+      <div class="d-flex gap-2">
+        {% if 'service-add' in request.session.user_permissions %}
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Add Service
+        </button>
+        {% endif %}
+        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadCSVModal">
+          Upload CSV
+        </a>
+      </div>
+      
+          <!-- CSV Upload Modal -->
+        <div class="modal fade" id="uploadCSVModal" tabindex="-1" aria-labelledby="uploadCSVModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadCSVModalLabel">Upload CSV File</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="{% url 'services:upload_services_csv' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="csv_file" class="form-label">Choose CSV File</label>
+                                <input class="form-control" type="file" name="csv_file" id="csv_file" accept=".csv" required>
+                                <small class="text-muted">Ensure your file has Exact headers like: bill_type,	service_type,	name,	charge
+                                </small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Upload</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="example" class="table table-striped table-hover align-middle">
+                    <thead class="table-secondary text-dark">
+                        <tr>
+                            <th class="text-center"></th>
+                            <th class="text-center">Sr.</th>
+                            <th class="text-center">Bill Type</th>
+                            <th class="text-center">Service Type</th>
+                            <th class="text-center">Service Name</th>
+                            <th class="text-center">Service Charge</th>
+                            <th class="text-center" style="width: 160px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for service in services %}
+                        <tr>
+                            <td class="text-center"></td>
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td class="text-center">{{ service.bill_type }}</td>
+                            <td class="text-center">{{ service.service_type }}</td>
+                            <td class="text-center">
+                                <span class="fw-semibold text-primary">{{ service.name }}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-light text-dark border border-1 px-2 py-1">
+                                    ₹{{ service.charge }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                {% if 'service-edit' in request.session.user_permissions %}
+                                    <button type="button" class="btn btn-primary-light btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ service.id }}" title="Edit Service">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+                                    <!-- Edit Modal -->
+                                    <div class="modal fade" id="editModal{{ service.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ service.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-primary text-light">
+                                                    <h5 class="modal-title" id="editModalLabel{{ service.id }}">Edit Service</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="POST" action="/services/update/{{ service.id }}/">
+                                                        {% csrf_token %}
+                                                        <div class="row g-3">
+                                                            <div class="col-md-6">
+                                                                <label for="bill_type_{{ service.id }}" class="form-label">Bill Type <span class="text-danger">*</span></label>
+                                                                <select class="form-select" id="bill_type_{{ service.id }}" name="bill_type" required>
+                                                                    <option value="">Select Bill Type</option>
+                                                                    <option value="Appointment(OPD)" {% if service.bill_type == "Appointment(OPD)" %}selected{% endif %}>Appointment(OPD)</option>
+                                                                    <option value="IPD" {% if service.bill_type == "IPD" %}selected{% endif %}>IPD</option>
+                                                                    <option value="Radiology" {% if service.bill_type == "Radiology" %}selected{% endif %}>Radiology</option>
+                                                                    <option value="Pathology" {% if service.bill_type == "Pathology" %}selected{% endif %}>Pathology</option>
+                                                                    <option value="Surgery" {% if service.bill_type == "Surgery" %}selected{% endif %}>Surgery</option>
+                                                                    <option value="General" {% if service.bill_type == "General" %}selected{% endif %}>General</option>
+                                                                    <option value="Package" {% if service.bill_type == "Package" %}selected{% endif %}>Package</option>
+                                                                    <option value="Miscllaneous" {% if service.bill_type == "Miscllaneous" %}selected{% endif %}>Miscllaneous</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="service_type_{{ service.id }}" class="form-label">Service Type <span class="text-danger">*</span></label>
+                                                                <input type="text" class="form-control" id="service_type_{{ service.id }}" value="{{ service.service_type }}" name="service_type" required>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="name_{{ service.id }}" class="form-label">Service Name <span class="text-danger">*</span></label>
+                                                                <input type="text" class="form-control" id="name_{{ service.id }}" value="{{ service.name }}" name="name" required>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="charge_{{ service.id }}" class="form-label">Service Charge <span class="text-danger">*</span></label>
+                                                                <input type="number" class="form-control" id="charge_{{ service.id }}" value="{{ service.charge }}" name="charge" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-center mt-4">
+                                                            <button type="submit" class="btn btn-success px-4">Update</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if 'service-delete' in request.session.user_permissions %}
+                                    <form method="POST" action="/services/delete/{{ service.id }}/" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this service?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger-light btn-sm" title="Delete Service">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</div>
+
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add Service</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form method="POST" action="/services/add">
+                {% csrf_token %}
+                <div class="m-3">
+                  <div class="row">
+
+                    <!-- Bill Type -->
+                    <div class="col-md-6">
+                      <label for="a2" class="form-label">Bill Type <span class="text-danger">*</span></label>
+                      <select class="form-select" id="a2" name="bill_type" required>
+                          <option value="">Select Bill Type</option>
+                              <option value="Appointment(OPD)">Appointment(OPD)</option>
+                              <option value="IPD">IPD</option>
+                              <option value="Radiology">Radiology</option>
+                              <option value="Pathology">Pathology</option>
+                              <option value="Surgery">Surgery</option>
+                              <option value="General">General</option>
+                              <option value="Package">Package</option>
+                              <option value="Miscllaneous">Miscllaneous</option>
+                              
+                      </select>
+                    </div>
+
+                    <!-- Service Type -->
+                    <div class="col-md-6">
+                      <label for="a2" class="form-label">Service Type <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="a2" name="service_type" required>
+                      <!-- <select class="form-select" id="a2" name="type" required>
+                          <option value="">Select Service Type</option>
+                          {% for service_type in service_types %}
+                              <option value="{{ service_type.id }}">{{ service_type.name }}</option>
+                          {% endfor %}
+                      </select> -->
+                    </div>
+
+                  </div>
+                  <div class="row mt-3">
+                    <!-- Service Name -->
+                    <div class="col-md-6">
+                      <label for="a2" class="form-label">Service Name <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="a2" name="name" required>
+                    </div>
+
+                    <!-- Service Charge -->
+                    <div class="col-md-6">
+                      <label for="a2" class="form-label">Service Charge <span class="text-danger">*</span></label>
+                      <input type="number" class="form-control" id="a2" name="charge" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-success-light">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+{% endblock %}

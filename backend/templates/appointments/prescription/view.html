@@ -1,0 +1,242 @@
+{% extends 'dashboard/base.html' %} {% load static %} {% block content %}
+
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+  rel="stylesheet"
+/>
+
+<style>
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    .table th {
+      background-color: #225dce;
+      color: white;
+    }
+    .prescription,
+    .prescription * {
+      visibility: visible;
+    }
+    .prescription {
+      max-width: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      margin: 0;
+      width: 100%;
+      padding: 0;
+    }
+
+    button {
+      display: none !important;
+    }
+    .main {
+      visibility: hidden;
+    }
+  }
+
+  body {
+    background-color: #f9f9f9;
+    font-size: 15px;
+  }
+  .prescription {
+    background: white;
+    width: 98%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .table th {
+    background-color: #225dce;
+    color: white;
+    vertical-align: middle;
+  }
+  .copyright-img {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    translate: -50% -30%;
+    opacity: 0.2;
+    width: 250px;
+  }
+</style>
+
+<div>
+  <div class="prescription d-flex justify-content-end">
+    <a href="{% url 'appointments:prescription-add' appointment.id %}" type="button"
+      class="btn btn-primary me-2"
+      style="font-size: 12px" >
+      <i class="bi bi-plus-circle" style="font-size: 12px"></i> Add Prescription
+    </a>
+    <a href="{% url 'appointments:prescription-update' appointment.id %}" type="button" 
+      class="btn btn-secondary"
+      style="font-size: 12px">
+      <i class="bi bi-pencil-square" style="font-size: 12px"></i> Update Prescription
+    </a>
+  </div>
+</div>
+<div class="container">
+  <h3 class="section__title">View Prescription</h3> <br>
+</div>
+<div class="prescription">
+  {% if request.session.profile_image %}
+    <img src="{{ request.session.profile_image }}" alt="" class="copyright-img">
+  {% else %}
+    <img src="{% static 'images/healthrx.png' %}" alt="" class="copyright-img">
+  {% endif %}
+  <div class="row">
+    <div class="card shadow-sm rounded mb-3">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <p class="mb-2"><strong>Patient Name:</strong> {{ appointment.patient.name|default:"N/A" }}</p>
+            <p class="mb-2"><strong>Age / Sex:</strong> 
+              {{ appointment.patient.age|default:"N/A" }} Y / {{ appointment.patient.gender|default:"N/A" }}
+            </p>
+            <p class="mb-2"><strong>Mob-No:</strong> {{ appointment.patient.phone|default:"N/A" }}</p>
+            <p class="mb-2"><strong>Guardian Name / Phone:</strong> 
+              {{ appointment.patient.guardian_name|default:"N/A" }} / {{ appointment.patient.guardian_phone|default:appointment.patient.phone|default:"N/A" }}
+            </p>
+            <p class="mb-2"><strong>Address:</strong> {{ appointment.patient.address|default:"N/A" }}</p>
+          </div>
+          <div class="col-md-4 d-flex align-items-center justify-content-center">
+            {% if request.session.profile_image %}
+              <img src="{{ request.session.profile_image }}" class="p-0 img-fluid" width="180px" height="180px" alt="Patient Image"/>
+            {% else %}
+              <img src="/static/images/healthrx.png" class="p-0 img-fluid" width="180px" height="180px" alt="Default"/>
+            {% endif %}
+          </div>
+          <div class="col-md-4 pb-3">
+            <p class="mb-2"><strong>Patient ID:</strong> {{ appointment.patient.patient_record_id|default:"N/A" }}</p>
+            <p class="mb-2"><strong>SSN/Aadhar No:</strong> {{ appointment.aadhar_card_no|default:"N/A" }}</p>
+            <p class="mb-2"><strong>Ayushman No:</strong> {{ appointment.ayushman_card_no|default:"N/A" }}</p>
+            <p class="mb-2"><strong>Blood Group:</strong> {{ appointment.patient.blood_group|default:"N/A" }}</p>
+            <p class="mb-2"><strong>Enrollment Date:</strong> {{ appointment.patient.created_at|date:"d-M-Y" }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <br>
+  <div class="row mb-2">
+    <div class="col-md-2 col-6 mb-2">
+      <button type="button" class="btn btn-primary btn-sm w-100 text-start">
+        <strong>BP:</strong> {{ appointment.bp|default:"N/A" }} mmHg
+      </button>
+    </div>
+    <div class="col-md-2 col-6 mb-2">
+      <button type="button" class="btn btn-primary btn-sm w-100 text-start">
+        <strong>Pulse:</strong> {{ appointment.pulse|default:"N/A" }} bpm
+      </button>
+    </div>
+    <div class="col-md-2 col-6 mb-2">
+      <button type="button" class="btn btn-primary btn-sm w-100 text-start">
+        <strong>Weight:</strong> {{ appointment.weight|default:"N/A" }} kg
+      </button>
+    </div>
+    <div class="col-md-2 col-6 mb-2">
+      <button type="button" class="btn btn-primary btn-sm w-100 text-start">
+        <strong>SPO2:</strong> {{ appointment.spo2|default:"N/A" }} %
+      </button>
+    </div>
+    <div class="col-md-2 col-6 mb-2">
+      <button type="button" class="btn btn-primary btn-sm w-100 text-start">
+        <strong>RBS:</strong> {{ appointment.rbs|default:"N/A" }} mg/dl
+      </button>
+    </div>
+  </div>
+  
+  <div class="row mb-2">
+    <div class="col-md-6 col-12 mb-2">
+      <strong>Complaints:</strong> <br>
+      <div>
+        <div class="card shadow-sm rounded mb-3 bg-white">
+          <div class="card-body">
+            <textarea class="form-control" rows="8" cols="50" readonly style="height: 160px;">{{ prescriptions.problem|default:"Enter the patient query here.." }}
+            </textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="col-md-6 col-12 mb-2">
+      <strong>Investigations:</strong> <br>
+      <div>
+        <div class="card shadow-sm rounded mb-3 bg-white">
+          <div class="card-body">
+            <textarea class="form-control" rows="8" cols="50" readonly style="height: 160px;">{{ prescriptions.tests|default:"Enter the investigations here..." }}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <h5 class="mt-4 mb-3">Rx:</h5>
+
+  <table class="table table-striped">
+    <thead class="table-light">
+      <tr>
+        <th>Sr.No.</th>
+        <th>Medicine</th>
+        <th>Dosage</th>
+        <th>Timing</th>
+        <th>Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for med in prescriptions.medicines %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>
+          <b class="d-block mb-2">{{ med.medicine }}</b>
+          <span class="small d-block">Composition: {{ med.composition }}</span>
+          <span class="small d-block">Timing: {{ med.time }}</span>
+        </td>
+        <td>{{ med.dosage }}</td>
+        <td>{{ med.time }}</td>
+        <td>{{ med.duration }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="row mb-2">
+    <div class="col-md-12 col-12 mb-2">
+      <strong>Diagnosis:</strong> <br>
+      <div>
+        <div class="card shadow-sm rounded mb-3 bg-white">
+          <div class="card-body">
+            <textarea class="form-control" rows="8" cols="30" readonly style="height: 130px;">{{ prescriptions.diagnosis|default:"Enter the diagnosis here.." }}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p><strong>Next Visit:</strong> {{ prescriptions.next_visit_days }} days</p>
+  <footer
+    class="mt-5 pt-3"
+    style="border-top: 3px solid #225dce; border-radius: 5px"
+  >
+    <p>
+      <span
+        ><i class="bi bi-telephone-fill" style="color: #225dce"></i> Mobile: +91
+        8286306019 |
+        <i class="bi bi-envelope-fill" style="color: #225dce"></i> Email:
+        info@goodwillshospital.com</span
+      >
+      <span
+        ><i class="bi bi-geo-alt-fill" style="color: #225dce"></i> Siddharth
+        Chowk, Tikrapara, Raipur (C.G.) 492001</span
+      >
+    </p>
+    <p class="text-muted small"></p>
+  </footer>
+</div>
+
+<div class="text-center mt-4">
+  <button class="btn btn-primary" onclick="window.print()">
+    <i class="bi bi-printer"></i> Print
+  </button>
+</div>
+
+{% endblock content %}

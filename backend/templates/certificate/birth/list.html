@@ -1,0 +1,73 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="mx-4">
+  <div class="card border-0">
+       <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-0">
+        Birth Certificate Records
+      </h5>
+      {% if 'birth-certificate-add' in request.session.user_permissions %}
+      <a href="/certificate/birth-certificate/add" class="btn btn-primary">
+        Add Certificate
+      </a>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table id="example" class="table table-striped table-hover align-middle">
+          <thead class="table-secondary text-dark">
+            <tr>
+              <th></th>
+              <th scope="col">ID</th>
+              <th scope="col">Child Name</th>
+              <th scope="col">Father Name</th>
+              <th scope="col">Mother Name</th>
+              <th scope="col">Date of Birth</th>
+              <th scope="col">Gender</th>
+              <th scope="col">Place of Birth</th>
+              <th scope="col" class="rounded-end text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for d in births %}
+            <tr>
+              <td></td>
+              <td>
+                <span class="fw-semibold text-primary d-block text-center">BC-00{{ forloop.counter }}</span>
+              </td>
+              <td>{{ d.child_name }}</td>
+              <td>{{ d.father_name }}</td>
+              <td>{{ d.mother_name }}</td>
+              <td>{{ d.date_of_birth }}</td>
+              <td>{{ d.child_gender }}</td>
+              <td>{{ d.place_of_birth }}</td>
+              <td class="text-center">
+                {% if 'birth-certificate-view' in request.session.user_permissions %}
+                <a href="{% url 'certificate:birth_certificate_view' d.id %}" class="btn btn-outline-warning btn-sm me-1" title="View">
+                  <i class="bi bi-eye-fill"></i>
+                </a>
+                {% endif %}
+                {% if 'birth-certificate-edit' in request.session.user_permissions %}
+                <a href="{% url 'certificate:birth_certificate_edit' d.id %}" class="btn btn-outline-primary btn-sm me-1" title="Edit">
+                  <i class="bi bi-pen-fill"></i>
+                </a>
+                {% endif %}
+                {% if 'birth-certificate-delete' in request.session.user_permissions %}
+                <a href="{% url 'certificate:birth_certificate_delete' d.id %}" class="btn btn-outline-danger btn-sm" title="Delete" onclick="return confirm('Are you sure you want to delete this certificate?');">
+                  <i class="bi bi-trash3-fill"></i>
+                </a>
+                {% endif %}
+              </td>
+            </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

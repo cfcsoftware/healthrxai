@@ -1,0 +1,118 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+.certificate-border {
+  border: 8px double #2c3e50;
+  padding: 40px 30px;
+  background: #f9f9f6;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(44,62,80,0.12);
+  max-width: 800px;
+  margin: 40px auto;
+  position: relative;
+}
+.certificate-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.certificate-title {
+  font-family: 'Georgia', serif;
+  font-size: 2.5rem;
+  color: #2c3e50;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+.certificate-subtitle {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+.certificate-table th, .certificate-table td {
+  border: none !important;
+  padding: 10px 18px;
+  font-size: 1.1rem;
+}
+.certificate-table th {
+  text-align: left;
+  color: #34495e;
+  width: 220px;
+  background: #f0f4f8;
+  font-weight: 600;
+}
+.certificate-table td {
+  background: #fff;
+  color: #222;
+}
+.certificate-footer {
+  margin-top: 40px;
+  text-align: right;
+  font-family: 'Georgia', serif;
+  font-size: 1.1rem;
+  color: #444;
+}
+.certificate-signature {
+  margin-top: 60px;
+  text-align: right;
+  font-family: 'Brush Script MT', cursive, sans-serif;
+  font-size: 1.5rem;
+  color: #2c3e50;
+}
+@media print {
+  .btn, .navbar, .sidebar { display: none !important; }
+  body { background: #fff !important; }
+  .certificate-border { box-shadow: none !important; }
+}
+</style>
+
+<div class="certificate-border">
+  <div class="certificate-header">
+    <img src="{% static 'images/healthrx.png' %}" alt="Hospital Logo" style="height:70px; margin-bottom:10px;">
+    <div class="certificate-title">Medical Certificate</div>
+    <div class="certificate-subtitle">This is to certify that the following information is true to the best of my knowledge:</div>
+    <hr style="border-top:2px solid #2c3e50; width:60px; margin:18px auto 0;">
+  </div>
+  <table class="table certificate-table mb-0">
+    <tr>
+      <th>Patient Name</th>
+      <td>{{ certificate.patient_name }}</td>
+    </tr>
+    <tr>
+      <th>Age</th>
+      <td>{{ certificate.age }}</td>
+    </tr>
+    <tr>
+      <th>Gender</th>
+      <td>{{ certificate.gender }}</td>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <td>{{ certificate.date }}</td>
+    </tr>
+    <tr>
+      <th>Purpose</th>
+      <td>{{ certificate.purpose }}</td>
+    </tr>
+    <tr>
+      <th>Medical Findings</th>
+      <td>{{ certificate.findings }}</td>
+    </tr>
+    <tr>
+      <th>Doctor's Name</th>
+      <td>{{ certificate.doctor_name }}</td>
+    </tr>
+  </table>
+  <div class="certificate-footer">
+    Date: {{ certificate.date|date:"F d, Y" }}
+    <div class="certificate-signature">
+      <span>__________________________</span><br>
+      <span>Authorized Signature</span>
+    </div>
+  </div>
+  <div class="text-center mt-4">
+    <button class="btn btn-primary" onclick="window.print()">Print Certificate</button>
+  </div>
+</div>
+
+{% endblock %}

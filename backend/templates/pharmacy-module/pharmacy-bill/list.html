@@ -1,0 +1,80 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="mx-4">
+  <div class="card border-0">
+       <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-0">
+        Pharmacy Bill
+      </h5>
+      {% if 'pharmacy-bill-add' in request.session.user_permissions %}
+        <a href="/pharmacy/pharmacy-bill/add" class="btn btn-primary">
+          Add Pharmacy Bill
+        </a>
+        {% endif %}
+        </div>
+      <div class="card-body px-0">
+        <div class="table-responsive">
+          <table id="example" class="table text-start table-striped table-hover align-middle" style="white-space:nowrap;">
+            <thead class="table-secondary text-start text-dark" style="white-space:nowrap;">
+                <tr>
+                  <th></th>
+                    <th>Sr.</th>
+                    <th>Bill No.</th>
+                    <!-- <th>Reg No.</th> -->
+                    <th>Patient Details</th>
+                    <th>Doctor Name</th>
+                    <!-- <th>Admitted Date</th> -->
+                    <th>Discharge Status</th>
+                    <!-- <th>Medicine Category</th> -->
+                    <!-- <th>Medicine Name</th> -->
+                    <th>Payment Mode</th>
+                    <th>Bill Amount</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for p_bill in all_pharmacy_bill %}
+                    <tr>
+                      <td></td>
+                        <td color="primary">{{ forloop.counter }}</td>
+                        <td color="primary">{{ p_bill.pharmacy_bill_no }}</td>
+                        <!-- <td color="primary">{{ p_bill.reg_no }}</td> -->
+                        <td>
+                            {{ p_bill.patient.name }} <br>
+                            {{ p_bill.patient_age }} | {{ p_bill.patient_gender }}| {{ p_bill.patient_phone }}
+                        </td>
+                        <!-- <td>{{ p_bill.medicine_category.name }}</td> -->
+                        <!-- <td>{{ p_bill.medicine_name }}</td> -->
+                        <td>{{ p_bill.doctor.name }}</td>
+                        <!-- <td>{{ p_bill.admitted_on }}</td> -->
+                        <td>{{ p_bill.discharge_status }}</td>
+                        <td>{{ p_bill.payment_mode }}</td>
+                        <td>{{ p_bill.payable_amount }}</td>
+                    
+                        <td>
+                            {% if 'pharmacy-bill-update' in request.session.user_permissions %}
+                            <!-- <a href="/pharmacy/pharmacy-bill/update/{{ p_bill.id }}" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a> -->
+                            {%endif %}
+                            
+                            {% if 'pharmacy-bill-delete' in request.session.user_permissions %}
+                            <!-- <a href="/pharmacy/pharmacy-bill/delete/{{ p_bill.id }}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a> -->
+                            {% endif %}
+
+                            {% if 'pharmacy-bill-view' in request.session.user_permissions %}
+                            <a href="/pharmacy/pharmacy-bill/{{p_bill.id}}/view" class="btn btn-info btn-sm"><i class="bi bi-eye"></i></a>
+                            {% endif %}
+                        </td>
+                    </tr> 
+                    {% endfor %}
+                
+                </tbody>
+              
+            </div>
+        </div>
+</div>
+
+
+
+{% endblock %}

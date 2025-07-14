@@ -1,0 +1,668 @@
+
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+   .visit-date {
+      border-left: 4px solid #3c5dcc;
+      padding-left: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .visit-date.active {
+      background-color: #e7f1ff;
+      border-left: 4px solid #0b5ed7;
+    }
+    .test-card {
+      background-color: #fff;
+      border-radius: 6px;
+      padding: 15px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    }
+    audio {
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      padding: 5px;
+    }
+</style>
+
+
+<div class="px-4">
+  
+    <div class="card shadow-sm rounded-3 mb-3">
+      <div class="card-body">
+        <div class="row m-0"> 
+          <div class="col-md-4">
+            <p class="mb-2"><strong>Patient Name:</strong> {{data.appointments.0.patient.name}}</p>
+            <p class="mb-2"><strong>Age / Sex:</strong> {{data.appointments.0.patient.age}} Y / {{data.appointments.0.patient.gender}}</p>
+            <p class="mb-2"><strong>Mob-No:</strong> {{data.appointments.0.patient.phone}}</p>
+            <p class="mb-2"><strong>Guardian Name / Phone:</strong> {{data.appointments.0.patient.guardian_name}} / {{data.appointments.0.patient.phone}}</p>
+            <p class="mb-2"><strong>Address:</strong> {{data.appointments.0.patient.address}}</p>
+          </div>
+          <div class="col-md-4">
+                <img src="/static/images/healthrx.png" class=" p-0 img-fluid" width="210px" height="100px"/>    
+        
+          </div>
+          <div class="col-md-4 pb-3"> <!--14-May-2025 / 07:02 PM -->
+            <p class="mb-2"><strong>Patient ID:</strong> {{data.appointments.0.patient.patient_record_id}} </p>   
+            <p class="mb-2"><strong>SSN/Aadhar No:</strong> {{data.appointments.0.aadhar_card_no}}</p>
+            <p class="mb-2"><strong>Ayushman No:</strong> {{data.appointments.0.ayushman_card_no}}</p>
+            <p class="mb-2"><strong>Blood Group:</strong> {{data.appointments.0.patient.blood_group}}</p>
+            <p class="mb-2"><strong>Enrollment Date:</strong> {{data.appointments.0.patient.created_at}}  </p> <!--14-May-2025 / 07:02 PM-->
+          </div>
+        </div>
+      </div>
+    </div>  
+
+  
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="true">Patient History</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="medicine-tab" data-bs-toggle="tab" data-bs-target="#medicine" type="button" role="tab" aria-controls="medicine" aria-selected="false">Medicines</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="lab-tab" data-bs-toggle="tab" data-bs-target="#lab" type="button" role="tab" aria-controls="lab" aria-selected="false">Lab Reports</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="scan-tab" data-bs-toggle="tab" data-bs-target="#scan" type="button" role="tab" aria-controls="scan" aria-selected="false">Scan Reports</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="billing-tab" data-bs-toggle="tab" data-bs-target="#billing" type="button" role="tab" aria-controls="billing" aria-selected="false">Billings</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="doc-tab" data-bs-toggle="tab" data-bs-target="#doc" type="button" role="tab" aria-controls="doc" aria-selected="false">Documents</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="emr-tab" data-bs-toggle="tab" data-bs-target="#emr" type="button" role="tab" aria-controls="emr" aria-selected="false">EMR Activities</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="audio-tab" data-bs-toggle="tab" data-bs-target="#audio" type="button" role="tab" aria-controls="audio" aria-selected="false">Audio Recordings</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="ai-tab" data-bs-toggle="tab" data-bs-target="#ai" type="button" role="tab" aria-controls="ai" aria-selected="false">AI Report</button>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="history-tab">
+        <div class="row m-4 gx-4 justify-content-center">
+          <!-- Left Sidebar -->
+          <div class="col-md-2">
+            <h6 class="mb-3">Past Visits</h6>
+              {% for appt in data.appointments %}
+                <div class="visit-date {% if forloop.first %}active{% endif %}" data-visit="{{ forloop.counter }}">
+                  <strong>{{ appt.created_day }}</strong><br>{{ appt.created_month }}
+                </div>
+              {% endfor %}
+
+          </div>
+
+          <!-- Right Content -->
+          <div class="col-md-10">
+            <!-- Patient Info -->
+
+            {% for appt in data.appointments %}
+            <div id="visit-content-{{ forloop.counter }}" class="visit-content {% if not forloop.first %}d-none{% endif %}">
+              <div class="card shadow-sm rounded mb-3 bg-white">
+                <div class="card-body">
+                  <textarea class="form-control" rows="5" cols="50" readonly placeholder="Dignosis" style="height: 100px;">Patient is suffering from fever and cough. Patient is advised to take rest and drink plenty of fluids.Patient is suffering from fever and cough. Patient is advised to take rest and drink plenty of fluids.Patient is suffering from fever and cough. Patient is advised to take rest and drink plenty of fluids.
+                  </textarea>
+              </div>
+                
+              </div>
+
+              <div class="card shadow-sm rounded mb-3 bg-white">
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-12 d-flex flex-wrap gap-2 justify-content-between">
+                      <!-- <div class="border rounded px-3 py-2"><strong>OPD Date:</strong> {{ data.appointments.0.created_at|date:"d-m-Y" }}</div> -->
+                      <!-- <div class="border rounded px-3 py-2"><strong>Department:</strong> {{ data.appointments.0.department }}</div> -->
+                      <div class="border rounded px-3 py-2"><strong>OPD ID:</strong> {{ data.appointments.0.appointment_record_id }}</div>
+                      <div class="border rounded px-3 py-2"><strong>Token No:</strong> {{ data.appointments.0.token_no }}</div>
+                      <div class="border rounded px-3 py-2"><strong>Consultant:</strong> {{ data.appointments.0.doctor.name }}</div>
+                      <div class="border rounded px-3 py-2"><strong>Fees Paid:</strong> ₹ {{ data.appointments.0.total_payment }}</div> 
+                    </div>
+                  </div>
+
+                 
+
+                  <div class="row">
+                    <div class="col-12 d-flex flex-wrap gap-2 justify-content-between">
+                      <div class="border rounded px-3 py-2"><strong>Temp:</strong> {{ data.appointments.0.temperature }}</div>
+                      <div class="border rounded px-3 py-2"><strong>B.P.:</strong> {{ data.appointments.0.bp }}</div>
+                      <div class="border rounded px-3 py-2"><strong>Pulse:</strong> {{ data.appointments.0.pulse }}</div>
+                      <div class="border rounded px-3 py-2"><strong>SPO2:</strong> {{ data.appointments.0.spo2 }}</div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+
+              <!-- Medicine Table -->
+              <div class="table-responsive mb-3">
+                <table class="table table-bordered table-sm">
+                  <thead class="table-light">
+                    <tr>
+                      <th>#</th>
+                      <th>Medicine</th>
+                      <th>Dosage</th>
+                      <th>Instructions</th>
+                      <th>Duration</th>
+                    </tr>
+                  </thead>
+                  {% if data.prescriptions.0.prescription.medicines %}
+                    {% for med in data.prescriptions.0.prescription.medicines %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ med.medicine }}</td>
+                        <td>{{ med.dosage }}</td>
+                        <td>{{ med.time }}</td>
+                        <td>{{ med.duration }}</td>
+                      </tr>
+                    {% endfor %}
+                  {% else %}
+                    <tr>
+                      <td colspan="6" class="text-center">No medicines prescribed.</td>
+                    </tr>
+                  {% endif %}
+                   
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Pathology Test Table 2 -->
+              <div class="table-responsive mb-3">
+                <table class="table table-bordered table-sm">
+                  <thead class="table-light">
+                    <tr>
+                      <th>#</th>
+                      <th>Test Name</th>
+                      <th>Health Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                     {% for pt in data.pathology_reports %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ pt.service}}</td>
+                      <td>{{pt.remarks}}</td>
+                    </tr>
+                    {% endfor %} 
+                  
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Radiology Scan 3 -->
+              <div class="table-responsive mb-3">
+                <table class="table table-bordered table-sm">
+                  <thead class="table-light">
+                    <tr>
+                      <th>#</th>
+                      <th>Test Name</th>
+                      <th>Health Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                     {% for rd in data.radiology_reports %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ rd.test_details.test_name}}</td>
+                      <td>{{rd.test_details.components.result}}</td>
+                    </tr>
+                    {% endfor %}
+                    
+                  </tbody>
+                </table>
+              </div>
+
+              
+              <!-- Next Visit -->
+              <div class="test-card">
+                <p><strong>Next Visit:</strong> 23-June-2025</p>
+                &nbsp;&nbsp; <small>By : Dr. Ankit Madharia</small></p>
+                <br>
+                <p><strong>Tests Requested:</strong><br>VIRAL MARKERS, ESR</p>
+              </div>
+
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="medicine" role="tabpanel" aria-labelledby="medicine-tab">
+          <div class="row m-4 gx-4 justify-content-center">
+            <div class="col-12">
+              <div class="table-responsive mb-3">
+                <div class="card-body position-relative">
+
+                  <table class="stripe row-border order-column nowrap example" id="example-medicine">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Sr.</th>
+                        <th>Bill No.</th>
+                        <th>Patient Details</th>
+                        <th>Doctor Name</th>
+                        <th>Discharge Status</th>
+                        <th>Payment Mode</th>
+                        <th>Bill Amount</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for mb in data.medical_bills %}
+                      <tr>
+                        <td></td>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ mb.pharmacy_bill_no }}</td>
+                        <td>{{ mb.patient.name }}<br>{{ mb.age }} | {{ mb.gender }} | {{ mb.phone }}</td>
+                        <td>DR. {{ mb.doctor.name }}</td>
+                        <td>{{ mb.discharge_status }}</td>
+                        <td>{{ mb.payment_status }}</td>
+                        <td>{{ mb.payable_amount }}</td>
+                        <td><a href="#" class="btn btn-info btn-sm"><i class="bi bi-eye"></i></a></td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+      </div>
+      <div class="tab-pane fade" id="lab" role="tabpanel" aria-labelledby="lab-tab">
+        <div class="row gx-4 justify-content-center">
+            <div class="col-12">
+              <div class="table-responsive mb-3">
+                <div class="card-body position-relative">
+                  <table class="stripe row-border order-column nowrap example" id="example-lab">
+                    <thead>
+                      <tr>
+                        <th></th>
+                          <th>Sr.</th>
+                          <th>Bill No.</th>
+                          <th>Patient Name</th>
+                          <th>Test Name</th>
+                          <th>Doctor Name</th>
+                          <th>Report Days</th>
+                          <th>Payment Status</th>
+                          <th>Total Amount</th>
+                          <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for pt in data.pathology_reports %}
+                        <tr>
+                          <td></td>
+                            <td color="primary">{{foorloop.counter}}</td>
+                            <td color="primary">PathoBill - #000{{foorloop.counter}}</td>
+                            <td>
+                                {{pt.patient.name}}<br>
+                                {{pt.patient.age}} Y
+                            </td>
+                            <td>{{pt.service}}</td>
+                            <td>Dr. {{pt.doctor.name}}</td>
+                            <td>{{pt.report_days}}</td>
+                            <td>{{pt.payment_status}}</td>
+                            <td>{{pt.total_amount}}</td>
+                        
+                            <td>
+                                <a href="#" class="btn btn-info btn-sm"><i class="bi bi-eye"></i></a>
+                            </td>
+                        </tr> 
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="tab-pane fade" id="scan" role="tabpanel" aria-labelledby="scan-tab">
+        <div class="row gx-4 justify-content-center">
+            <div class="col-12">
+              <div class="table-responsive mb-3">
+                <div class="card-body position-relative">
+                  <table class="stripe row-border order-column nowrap example" id="example-scan">
+                    <thead>
+                      <tr>
+                        <th></th>
+                          <th>Sr.</th>
+                          <th>Bill No.</th>
+                          <th>Patient Name</th>
+                          <th>Test Name</th>
+                          <th>Doctor Name</th>
+                          <th>Report Days</th>
+                          <th>Payment Status</th>
+                          <th>Total Amount</th>
+                          <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      {% for rt in data.radiology_reports %}
+                      
+                        <tr>
+                          <td></td>
+                            <td color="primary">{{forloop.counter}}</td>
+                            <td color="primary">RadioBill - #000{{forloop.counter}}</td>
+                            <td>
+                                {{rt.patient.name}}
+                            </td>
+                            <td>{{rt.test_details.test_name}}</td>
+                            <td>{{rt.doctor.name}}</td>
+                            <td>{{rt.report_days}}</td>
+                            <td>{{rt.payment_status}}</td>
+                            <td>{{rt.total_amount}}</td>
+                        
+                            <td>
+                                <a href="#" class="btn btn-info btn-sm"><i class="bi bi-eye"></i></a>
+                            </td>
+                        </tr> 
+                      {% endfor %}
+                    
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
+        <div class="row gx-4 justify-content-center">
+            <div class="col-12">
+                  <table class="stripe row-border order-column nowrap example" id="example-billing">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Sr.</th>
+                        <th>Bill No.</th>
+                        <th>Patient Name</th>
+                        <th>Bill Date</th>
+                        <th>Service Type</th>
+                        <th>Bill Type</th>
+                        <th>Total Amount</th>
+                        <th>Paid Amount</th>
+                        <th>Payment Mode</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for bill in data.billing %}
+                      <tr>
+                        <td></td>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ bill.billing_record_id }}</td>
+                        <td>{{ bill.patient }}</td>
+                        <td>{{ bill.created_at }}</td>
+                        <td>{{ bill.service_type }}</td>
+                        <td>{{ bill.bill_type }}</td>
+                        <td>{{ bill.amount }}</td>
+                        <td>{{ bill.amount_paid }}</td>
+                        <td>{{ bill.payment_mode }}</td>
+                        <td><a href="#" class="btn btn-info btn-sm"><i class="bi bi-eye"></i></a></td>
+                      </tr>
+                      {% empty %}
+                      <tr>
+                        <td></td>
+                        <td>1</td>
+                        <td>INV-2024-001</td>
+                        <td>John Doe</td>
+                        <td>2024-06-01</td>
+                        <td>OPD</td>
+                        <td>₹1500</td>
+                        <td>₹1500</td>
+                        <td>Paid</td>
+                        <td><a href="#" class="btn btn-info btn-sm"><i class="bi bi-eye"></i></a></td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+            </div>
+          </div>
+      </div>
+      <div class="tab-pane fade" id="doc" role="tabpanel" aria-labelledby="doc-tab">
+          <div class="row gx-4 justify-content-center">
+            <div class="col-12">
+                  <table class="stripe row-border order-column nowrap example" id="example-doc">
+                    <thead>
+                      <tr>
+                        <th>Sr.</th>
+                        <th>Document Name</th>
+                        <th>Type</th>
+                        <th>Uploaded By</th>
+                        <th>Date Uploaded</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for doc in data.documents %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ doc.name }}</td>
+                        <td>{{ doc.type }}</td>
+                        <td>{{ doc.uploaded_by }}</td>
+                        <td>{{ doc.uploaded_at }}</td>
+                        <td>
+                          {% if doc.file_url %}
+                            <a href="{{ doc.file_url }}" class="btn btn-info btn-sm" target="_blank"><i class="bi bi-eye"></i> View</a>
+                          {% else %}
+                            <span class="text-muted">No file</span>
+                          {% endif %}
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+            </div>
+          </div>
+      </div>
+      <div class="tab-pane fade" id="emr" role="tabpanel" aria-labelledby="emr-tab">
+        <div class="row gx-4 justify-content-center">
+          <div class="col-sm-12 col-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for record in patient_history.patient_history %}
+                            <li class="list-group-item">
+                                <strong>ID:</strong> {{ record.id }} | 
+                                <strong>Message:</strong> {{ record.message }}
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item">No EMR Activities found.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="audio" role="tabpanel" aria-labelledby="audio-tab">
+        <div class="row gx-4 justify-content-center">
+          <div class="col-sm-12 col-12">
+            {% for audio in data.appointment_audio %}
+            <li class="mb-4">
+              {% with audio|cut:"https://healthsrx.com/media/audio_recordings/audio_"|cut:".webm" as datetime_str %}
+                {% with datetime_str|slice:":8" as date_str %}
+                  {% with datetime_str|slice:"8:" as time_str %}
+                    {% with date_str|slice:":4" as year %}
+                      {% with date_str|slice:"4:6" as month %}
+                        {% with date_str|slice:"6:8" as day %}
+                          {% with time_str|slice:":2" as hour %}
+                            {% with time_str|slice:"2:4" as minute %}
+                              {% with time_str|slice:"4:6" as second %}
+                                <p class="mb-1 text-break">
+                                  <strong>File:</strong>
+                                  <a href="{{ audio }}" target="_blank">
+                                    Audio {{ year }}-{{ month }}-{{ day }} {{ hour }}:{{ minute }}:{{ second }}
+                                  </a>
+                                </p>
+                              {% endwith %}
+                            {% endwith %}
+                          {% endwith %}
+                        {% endwith %}
+                      {% endwith %}
+                    {% endwith %}
+                  {% endwith %}
+                {% endwith %}
+              {% endwith %}
+          
+              <!-- Audio Player -->
+              <audio controls preload="metadata" class="w-100 border rounded shadow-sm">
+                <source src="{{ audio }}" type="audio/webm">
+                Your browser does not support the audio element.
+              </audio>
+          
+              <!-- Download button -->
+              <div class="mt-2">
+                <a href="{{ audio }}" download class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-download"></i> Download
+                </a>
+              </div>
+            </li>
+          {% endfor %}
+            
+          </div>
+        </div>
+      </div>
+      
+      <div class="tab-pane fade" id="ai" role="tabpanel" aria-labelledby="ai-tab">
+        <div class="row gx-4 justify-content-center">
+          <div class="col-md-12">
+          
+            
+            <div class=" my-4">
+              <!-- Health Score Card -->
+              <div class="score-card position-relative mb-4">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <h5 class="mb-0 text-light">Health Score</h5>
+                    <h1 class="fw-bold mt-1">86/100</h1>
+                    <span class="badge badge-improve">Improved by +12</span>
+                    <p class="mt-2 mb-0" style="font-size: 0.9rem;">You are in the top 18% percentile</p>
+                  </div>
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHZR2D9nPzYegHfKYOQsbwcVFA280WUIGvHw&s" alt="User Illustration">
+                </div>
+              </div>
+
+              <!-- Summary Header -->
+              <div class="section-header">
+                <div class="list-header">Health Summary</div>
+                <div>
+                  <a class="read-more me-2" data-bs-toggle="collapse" href="#healthSummaryCollapse" role="button" aria-expanded="false" aria-controls="healthSummaryCollapse">
+                    Read more
+                  </a>
+                  <!-- <span class="plus-btn">+</span> -->
+                </div>
+              </div>
+              <div class="collapse my-4" id="healthSummaryCollapse">
+                <p>
+                  Your health summary provides an overview of your recent medical status, highlighting areas that need attention as well as those that are within healthy ranges. Regular monitoring and timely intervention can help you maintain and improve your overall well-being.
+                </p>
+              </div>
+
+              <!-- Quick Stats -->
+              <div class="d-flex quick-stats mb-4">
+                <div class="col p-4 rounded-3 bg-light-green text-center">
+                  <h5 class="mb-3">Needs Improvement</h5>
+                   <h2 class="text-warning mb-3">05</h2>
+                   <p class="mb-0">Body System</p>
+                </div>
+                <div class="col p-4 rounded-3 bg-light-green text-center">
+                  <h5 class="mb-3">Looks Good</h5>
+                  <h2 class="text-success mb-3">03</h2> 
+                  <p class="mb-0">Body System</p>
+                </div>
+              </div>
+
+              <!-- Needs Improvement List -->
+              <h6 class="list-header text-voilet mb-2">Needs Improvement</h6>
+              <p class="mb-2">
+                These body systems show results that are outside the healthy range and may require medical attention or lifestyle changes.
+              </p>
+              <div class="list-group mb-4">
+                <div class="ai-summary-section my-3">
+                  {% if data.ai_report %}
+                    <div class="">
+                      <div>
+                        
+                        <!-- Raw markdown content from Django -->
+                        <div id="aiReportContentRaw" style="display: none;">
+                          {{ data.ai_report|safe }}
+                        </div>
+                        <!-- Rendered markdown HTML will appear here -->
+                        <div id="aiReportContent"></div>
+                      </div>
+                    </div>
+                  {% else %}
+                    <div class="list-group-item text-muted bg-light border rounded shadow-sm p-4 mb-2 text-center">
+                      <i class="bi bi-info-circle me-2"></i>
+                      <span>No AI health summary available.</span>
+                    </div>
+                  {% endif %}
+                </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+  </div>
+  
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  const rawMarkdown = document.getElementById("aiReportContentRaw").innerText;
+  const html = marked.parse(rawMarkdown);
+  document.getElementById("aiReportContent").innerHTML = html;
+</script>
+
+
+
+<script>
+  document.querySelectorAll('.visit-date').forEach(button => {
+    button.addEventListener('click', function () {
+      // Remove active class
+      document.querySelectorAll('.visit-date').forEach(el => el.classList.remove('active'));
+      this.classList.add('active');
+
+      // Hide all content blocks
+      document.querySelectorAll('.visit-content').forEach(el => el.classList.add('d-none'));
+
+      // Show selected content block
+      const visitId = this.getAttribute('data-visit');
+      document.getElementById(`visit-content-${visitId}`).classList.remove('d-none');
+    });
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    $('#example-scan').DataTable({
+      language: {
+        emptyTable: "No data found"
+      }
+    });
+  });
+  $(document).ready(function () {
+    $('#example-medicine').DataTable({
+      language: {
+        emptyTable: "No data found"
+      }
+    });
+  });
+
+  $(document).ready(function () {
+    $('#example-billing').DataTable({
+      language: {
+        emptyTable: "No data found"
+      }
+    });
+  });
+</script>
+  
+{% endblock %}

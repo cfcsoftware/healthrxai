@@ -1,0 +1,227 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="p-0 p-md-5">    
+    <h4 class="d-flex align-items-center justify-content-between mb-3">
+        <b>Update OPD Patient</b>
+    </h4>
+    <form action="/opd/update/{{opd.id}}" method="POST">
+        {% csrf_token %}
+        <div class="mb-2">
+                <div class="container mt-3">
+                    <div class="row mt-2">
+
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="appointment">Appointment <span class="text-danger">*</span></label>
+                                <select class="form-control" name="appointment" id="appointment">
+                                    <option value="">Select</option>
+                                    {% for appointment in appointments %}
+                                    <option value="{{ appointment.id }}" {% if appointment.id == opd.appointment_id %}selected{% endif %}>{{ appointment.appointment_record_id }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="patient">Patient Name <span class="text-danger">*</span></label>
+                                <select class="form-control" name="patient" id="patient" required>
+                                    <option value="">Select</option>
+                                    {% for patient in patients %}
+                                    <option value="{{ patient.id }}" {% if patient.id == opd.patient_id %}selected{% endif %}>{{ patient.name }}</option>
+                                    {% endfor %}  
+                                </select>
+                            </div>
+                        </div>  
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="doctor">Consultant Doctor <span class="text-danger">*</span></label>
+                                <select class="form-control" name="doctor" id="doctor" required>
+                                    <option value="">Select</option>
+                                    {% for doctor in doctors %}
+                                    <option value="{{ doctor.id }}" {% if doctor.id == opd.doctor_id %}selected{% endif %}>{{ doctor.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-md-2 mt-2">
+                            <div class="form-group">
+                                <label for="height">Height</label>
+                                <input type="text" class="form-control" name="height" id="height" value="{{ opd.height }}">
+                            </div>
+                        </div>
+                
+                        <div class="col-md-2 mt-2">
+                            <div class="form-group">
+                                <label for="weight">Weight</label>
+                                <input type="text" class="form-control" name="weight" id="weight" value="{{ opd.weight }}">
+                            </div>
+                        </div>
+                
+                        <div class="col-md-2 mt-2">
+                            <div class="form-group">
+                                <label for="bp">BP</label>
+                                <input type="text" class="form-control" name="bp" id="bp" value="{{ opd.bp }}">
+                            </div>
+                        </div>
+                
+                        <div class="col-md-2 mt-2">
+                            <div class="form-group">
+                                <label for="pulse">Pulse</label>
+                                <input type="text" class="form-control" name="pulse" id="pulse" value="{{ opd.pulse }}">
+                            </div>
+                        </div>
+                
+                        <div class="col-md-2 mt-2">
+                            <div class="form-group">
+                                <label for="temperature">Temperature</label>
+                                <input type="text" class="form-control" name="temperature" id="temperature" value="{{ opd.temperature }}">
+                            </div>
+                        </div>
+                
+                        <div class="col-md-2 mt-2">
+                            <div class="form-group">
+                                <label for="respiration">Respiration(Breathing)</label>
+                                <input type="text" class="form-control" name="respiration" id="respiration" value="{{ opd.respiration }}">
+                            </div>
+                        </div>
+                
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group">
+                                <label for="symptoms">Symptoms</label>
+                                <select class="form-control" name="symptoms" id="symptoms">
+                                    <option value="">Select</option>
+                                    <option value="Eating or weight problems" {% if opd.symptoms == "Eating or weight problems" %}selected{% endif %}>Eating or weight problems</option>
+                                    <option value="Emotional problems" {% if opd.symptoms == "Emotional problems" %}selected{% endif %}>Emotional problems</option>
+                                    <option value="Muscle or joint problems" {% if opd.symptoms == "Muscle or joint problems" %}selected{% endif %}>Muscle or joint problems</option>
+                                    <option value="Skin problems" {% if opd.symptoms == "Skin problems" %}selected{% endif %}>Skin problems</option>
+                                    <option value="Bladder problems" {% if opd.symptoms == "Bladder problems" %}selected{% endif %}>Bladder problems</option>
+                                    <option value="Stomach problems" {% if opd.symptoms == "Stomach problems" %}selected{% endif %}>Stomach problems</option>
+                                    <option value="Lung problems" {% if opd.symptoms == "Lung problems" %}selected{% endif %}>Lung problems</option>
+                                    <option value="Other" {% if opd.symptoms == "Other" %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group">
+                                <label for="note">Note</label>
+                                <textarea class="form-control" name="notes" id="notes" rows="3">{{ opd.notes }}</textarea>
+                            </div>
+                        </div>
+
+                    </div>
+            
+                    <div class="row mt-2">
+                        
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group">
+                                <label for="allergies">Any Known Allergies</label>
+                                <textarea class="form-control" name="allergies" id="allergies" rows="3">{{ opd.allergies }}</textarea>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group">
+                                <label for="previous_medical_issue">Previous Medical Issue</label>
+                                <textarea class="form-control" name="previous_medical_issue" id="previous_medical_issue" rows="3">{{ opd.previous_medical_issue }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="row mt-2">
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="old_patient">Old Patient</label>
+                                <select class="form-control" name="old_patient" id="old_patient">
+                                    <option value="">Select</option>
+                                    <option value="Yes" {% if opd.old_patient == "Yes" %}selected{% endif %}>Yes</option>
+                                    <option value="No" {% if opd.old_patient == "No" %}selected{% endif %}>No</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="charge_category">Charge Category</label>
+                                <select class="form-control" name="charge_category" id="charge_category">
+                                    <option value="">Select</option>
+                                    <option value="OPD Consultation Fees" {% if opd.charge_category == "OPD Consultation Fees" %}selected{% endif %}>OPD Consultation Fees</option>
+                                    <option value="OPD Service" {% if opd.charge_category == "OPD Service" %}selected{% endif %}>OPD Service</option>
+                                    <option value="OPD Insurance" {% if opd.charge_category == "OPD Insurance" %}selected{% endif %}>OPD Insurance</option>
+                                    <option value="Blood pressure check" {% if opd.charge_category == "Blood pressure check" %}selected{% endif %}>Blood pressure check</option>
+                                    <option value="Eye check" {% if opd.charge_category == "Eye check" %}selected{% endif %}>Eye check</option>
+                                    <option value="Cholesterol level check" {% if opd.charge_category == "Cholesterol level check" %}selected{% endif %}>Cholesterol level check</option>
+                                    <option value="Sterilization and Cleaning Equipment" {% if opd.charge_category == "Sterilization and Cleaning Equipment" %}selected{% endif %}>Sterilization and Cleaning Equipment</option>
+                                    <option value="Oxygen cylinder" {% if opd.charge_category == "Oxygen cylinder" %}selected{% endif %}>Oxygen cylinder</option>
+                                    <option value="Fire extinguisher" {% if opd.charge_category == "Fire extinguisher" %}selected{% endif %}>Fire extinguisher</option>
+                                    <option value="Operation Services" {% if opd.charge_category == "Operation Services" %}selected{% endif %}>Operation Services</option>
+                                    <option value="Other Charges" {% if opd.charge_category == "Other Charges" %}selected{% endif %}>Other Charges</option>
+                                </select>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                            <label for="charge">Charge</label>
+                            <input type="text" class="form-control" name="charge" id="charge" value="{{ opd.charge }}" oninput="calculateAmounts()">
+                            </div>
+                        </div>
+
+                    </div>
+            
+                    <div class="row mt-2">
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="payment_mode">Payment Mode</label>
+                                <select class="form-control" name="payment_mode" id="payment_mode">
+                                    <option value="">Select</option>
+                                    <option value="Cash" {% if opd.payment_mode == "Cash" %}selected{% endif %}>Cash</option>
+                                    <option value="Cheque" {% if opd.payment_mode == "Cheque" %}selected{% endif %}>Cheque</option>
+                                    <option value="Transfer to Bank Account" {% if opd.payment_mode == "Transfer to Bank Account" %}selected{% endif %}>Transfer to Bank Account</option>
+                                    <option value="UPI" {% if opd.payment_mode == "UPI" %}selected{% endif %}>UPI</option>
+                                    <option value="Other" {% if opd.payment_mode == "Other" %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="paid_amount">Paid Amount</label>
+                                <input type="text" class="form-control" name="paid_amount" id="paid_amount" value="{{ opd.paid_amount }}" oninput="calculateAmounts()">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mt-2">
+                            <div class="form-group">
+                                <label for="due_amount">Due Amount</label>
+                                <input type="text" class="form-control" name="due_amount" id="due_amount" value="{{ opd.due_amount }}" readonly>
+                            </div>
+                        </div>
+
+                        <script>
+                            function calculateAmounts() {
+                                var charge = parseFloat(document.getElementById('charge').value) || 0;
+                                var paidAmount = parseFloat(document.getElementById('paid_amount').value) || 0;
+                                var dueAmount = charge - paidAmount;
+                                document.getElementById('due_amount').value = dueAmount > 0 ? dueAmount : 0;
+                            }
+                        </script>
+
+                    </div>
+            
+                </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    </form>
+</div>
+        
+{% endblock %}

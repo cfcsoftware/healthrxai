@@ -1,0 +1,674 @@
+{% extends 'dashboard/base.html' %} {% load static %} {% block content %}
+
+
+{% if request.session.role_name == "Admin" %}
+  <div class="mx-4 px-0">
+  <h5>HOSPITAL PROFILE</h5> <br>
+
+  <form>
+    <!-- 1. Basic Hospital Info -->
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-light">Basic Information</div>
+      <div class="card-body row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Hospital Name</label>
+          <input type="text" class="form-control" name="name">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Type</label>
+          <select class="form-select" name="type">
+            <option>Hospital</option>
+            <option>Clinic</option>
+            <option>Diagnostic Center</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Tagline</label>
+          <input type="text" class="form-control" name="tagline">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Establishment Date</label>
+          <input type="date" class="form-control" name="establishment_date">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Registration Number</label>
+          <input type="text" class="form-control" name="registration_number">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Accreditation</label>
+          <input type="text" class="form-control" name="accreditation">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">License Expiry</label>
+          <input type="date" class="form-control" name="license_expiry_date">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Logo Upload</label>
+          <input type="file" class="form-control" name="logo_url">
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Location -->
+    <div class="card mb-4">
+      <div class="card-header bg-success text-light">Location & Contact</div>
+      <div class="card-body row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Address</label>
+          <input type="text" class="form-control" name="address_line1">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">City</label>
+          <input type="text" class="form-control" name="city">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">State</label>
+          <input type="text" class="form-control" name="state">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Country</label>
+          <input type="text" class="form-control" name="country">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Pincode</label>
+          <input type="text" class="form-control" name="zipcode">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Primary Phone</label>
+          <input type="text" class="form-control" name="primary_phone">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Support Email</label>
+          <input type="email" class="form-control" name="support_email">
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Owner Info -->
+    <div class="card mb-4">
+      <div class="card-header bg-warning">Admin / Owner Info</div>
+      <div class="card-body row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-control" name="admin_name">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" name="admin_email">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Mobile</label>
+          <input type="text" class="form-control" name="admin_mobile">
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Configuration -->
+    <div class="card mb-4">
+      <div class="card-header bg-info text-light">System Configuration</div>
+      <div class="card-body row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Preferred Language</label>
+          <select class="form-select" name="language">
+            <option>English</option>
+            <option>Hindi</option>
+            <option>Arabic</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Default Currency</label>
+          <select class="form-select" name="currency">
+            <option>INR</option>
+            <option>USD</option>
+            <option>EUR</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Timezone</label>
+          <input type="text" class="form-control" name="timezone">
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Subscription -->
+    <div class="card mb-4">
+      <div class="card-header bg-secondary text-light">Subscription Info</div>
+      <div class="card-body row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Plan Name</label>
+          <input type="text" class="form-control" name="plan_name">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Start Date</label>
+          <input type="date" class="form-control" name="plan_start">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Expiry Date</label>
+          <input type="date" class="form-control" name="plan_expiry">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Plan Type</label>
+          <select class="form-select" name="plan_type">
+            <option>Trial</option>
+            <option>Paid</option>
+            <option>Custom</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Auto-Renewal</label>
+          <select class="form-select" name="auto_renewal">
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="d-flex justify-content-center">
+      <button class="btn btn-primary px-4">Save Details</button>
+    </div> <br>
+
+  </form>
+
+
+
+</div>
+{% else %}
+
+<div class="container py-5">
+  <div class="row justify-content-center m-0">
+    <div class="col-lg-3 col-md-4">
+      <div class="card profile-card box-shadow-sm border-0">
+        <div class="card-body p-4 p-4">
+          <div class="text-center mb-4">
+            <div class="mb-4">
+              {{logo_data}}
+              <img
+                src="{{data.profile_image |default:'https://bootdey.com/img/Content/avatar/avatar6.png'}}"
+                alt="Avatar"
+                class="profile-pic rounded-4"
+              />
+            </div>
+            <form method="post" enctype="multipart/form-data" autocomplete="off" class="d-inline">
+              {% csrf_token %}
+            </form>
+            <h3 class="fw-semibold mb-3 mt-2">{{data.username}}</h3>
+            <p class="text-center mb-5">
+              <span
+                class="py-2 text-light bg-primary mb-1 d-inline-block rounded-5 px-4"
+                >{{request.session.role_name}}</span
+              >
+            </p>
+            <p class="text-muted small mb-2">
+              <i class="bi bi-geo-alt-fill"></i> {{data.address}}
+            </p>
+            <p class="text-muted small mb-2">
+              <i class="bi bi-envelope"></i> {{data.email}}
+            </p>
+            <p class="text-muted small">
+              <i class="bi bi-telephone-fill"></i> {{data.phone}}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-9 col-md-8">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h4 class="mb-0">Profile Information</h4>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#personal-information"
+        >
+          <i class="bi bi-pencil-square me-1"></i>
+        </button>
+
+      </div>
+      <div class="row g-3">
+        <div class="col-lg-6 col-md-6">
+          <div class="card profile-card box-shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+              <h5
+                class="card-title mb-4 d-flex align-items-center justify-content-between">
+                Personal Information
+              </h5>
+              <ul class="list-unstyled mb-0">
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Username:</strong> {{ data.username }}
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Email:</strong> {{ data.email }}
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Phone:</strong> {{ data.phone }}
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Date of Birth:</strong> {{ data.dob }}
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong></strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="card profile-card box-shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+              <h5
+                class="card-title mb-4 d-flex align-items-center justify-content-between"
+              >
+                Address & Information <i class=""></i>
+              </h5>
+              <ul class="list-unstyled mb-0">
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Address:</strong> Indore, Madhya Pradesh, India
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>City:</strong> Indore
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>State:</strong> Madhya Pradesh
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Zip Code:</strong> 452001
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Blood Group:</strong> O+
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="card profile-card box-shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+              <h5
+                class="card-title mb-4 d-flex align-items-center justify-content-between"
+              >
+                Identity & Payment <i class=""></i>
+              </h5>
+              <ul class="list-unstyled mb-0">
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Aadhar No:</strong> 1425 2514 2514
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Aadhar Front Image:</strong>
+                  <a href="" target="_blank">View</a>
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Aadhar Back Image:</strong>
+                  <a href="" target="_blank">View</a>
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>PAN No:</strong> PAN1223wsd33
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>PAN Image:</strong>
+                  <a href="" target="_blank">View</a>
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>UPI ID:</strong> example@ybl
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="card profile-card box-shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+              <h5
+                class="card-title mb-4 d-flex align-items-center justify-content-between"
+              >
+                Bank & Physical <i class=""></i>
+              </h5>
+              <ul class="list-unstyled mb-0">
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Bank Name:</strong> State Bank of India
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Account Number:</strong> 12345678901234567
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Account Holder Name:</strong> Durgesh Rajak
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>IFSC Code:</strong> SBI0001234
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Height:</strong> 172 cm
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Weight:</strong> 50 kg
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="card profile-card box-shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+              <h5
+                class="card-title mb-4 d-flex align-items-center justify-content-between"
+              >
+                Skills & Others<i class=""></i>
+              </h5>
+              <ul class="list-unstyled mb-0">
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Languages:</strong> English, Hindi, Marathi
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Services:</strong> Services Name
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Expertise:</strong>
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Service Locations:</strong> Indore, Madhya Pradesh
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Other 1:</strong> Other
+                </li>
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Other 2:</strong> Other
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="card profile-card box-shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+              <h5
+                class="card-title mb-4 d-flex align-items-center justify-content-between"
+              >
+                Password<i class="bi bi-pencil-square"></i>
+              </h5>
+              <ul class="list-unstyled mb-0">
+                <li
+                  class="mb-3 d-flex align-items-center justify-content-between"
+                >
+                  <strong>Password:</strong> John@1234
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- The Modal -->
+<div class="modal fade" id="personal-information">
+  <div
+    class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
+  >
+    <div class="modal-content rounded-4">
+      <!-- Modal Header -->
+      <div class="modal-header bg-primary">
+        <h4 class="modal-title" style="color: white;">Personal Information</h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body p-5">
+        <form method="post" enctype="multipart/form-data" autocomplete="off">
+          {% csrf_token %}
+
+          <!-- Personal Information Section -->
+          <div class="mb-4">
+            <h5 class="mb-3 text-dark">
+            <i class="bi bi-person-circle me-2"></i> Personal Information
+            </h5> <hr>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="username" value="{{ data.username }}" >
+              </div>
+              <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" id="email" value="{{ data.email }}" >
+              </div>
+              <div class="col-md-6">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="text" class="form-control" name="phone" id="phone" value="{{ data.phone }}" >
+              </div>
+              <div class="col-md-6">
+                <label for="dob" class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" name="dob" id="dob" value="{{ data.dob }}" >
+              </div>
+            </div>
+          </div>
+
+          <!-- Address Section -->
+          <div class="mb-4">
+            <h5 class="mb-3 text-dark">
+            <i class="bi bi-geo-alt-fill me-2"></i> Address Information
+            </h5> <hr>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" name="address" id="address" value="{{ data.address }}">
+              </div>
+              <div class="col-md-6">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" name="city" id="city" value="{{ data.city }}">
+              </div>
+              <div class="col-md-6">
+                <label for="state" class="form-label">State</label>
+                <input type="text" class="form-control" name="state" id="state" value="{{ data.state }}">
+              </div>
+              <div class="col-md-6">
+                <label for="zip_code" class="form-label">Zip Code</label>
+                <input type="text" class="form-control" name="zip_code" id="zip_code" value="{{ data.zip_code }}">
+              </div>
+            </div>
+          </div>
+
+          <!-- Identity Section -->
+          <div class="mb-4">
+            <h5 class="mb-3 text-dark">
+            <i class="bi bi-credit-card-2-front me-2"></i> Identity Details
+            </h5> <hr>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="aadhar_no" class="form-label">Aadhar Number</label>
+                <input type="text" class="form-control" name="aadhar_no" id="aadhar_no" value="{{ data.aadhar_no }}">
+              </div>
+              <div class="col-md-6">
+                <label for="pan_no" class="form-label">PAN Number</label>
+                <input type="text" class="form-control" name="pan_no" id="pan_no" value="{{ data.pan_no }}">
+              </div>
+              <div class="col-md-6">
+                <label for="upi_id" class="form-label">UPI ID</label>
+                <input type="text" class="form-control" name="upi_id" id="upi_id" value="{{ data.upi_id }}">
+              </div>
+            </div>
+          </div>
+
+          <!-- Bank Information Section -->
+          <div class="mb-4">
+            <h5 class="mb-3 text-dark">
+            <i class="bi bi-bank me-2"></i> Bank Information
+            </h5> <hr>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="bank_name" class="form-label">Bank Name</label>
+                <input type="text" class="form-control" name="bank_name" id="bank_name" value="{{ data.bank_name }}">
+              </div>
+              <div class="col-md-6">
+                <label for="account_number" class="form-label">Account Number</label>
+                <input type="text" class="form-control" name="account_number" id="account_number" value="{{ data.account_number }}">
+              </div>
+              <div class="col-md-6">
+                <label for="account_holder" class="form-label">Account Holder Name</label>
+                <input type="text" class="form-control" name="account_holder" id="account_holder" value="{{ data.account_holder }}">
+              </div>
+              <div class="col-md-6">
+                <label for="ifsc_code" class="form-label">IFSC Code</label>
+                <input type="text" class="form-control" name="ifsc_code" id="ifsc_code" value="{{ data.ifsc_code }}">
+              </div>
+            </div>
+          </div>
+
+          <!-- Physical Information Section -->
+          <div class="mb-4">
+            <h5 class="mb-3 text-dark">
+            <i class="bi bi-body-text me-2"></i> Physical Information
+            </h5> <hr>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="height" class="form-label">Height (cm)</label>
+                <input type="number" class="form-control" name="height" id="height" value="{{ data.height }}">
+              </div>
+              <div class="col-md-6">
+                <label for="weight" class="form-label">Weight (kg)</label>
+                <input type="number" class="form-control" name="weight" id="weight" value="{{ data.weight }}">
+              </div>
+            </div>
+          </div>
+
+          <!-- Skills Section -->
+          <div class="mb-4">
+            <h5 class="mb-3 text-dark">
+            <i class="bi bi-award me-2"></i> Skills & Expertise
+            </h5> <hr>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="languages" class="form-label">Languages</label>
+                <input type="text" class="form-control" name="languages" id="languages" value="{{ data.languages }}">
+              </div>
+              <div class="col-md-6">
+                <label for="services" class="form-label">Services</label>
+                <input type="text" class="form-control" name="services" id="services" value="{{ data.services }}">
+              </div>
+              <div class="col-md-6">
+                <label for="expertise" class="form-label">Expertise</label>
+                <input type="text" class="form-control" name="expertise" id="expertise" value="{{ data.expertise }}">
+              </div>
+              <div class="col-md-6">
+                <label for="service_locations" class="form-label">Service Locations</label>
+                <input type="text" class="form-control" name="service_locations" id="service_locations" value="{{ data.service_locations }}">
+              </div>
+            </div>
+          </div>
+
+          <!-- Optional Fields Section -->
+          <div class="mb-4">
+            <h5 class="mb-3 text-dark">
+            <i class="bi bi-three-dots me-2"></i> Other Information
+            </h5> <hr>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="other1" class="form-label">Other 1</label>
+                <input type="text" class="form-control" name="other1" id="other1" value="{{ data.other1 }}">
+              </div>
+              <div class="col-md-6">
+                <label for="other2" class="form-label">Other 2</label>
+                <input type="text" class="form-control" name="other2" id="other2" value="{{ data.other2 }}">
+              </div>
+              <div class="col-md-6">
+                <label for="profile_image" class="form-label">Profile Image</label>
+                <input type="file" class="form-control" name="profile_image" id="profile_image" accept="image/*">
+              </div>
+
+              {% if request.session.role_name == "Admin" %}
+                <div class="col-md-6">
+                  <label for="logo" class="form-label">Hospital Logo</label>
+                  <input type="file" class="form-control" name="logo" id="logo" accept="image/*">
+                </div> 
+              {% endif %}          
+              <div class="col-md-6">
+                <label for="pan_image" class="form-label">PAN Image</label>
+                <input type="file" class="form-control" name="pan_image" id="pan_image" accept="image/*">
+              </div>
+              <div class="col-md-6">
+                <label for="aadhar_front_image" class="form-label">Aadhar Front Image</label>
+                <input type="file" class="form-control" name="aadhar_front_image" id="aadhar_front_image" accept="image/*">
+              </div>
+              <div class="col-md-6">
+                <label for="aadhar_back_image" class="form-label">Aadhar Back Image</label>
+                <input type="file" class="form-control" name="aadhar_back_image" id="aadhar_back_image" accept="image/*">
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end mt-4">
+            <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+
+
+
+

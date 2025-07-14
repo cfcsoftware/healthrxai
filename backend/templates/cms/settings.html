@@ -1,0 +1,156 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Website Settings - CMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="bi bi-gear"></i> Website Settings</h4>
+                    <a href="/" target="_blank" class="btn btn-outline-primary">
+                        <i class="bi bi-eye"></i> View Website
+                    </a>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <!-- Website Settings -->
+                            <div class="col-md-6">
+                                <h5 class="border-bottom pb-2 mb-3"><i class="bi bi-globe"></i> Website Settings</h5>
+                                
+                                <div class="mb-3">
+                                    <label for="site_title" class="form-label">Site Title</label>
+                                    <input type="text" class="form-control" id="site_title" name="site_title" 
+                                           value="{{ website_settings.site_title|default:'' }}" placeholder="Hospital Name">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="site_description" class="form-label">Site Description</label>
+                                    <textarea class="form-control" id="site_description" name="site_description" 
+                                              rows="3" placeholder="Brief description of your hospital">{{ website_settings.site_description|default:'' }}</textarea>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="primary_color" class="form-label">Primary Color</label>
+                                            <input type="color" class="form-control form-control-color" id="primary_color" 
+                                                   name="primary_color" value="{{ website_settings.primary_color|default:'#007bff' }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="secondary_color" class="form-label">Secondary Color</label>
+                                            <input type="color" class="form-control form-control-color" id="secondary_color" 
+                                                   name="secondary_color" value="{{ website_settings.secondary_color|default:'#6c757d' }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="font_family" class="form-label">Font Family</label>
+                                    <select class="form-select" id="font_family" name="font_family">
+                                        <option value="Arial, sans-serif" {% if website_settings.font_family == 'Arial, sans-serif' %}selected{% endif %}>Arial</option>
+                                        <option value="Helvetica, sans-serif" {% if website_settings.font_family == 'Helvetica, sans-serif' %}selected{% endif %}>Helvetica</option>
+                                        <option value="Georgia, serif" {% if website_settings.font_family == 'Georgia, serif' %}selected{% endif %}>Georgia</option>
+                                        <option value="Times New Roman, serif" {% if website_settings.font_family == 'Times New Roman, serif' %}selected{% endif %}>Times New Roman</option>
+                                        <option value="Inter, sans-serif" {% if website_settings.font_family == 'Inter, sans-serif' %}selected{% endif %}>Inter</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="logo" class="form-label">Logo</label>
+                                    <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
+                                    {% if website_settings.logo %}
+                                        <div class="mt-2">
+                                            <img src="{{ website_settings.logo.url }}" alt="Current Logo" class="img-thumbnail" style="max-height: 100px;">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="favicon" class="form-label">Favicon</label>
+                                    <input type="file" class="form-control" id="favicon" name="favicon" accept="image/*">
+                                    {% if website_settings.favicon %}
+                                        <div class="mt-2">
+                                            <img src="{{ website_settings.favicon.url }}" alt="Current Favicon" class="img-thumbnail" style="max-height: 50px;">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Footer Settings -->
+                            <div class="col-md-6">
+                                <h5 class="border-bottom pb-2 mb-3"><i class="bi bi-layout-text-window-reverse"></i> Footer Settings</h5>
+                                
+                                <div class="mb-3">
+                                    <label for="company_name" class="form-label">Company Name</label>
+                                    <input type="text" class="form-control" id="company_name" name="company_name" 
+                                           value="{{ footer_settings.company_name|default:'' }}" placeholder="Hospital Name">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Company Description</label>
+                                    <textarea class="form-control" id="description" name="description" 
+                                              rows="3" placeholder="Brief description about your hospital">{{ footer_settings.description|default:'' }}</textarea>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <textarea class="form-control" id="address" name="address" 
+                                              rows="2" placeholder="Hospital Address">{{ footer_settings.address|default:'' }}</textarea>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="phone" class="form-label">Phone</label>
+                                            <input type="text" class="form-control" id="phone" name="phone" 
+                                                   value="{{ footer_settings.phone|default:'' }}" placeholder="+1 (555) 123-4567">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" 
+                                                   value="{{ footer_settings.email|default:'' }}" placeholder="info@hospital.com">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="copyright_text" class="form-label">Copyright Text</label>
+                                    <input type="text" class="form-control" id="copyright_text" name="copyright_text" 
+                                           value="{{ footer_settings.copyright_text|default:'' }}" 
+                                           placeholder="© 2024 Hospital Name. All rights reserved.">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="footer_logo" class="form-label">Footer Logo</label>
+                                    <input type="file" class="form-control" id="footer_logo" name="footer_logo" accept="image/*">
+                                    {% if footer_settings.logo %}
+                                        <div class="mt-2">
+                                            <img src="{{ footer_settings.logo.url }}" alt="Current Footer Logo" class="img-thumbnail" style="max-height: 100px;">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-end mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Save Settings
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

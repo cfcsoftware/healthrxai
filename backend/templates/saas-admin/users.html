@@ -1,0 +1,42 @@
+{% extends "saas-admin/base.html" %}
+{% load static %}
+
+
+{% block content %} 
+
+<div class="px-4">
+  <h5 class="mb-1 text-start text-dark">Tenants List</h5>
+  <div class="table-responsive">
+      <table class="table table-striped table-hover table-bordered shadow-sm" id="example">
+        <thead class="thead-dark">
+          <tr>
+                <th></th>
+              <th>ID</th>
+              <th>Email</th>
+              <th>Username</th>
+              <th>Is Tenant Admin</th>
+              <th>Is Staff</th>
+              <th>Is Active</th>
+              <th>Date Joined</th>
+              <th>Tenant</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for user in tenants %}
+          <tr>
+              <td>{{ user.id }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.is_tenant_admin }}</td>
+              <td>{{ user.is_staff }}</td>
+              <td>{{ user.is_active }}</td>
+              <td>{{ user.date_joined }}</td>
+              <td>{{ user.tenant }}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+      </table>
+  </div>
+</div>
+
+{% endblock %}

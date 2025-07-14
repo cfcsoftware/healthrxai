@@ -1,0 +1,88 @@
+{% extends "saas-admin/base.html" %}
+{% load static %}
+
+
+{% block content %} 
+
+<div class="px-4">
+  <h5 class="mb-1 text-start text-dark">Tenants List</h5>
+  <div class="table-responsive">
+      <table class="table table-striped table-hover table-bordered shadow-sm" id="example">
+        <thead>
+          <tr>
+            <th></th>
+              <th>ID</th>
+              <th>Sub-Domain URL</th>
+              <th>Custom Domain URL</th>
+              <th>Browse</th>
+              <th>Action</th>
+          </tr>
+        </thead>
+      <tbody>
+          {% for tenant in tenants %}
+          <tr>
+            <td></td>
+              <td>TENANT-100{{ tenant.id }}</td>
+              <td>{{ tenant.domain }}</td>
+              <td>{{ tenant.custom_domain_url }}</td>
+              <td>
+                <a href="{{ tenant.browse }}" class="btn btn-primary" target="_blank">Visit Website</a>
+                <a href="{{ tenant.admin_login_url }}" class="btn btn-secondary" target="_blank">Login as Admin</a>
+              </td>
+                           
+              <td>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#updateModal{{ tenant.id }}"><i class="bi bi-pencil-fill"></i></a>
+                
+                <!-- Update Modal -->
+                <div class="modal fade" id="updateModal{{ tenant.id }}" tabindex="-1" aria-labelledby="updateModalLabel{{ tenant.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="card-dark shadow-sm p-4">
+                                    <div class="card-body">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="updateModalLabel{{ tenant.id }}">Update Domain</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <!-- Domain Update Form -->
+                                        <form method="POST" action="/saas/domains/update/{{ tenant.id }}">
+                                            {% csrf_token %}
+                                            <!-- First Row with 2 fields -->
+                                            <div class="row mb-3 firstRow">
+                                                <div class="col-6">
+                                                    <label for="domain{{ tenant.id }}" class="form-label">Sub-Domain URL</label>
+                                                    <input type="text" class="form-control" id="domain{{ tenant.id }}" name="domain" value="{{ tenant.domain }}" required>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label for="customDomain{{ tenant.id }}" class="form-label">Custom Domain URL</label>
+                                                    <input type="text" class="form-control" id="customDomain{{ tenant.id }}" name="custom_domain_url" value="{{ tenant.custom_domain_url }}" required>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row btnrow">
+                                                <center>
+                                                    <button type="submit" class="btn btn-success-light">
+                                                        Save changes
+                                                    </button>
+                                                </center>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+      </table>
+  </div>
+</div>
+
+
+
+
+
+{% endblock %}

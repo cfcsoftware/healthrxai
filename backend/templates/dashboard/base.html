@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/css/multi-select-tag.css" />
+    
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <title>{{request.session.username}}</title>
+    <script src="{% static 'assets_superadmin/js/jquery-3.6.0.min.js' %}"></script>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'assets_superadmin/img/logo.png' %}" type="image/x-icon"> 
+    <!-- Custom styles -->
+     <link rel="stylesheet" href="{% static 'assets_superadmin/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets_superadmin/css/style.min.css' %}" /> 
+
+    <link rel="stylesheet" href="{% static 'assets_superadmin/css/dataTables.dataTables.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets_superadmin/css/buttons.dataTables.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets_superadmin/css/fixedColumns.dataTables.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets_superadmin/css/select.dataTables.css' %}"/> 
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <style>
+      #calendar {
+        height: 100% !important;
+        min-height: 500px;
+      }    
+      /* Hide scrollbars for all browsers */
+      #calendar ::-webkit-scrollbar { display: none; }
+      #calendar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+  </head>
+
+  <body class="">
+    <div class="layer"></div>
+    <!-- ! Body -->
+    <div class="page-flex">
+      <!-- ! Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-start">
+          <div class="sidebar-head ">
+            <a href="#" class="logo-wrapper m-auto" title="Home">
+              <span class="sr-only">Home</span>
+              {% if request.session.profile_image %}
+                <img src="{{ request.session.profile_image }}" alt="Logo" class="pt-2" height="60">
+              {% else %}
+                <img src="{% static 'images/main_logo.png' %}" alt="Logo" class="pt-2" height="60">
+              {% endif %}
+            </a>
+          </div>
+          <div class="sidebar-body">
+            <ul class="sidebar-body-menu">
+
+                <!-- Dashboard --> 
+                {% if 'view-dashboard' in request.session.user_permissions %}
+                <li>
+                  <a href="/dashboard">
+                    <i class="bi bi-speedometer2"></i>
+                    <span class="nav-text">Dashboard</span>
+                  </a>
+                </li>
+                {% endif %}
+
+
+                <!-- patient Manager -->
+                {% if 'patient-list' in request.session.user_permissions%}
+                <li>
+                  <a class="show-cat-btn" href="#">
+                    <i class="bi bi-receipt"></i>
+                    <span>Patients</span>
+                    <span class="category__btn transparent-btn" title="Open list">
+                      <span class="sr-only">Open list</span>
+                      <span class="icon arrow-down" aria-hidden="true"></span>
+                    </span>
+                  </a>
+                  <ul class="cat-sub-menu">
+                    <li>
+                      <a href='/patients/all-patient'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text">Patients</span>
+                      </a>
+                    </li>
+                      <li>
+                        <a href='/patients/global/search'>
+                          <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                          <span class="nav-text">Global Search</span>
+                        </a>
+                      </li>
+                  </ul>
+                </li>
+                {% endif %}
+ 
+
+                <!-- Billing Counter --> 
+                {% if 'general-billing-list' in request.session.user_permissions or 'final-billing-list' in request.session.user_permissions %}
+                <li>
+                  <a class="show-cat-btn" href="#">
+                    <i class="bi bi-receipt"></i>
+                    <span>Billings</span
+                    >
+                    <span class="category__btn transparent-btn" title="Open list">
+                      <span class="sr-only">Open list</span>
+                      <span class="icon arrow-down" aria-hidden="true"></span>
+                    </span>
+                  </a>
+                  <ul class="cat-sub-menu">
+                    {% if 'general-billing-list' in request.session.user_permissions %}
+                    <li>
+                      <a href='/billing/billing'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text">General Billing </span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    {% if 'final-billing-list' in request.session.user_permissions %}
+                      <li>
+                        <a href='/billing/billing/final'>
+                          <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                          <span class="nav-text"> Final Billing </span>
+                        </a>
+                      </li>
+                      {% endif %}
+                  </ul>
+                </li>
+                {% endif %}
+
+               
+                <!-- Appointments --> 
+                {% if 'appointment-list' in request.session.user_permissions%} 
+                <li>
+                  <a href="/appointments/appointment">
+                    <i class="bi bi-clipboard-plus-fill"></i>
+                    <span class="nav-text">Appointments</span>
+                  </a>
+                </li>
+                {% endif %}
+
+
+                <!-- IPD --> 
+                {% if 'ipd-list' in request.session.user_permissions%} 
+                <li>
+                  <a href="/ipd/list">
+                    <i class="bi bi-bag-plus-fill"></i>
+                    <span class="nav-text"> IPD Module </span>
+                  </a>
+                </li>
+                {% endif %}
+
+                <!-- Bed Management --> 
+                {% if 'bed-management-list' in request.session.user_permissions%} 
+                <li>
+                  <a href="/bed-management/list">
+                    <i class="bi bi-align-start"></i>
+                    <span class="nav-text"> Bed Module </span>
+                  </a>
+                </li>
+                {% endif %}
+
+                <!-- Pharmacy Bill --> 
+                {% if 'pharmacy-bill-list' in request.session.user_permissions or 'medicine-list' in request.session.user_permissions or 'purchase-medicine-list' in request.session.user_permissions %}  
+                <li>
+                  <a class="show-cat-btn" href="#">
+                    <i class="bi bi-capsule-pill"></i>
+                    <span>Pharmacy</span
+                    >
+                    <span class="category__btn transparent-btn" title="Open list">
+                      <span class="sr-only">Open list</span>
+                      <span class="icon arrow-down" aria-hidden="true"></span>
+                    </span>
+                  </a>
+                  <ul class="cat-sub-menu">
+                    {% if 'pharmacy-bill-list' in request.session.user_permissions%}  
+                    <li>
+                      <a href='/pharmacy/pharmacy-bill'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text"> Pharmacy Bill </span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    {% if 'medicine-list' in request.session.user_permissions%} 
+                    <li>
+                        <a href='/pharmacy/medicine-list'>
+                          <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                          <span class="nav-text"> Medicine List  </span>
+                        </a>
+                    </li>
+                      {% endif %}
+                  <!--     {% if 'medicine-category-list' in request.session.user_permissions%} 
+                      <li>
+                          <a href='/pharmacy/medicine-stock'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text"> Medicine Stock  </span>
+                          </a>
+                      </li>
+                      {% endif %}
+                                        {% if 'purchase-medicine-list' in request.session.user_permissions%}  
+                      <li>
+                          <a href='/pharmacy/purchase-medicine'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">  Purchase Medicine   </span>
+                          </a>
+                      </li>
+                      {% endif %} -->
+
+                          
+                  </ul>
+                </li>
+                {% endif %}
+
+                <!-- pathology Module --> 
+                {% if 'pathology-report-list' in request.session.user_permissions or 'pathology-report-add' in request.session.user_permissions  or 'pathology-test-list' in request.session.user_permissions or 'pathology-test-add' in request.session.user_permissions %}
+                <li>
+                    <a class="show-cat-btn" href="#">
+                      <i class="bi bi-file-medical"></i>
+                      <span>Pathology</span
+                      >
+                      <span class="category__btn transparent-btn" title="Open list">
+                        <span class="sr-only">Open list</span>
+                        <span class="icon arrow-down" aria-hidden="true"></span>
+                      </span>
+                    </a>
+                  <ul class="cat-sub-menu">
+                    {% if 'pathology-report-list' in request.session.user_permissions %}
+                      <li>
+                          <a href='/pathology/report/list'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text"> Pathology Reports  </span>
+                          </a>
+                      </li>
+                    {% endif %}
+                    {% if 'pathology-test-list' in request.session.user_permissions %}
+                    <li>
+                      <a href='/pathology/test/list'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text"> Pathology Tests </span>
+                      </a>
+                    </li>
+                    {% endif %}       
+                  </ul>
+                </li>
+                {% endif %}
+
+
+                <!-- Radiology Module --> 
+                {% if 'radiology-test-add' in request.session.user_permissions or 'radiology-test-list' in request.session.user_permissions or 'radiology-report-list' in request.session.user_permissions or 'radiology-report-add' in request.session.user_permissions %}
+                <li>
+                    <a class="show-cat-btn" href="#">
+                      <i class="bi bi-radioactive"></i>
+                      <span>Radiology</span
+                      >
+                      <span class="category__btn transparent-btn" title="Open list">
+                        <span class="sr-only">Open list</span>
+                        <span class="icon arrow-down" aria-hidden="true"></span>
+                      </span>
+                    </a>
+                  <ul class="cat-sub-menu">
+                    {% if 'radiology-report-list' in request.session.user_permissions %}
+                    <li>
+                        <a href='/radiology/reports/list'>
+                          <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                          <span class="nav-text"> Radiology Reports  </span>
+                        </a>
+                    </li>
+                      {% endif %}                  
+                    {% if 'radiology-test-list' in request.session.user_permissions %}
+                    <li>
+                      <a href='/radiology/tests/list'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text"> Radiology Tests </span>
+                      </a>
+                    </li>
+                    {% endif %}
+                  
+                  </ul>
+                </li>
+                {% endif %}
+
+
+                <!-- Blood Bank
+                {% if 'blood-bank-list' in request.session.user_permissions or 'blood-bank-add' in request.session.user_permissions %} 
+                    <li>
+                      <a href="#">
+                        <i class="bi bi-droplet-fill"></i>
+                        <span class="nav-text"> Blood Bank </span>
+                      </a>
+                    </li>
+                {% endif %}  --> 
+
+                <!-- Certificate Module  -->
+                {% if 'discharge-certificate-list' in request.session.user_permissions or 'discharge-certificate-add' in request.session.user_permissions or 'discharge-certificate-edit' in request.session.user_permissions or 'discharge-certificate-view' in request.session.user_permissions or 'discharge-certificate-delete' in request.session.user_permissions %} 
+                <li>
+                    <a class="show-cat-btn" href="#">
+                      <i class="bi bi-bookmark-fill"></i>
+                      <span>Certificates</span
+                      >
+                      <span class="category__btn transparent-btn" title="Open list">
+                        <span class="sr-only">Open list</span>
+                        <span class="icon arrow-down" aria-hidden="true"></span>
+                      </span>
+                    </a>
+                  <ul class="cat-sub-menu">
+                    {% if 'discharge-certificate-list' in request.session.user_permissions %}
+                    <li>
+                      <a href='/certificate/discharge-certificate'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text"> Discharge Certificate </span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    {% if 'medical-certificate-list' in request.session.user_permissions %}
+                      <li>
+                          <a href='/certificate/medical-certificate'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Medical Certificate</span>
+                          </a>
+                      </li>
+                    {% endif %}
+                    {% if 'fitness-certificate-list' in request.session.user_permissions %}
+                      <li>
+                        <a href='/certificate/fitness-certificate'>
+                          <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                          <span class="nav-text"> Fitness Certificate  </span>
+                        </a>
+                      </li>
+                    {% endif %}
+                    {% if 'birth-certificate-list' in request.session.user_permissions %}
+                      <li>
+                        <a href='/certificate/birth-certificate'>
+                          <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                          <span class="nav-text"> Birth Certificate</span>
+                        </a>
+                      </li> 
+                    {% endif %}   
+                    {% if 'death-certificate-list' in request.session.user_permissions %}             
+                      <li>
+                        <a href='/certificate/death-certificate'>
+                          <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                          <span class="nav-text"> Death Certificate </span>
+                        </a>
+                      </li> 
+                    {% endif %}
+                  </ul>
+                </li>
+                {% endif %} 
+
+                
+                <!-- Surgery -->
+                {% if 'surgery-list' in request.session.user_permissions or 'surgery-add' in request.session.user_permissions%}  
+                  <li>
+                    <a href="/surgery/surgery">
+                      <i class="bi bi-scissors"></i>
+                      <span class="nav-text">Surgery</span>
+                    </a>
+                  </li>
+                {% endif %}
+
+                <!-- Accounting Module
+              {% if 'income-list' in request.session.user_permissions or 'income-add' in request.session.user_permissions or 'expenses-list' in request.session.user_permissions or 'expenses-add' in request.session.user_permissions %} 
+              <li>
+                <a class="show-cat-btn" href="#">
+                  <i class="bi bi-person-vcard-fill"></i>
+                  <span>Accounting</span
+                  >
+                  <span class="category__btn transparent-btn" title="Open list">
+                    <span class="sr-only">Open list</span>
+                    <span class="icon arrow-down" aria-hidden="true"></span>
+                  </span>
+                </a>
+                <ul class="cat-sub-menu">
+                  {% if 'income-list' in request.session.user_permissions %}
+                  <li>
+                    <a href='/income/list'>
+                      <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                      <span class="nav-text"> Income </span>
+                    </a>
+                  </li>
+                  {% endif %}
+                  {% if 'expenses-list' in request.session.user_permissions %}
+                    <li>
+                        <a href='/expenses/list'>
+                          <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                          <span class="nav-text">Expenses</span>
+                        </a>
+                    </li>
+                  {% endif %}                                       
+                </ul>
+              </li>
+              {% endif %}  --> 
+
+                <!-- Staff Management--> 
+                {% if 'staff-list' in request.session.user_permissions or 'staff-add' in request.session.user_permissions %}
+                <li>
+                  <a class="show-cat-btn" href="#">
+                    <i class="bi bi-person-gear"></i>
+                    <span>Manage Staff</span
+                    >
+                    <span class="category__btn transparent-btn" title="Open list">
+                      <span class="sr-only">Open list</span>
+                      <span class="icon arrow-down" aria-hidden="true"></span>
+                    </span>
+                  </a>
+                  <ul class="cat-sub-menu">
+                    {% if 'staff-add' in request.session.user_permissions %}
+                    <li>
+                      <a href='/staff/employee/add'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text"> Add Staff </span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    {% if 'staff-list' in request.session.user_permissions %}
+                    <li>
+                          <a href='/staff/employee/list'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Manage Staff</span>
+                          </a>
+                      </li>
+                    {% endif %}                                       
+                  </ul>
+                </li>
+                {% endif %}
+
+
+                <!-- Roles & Permissions management--> 
+                {% if 'role-list' in request.session.user_permissions or 'permission-list' in request.session.user_permissions or 'role-permission-assign-list' in request.session.user_permissions %}
+                <li>
+                  <a class="show-cat-btn" href="#">
+                    <i class="bi bi-person-fill-lock"></i>
+                    <span>Role & Permissions</span
+                    >
+                    <span class="category__btn transparent-btn" title="Open list">
+                      <span class="sr-only">Open list</span>
+                      <span class="icon arrow-down" aria-hidden="true"></span>
+                    </span>
+                  </a>
+                  <ul class="cat-sub-menu">
+                    {% if 'role-list' in request.session.user_permissions %}
+                    <li>
+                      <a href='/roles/list'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text"> Roles</span>
+                      </a>
+                    </li>
+                    {% endif %}
+
+                    <!--                   {% if 'permission-list' in request.session.user_permissions %}
+                    <li>
+                          <a href='/permissions/list'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Permissions</span>
+                          </a>
+                      </li>
+                    {% endif %}  -->
+    
+                    {% if 'role-permission-assign-list' in request.session.user_permissions %}
+                    <li>
+                          <a href='/role/permissions/'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Assign Role <br> Permission</span>
+                          </a>
+                      </li>
+                    {% endif %}                                     
+                  </ul>
+                </li>
+                {% endif %}
+
+
+                <!-- Departments --> 
+                {% if 'department-list' in request.session.user_permissions %} 
+                <li>
+                    <a href="/departments/department">
+                      <i class="bi bi-building-fill"></i>
+                      <span class="nav-text">Departments</span>
+                    </a>
+                </li>
+                {% endif %}
+
+
+                <!-- Service --> 
+                {% if 'service-list' in request.session.user_permissions %} 
+                <li>
+                    <a href="/services">
+                      <i class="bi bi-tools"></i>
+                      <span class="nav-text">Services</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                <!-- CMS Management -->
+                {% if 'cms-dashboard' in request.session.user_permissions or 'cms-setting' in request.session.user_permissions or 'cms-menu-builder' in request.session.user_permissions or 'cms-pages' in request.session.user_permissions or 'cms-features' in request.session.user_permissions or 'cms-gallery' in request.session.user_permissions  or 'cms-contacts' in request.session.user_permissions %} 
+                <li>
+                  <a class="show-cat-btn" href="#">
+                    <i class="bi bi-globe2"></i>
+                    <span>Website</span>
+                    <span class="category__btn transparent-btn" title="Open list">
+                      <span class="sr-only">Open list</span>
+                      <span class="icon arrow-down" aria-hidden="true"></span>
+                    </span>
+                  </a>
+                  <ul class="cat-sub-menu">
+                    {% if 'cms-dashboard' in request.session.user_permissions %}
+                    <li>
+                      <a href='/cms/'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text">CMS Dashboard</span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    {% if 'cms-setting' in request.session.user_permissions %}
+                    <li>
+                      <a href='/cms/settings'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text">Website Settings</span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    {% if 'cms-menu-builder' in request.session.user_permissions %}
+                    <li>
+                      <a href='/cms/menu-builder'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text">Menu Builder</span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    {% if 'cms-pages' in request.session.user_permissions %}
+                    <li>
+                      <a href='/cms/pages'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text">Manage Pages</span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    {% if 'cms-features' in request.session.user_permissions %}
+                    <li>
+                      <a href='/cms/features'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text">Features & Services</span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    {% if 'cms-gallery' in request.session.user_permissions %}
+                    <li>
+                      <a href='/cms/gallery'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text">Gallery Management</span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    {% if 'cms-contacts' in request.session.user_permissions %}
+                    <li>
+                      <a href='/cms/contacts'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text">Contact Submissions</span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    <li>
+                      <a href='/' target="_blank">
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text">View Website</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                {% endif %}
+
+                <!-- My Profile --> 
+                <li>
+                  <a href="/setting/user-profile">
+                    <i class="bi bi-person"></i>
+                    <span class="nav-text">My Profile</span>
+                  </a>
+                </li>
+
+
+                <!-- Settings -->
+                {% if 'general-setting' in request.session.user_permissions or 'patient-setting' in request.session.user_permissions or 'pharmacy-setting' in request.session.user_permissions or 'pathology-setting' in request.session.user_permissions or 'radiology-setting' in request.session.user_permissions  or 'blood-bank-setting' in request.session.user_permissions or 'bed-setting' in request.session.user_permissions or 'human-resource-setting' in request.session.user_permissionsor or 'insurance-setting' in request.session.user_permissionsor or 'inventory-setting' in request.session.user_permissions or 'operation-setting' in request.session.user_permissions or 'theme-setting' in request.session.user_permissions %}
+                <li>
+                  <a class="show-cat-btn" href="#">
+                    <i class="bi bi-gear-fill"></i>
+                    <span>Settings</span
+                    >
+                    <span class="category__btn transparent-btn" title="Open list">
+                      <span class="sr-only">Open list</span>
+                      <span class="icon arrow-down" aria-hidden="true"></span>
+                    </span>
+                  </a>
+                  <ul class="cat-sub-menu">
+                    {% if 'bed-setting' in request.session.user_permissions %}
+                    <li>
+                          <a href='/setting/bed'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Bed Settings </span>
+                          </a>
+                      </li>
+                    {% endif %} 
+                    {% comment %} {% if 'general-setting' in request.session.user_permissions %}
+                    <li>
+                      <a href='/settings/setting/general'>
+                        <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                        <span class="nav-text"> General Settings </span>
+                      </a>
+                    </li>
+                    {% endif %}
+                    {% if 'patient-setting' in request.session.user_permissions %}
+                    <li>
+                          <a href='/settings/setting/patient'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Patient Settings </span>
+                          </a>
+                      </li>
+                    {% endif %}   
+                    {% if 'pharmacy-setting' in request.session.user_permissions %}
+                    <li>
+                          <a href='/settings/setting/pharmacy'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Pharmacy Settings </span>
+                          </a>
+                      </li>
+                    {% endif %}   
+                    {% if 'pathology-setting' in request.session.user_permissions %}
+                    <li>
+                          <a href='/settings/setting/pathology'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Pathology Settings </span>
+                          </a>
+                      </li>
+                    {% endif %}  
+                    {% if 'radiology-setting' in request.session.user_permissions %}
+                    <li>
+                          <a href='/settings/setting/radiology'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Radiology Settings </span>
+                          </a>
+                      </li>
+                    {% endif %} 
+                    {% if 'blood-bank-setting' in request.session.user_permissions %}
+                    <li>
+                          <a href='/settings/setting/blood-bank'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Blood Bank<br>Settings </span>
+                          </a>
+                      </li>
+                    {% endif %} 
+                    {% if 'human-resource-setting' in request.session.user_permissions %}
+                    <li>
+                          <a href='/settings/setting/human-resource'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Human Resource <br> Settings </span>
+                          </a>
+                      </li>
+                    {% endif %} 
+                    {% if 'insurance-setting' in request.session.user_permissions %}
+                    <li>
+                          <a href='/settings/setting/insurance'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Insurance Settings </span>
+                          </a>
+                      </li>
+                    {% endif %} 
+                    {% if 'inventory-setting' in request.session.user_permissions %}
+                    <li>
+                          <a href='/settings/setting/inventory'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Inventory Settings </span>
+                          </a>
+                      </li>
+                    {% endif %} 
+                    {% if 'operation-setting' in request.session.user_permissions %}
+                    <li>
+                          <a href='/settings/setting/operation'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">OT Settings </span>
+                          </a>
+                      </li>
+                    {% endif %}
+                    {% if 'theme-setting' in request.session.user_permissions %} 
+                    <li>
+                          <a href='/settings/setting/theme'>
+                            <i class="bi bi-circle-fill" style="font-size: 10px;"></i>
+                            <span class="nav-text">Theme Settings </span>
+                          </a>
+                      </li>              
+                    {% endif %} {% endcomment %}
+                  </ul>
+                </li>
+                {% endif %}
+
+                <li>
+                  <a href="/logout">
+                    <i class="bi bi-box-arrow-left"></i>
+                    <span class="nav-text">Logout</span>
+                  </a>
+                </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+      <div class="main-wrapper">
+        <!-- ! Main nav -->
+        <nav class="main-nav--bg">
+          <div class="px-4 main-nav">
+            <div class="main-nav-start"></div>
+            <div class="main-nav-end">
+              <!-- <i class="bi bi-brightness-high-fill fs-5 me-3 theme-switcher"></i> -->
+              <div class="">
+                <span class="user-text">Welcome! {{request.session.username}}</span>
+              </div>
+              <button
+                class="sidebar-toggle transparent-btn"
+                title="Menu"
+                type="button"
+              >
+                <span class="sr-only">Toggle menu</span>
+                <span class="icon menu-toggle--gray" aria-hidden="true"></span>
+              </button>
+
+              <div class="nav-user-wrapper">
+                <button class="btn dropdown-toggle p-0" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-person-circle fs-3"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                  <li>
+                    <a class="dropdown-item text-danger" href="/logout">
+                      <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                      <span>Logout</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              
+              
+            </div>
+          </div>
+        </nav>
+
+         
+
+        <!-- ! Main -->
+        <main class="main users chart-page" id="skip-target">
+
+          <!-- Alert Messages -->
+         {% if messages %}
+         {% for message in messages %}
+           {% if message.tags == 'error' %}
+             <div class="alert alert-danger alert-dismissible fade show" role="alert">
+           {% elif message.tags == 'success' %}
+             <div class="alert alert-success alert-dismissible fade show" role="alert">
+           {% else %}
+             <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+           {% endif %}
+             {{ message }}
+             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+           </div>
+         {% endfor %}
+       {% endif %}
+
+          {% block content %} {% endblock content %}
+        </main>
+        <!-- ! Footer -->
+        <!-- <footer class="footer">
+          <div class="container footer--flex">
+            <div class="footer-start">
+              <p>Copyright © {% now "Y" %} HealthRx | All rights reserved. </p>
+            </div>
+          </div>
+        </footer> -->
+      </div>
+    </div>
+    <!-- Core JavaScript libraries -->
+
+    <script src="{% static 'assets_superadmin/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/jquery-ui.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <!-- Multi-select and other plugins -->
+    <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/js/multi-select-tag.js"></script>
+    
+    <!-- DataTables and related plugins -->
+    <script src="{% static 'assets_superadmin/js/dataTables.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/dataTables.buttons.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/buttons.dataTables.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/jszip.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.clogitudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="{% static 'assets_superadmin/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/dataTables.fixedColumns.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/fixedColumns.dataTables.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/dataTables.select.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/select.dataTables.js' %}"></script>
+    
+    <script>
+      // Initialize DataTables and MultiSelectTag using jQuery
+      $(document).ready(function () {
+        // Initialize main example table
+        const exampleTable = $('#example');
+if (exampleTable.length && typeof DataTable !== 'undefined') {
+          try {
+            exampleTable.DataTable({
+              layout: {
+                topStart: {
+                  buttons: ["copy", "csv", "excel", "pdf", "print", "Send"],
+                },
+              },
+              columnDefs: [
+                {
+                  orderable: false,
+                  render: DataTable.render.select(),
+                  targets: 0,
+                },
+              ],
+              fixedColumns: {
+                start: 1,
+              },
+              order: [[1, "asc"]],           
+              select: {
+                style: "os",
+                selector: "td:first-child",
+              },
+              initComplete: function () {
+                $('#example').show(); 
+              }
+            });
+
+            // Initialize all tables with class .example
+            $('.example').each(function () {
+              const table = $(this);
+              table.DataTable({
+                layout: {
+                  topStart: {
+                    buttons: ["copy", "csv", "excel", "pdf", "print", "Send"],
+                  },
+                },
+                columnDefs: [
+                  {
+                    orderable: false,
+                    render: DataTable.render.select(),
+                    targets: 0,
+                  },
+                ],
+                fixedColumns: {
+                  start: 1,
+                },
+                order: [[1, "asc"]],                
+                select: {
+                  style: "os",
+                  selector: "td:first-child",
+                },
+                initComplete: function () {
+                  table.show(); 
+                }
+              });
+            });
+          } catch (error) {
+            console.error('Error initializing example DataTable:', error);
+          }
+        }
+
+
+       // Initialize role table
+        const roleTable = $('#roletable');
+        if (roleTable.length && typeof DataTable !== 'undefined') {
+          try {
+            roleTable.DataTable({
+              columnDefs: [
+                {
+                  orderable: false,
+                  targets: 0,
+                },
+              ],
+              fixedColumns: {
+                start: 1,
+              },
+              order: [[1, "asc"]],
+              paging: false,
+              scrollCollapse: true,
+              scrollX: true,
+              scrollY: 300,
+              select: false, // Disable row selection
+              dom: 't', // This removes the search bar
+
+              
+              initComplete: function () {
+                $('#roletable').show();
+              }
+            });
+          } catch (error) {
+            console.error('Error initializing role DataTable:', error);
+          }
+        }
+
+
+        // Initialize MultiSelectTag
+        const countries = $('#countries');
+        if (countries.length && typeof MultiSelectTag !== 'undefined') {
+          try {
+            new MultiSelectTag("countries", {
+              rounded: true,
+              placeholder: "Search",
+              tagColor: {
+                textColor: "#red",
+                borderColor: "#92e681",
+                bgColor: "#000000",
+              },
+              onChange: function (values) {
+                console.log(values);
+              },
+            });
+          } catch (error) {
+            console.error('Error initializing countries MultiSelectTag:', error);
+          }
+        }
+
+        const countries2 = $('#countries2');
+        if (countries2.length && typeof MultiSelectTag !== 'undefined') {
+          try {
+            new MultiSelectTag("countries2", {
+              rounded: true,
+              placeholder: "Search",
+              tagColor: {
+                textColor: "#red",
+                borderColor: "#92e681",
+                bgColor: "#000000",
+                border: "1px solid gray",
+              },
+              onChange: function (values) {
+                console.log(values);
+              },
+            });
+          } catch (error) {
+            console.error('Error initializing countries2 MultiSelectTag:', error);
+          }
+        }
+      });
+    </script>
+
+    <!-- Chart library -->
+    <script src="{% static 'assets_superadmin/plugins/chart.min.js' %}"></script>
+    <!-- Icons library -->
+    <script src="{% static 'assets_superadmin/plugins/feather.min.js' %}"></script>
+    <!-- Custom scripts -->
+    <script src="{% static 'assets_superadmin/js/script.js' %}"></script>
+
+
+  
+
+    <script>
+      // Initialize page functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Dashboard base template loaded');
+        
+        // Initialize tooltips if Bootstrap is available
+        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+          var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+          var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+          });
+        }
+        
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+          const alerts = document.querySelectorAll('.alert-dismissible');
+          alerts.forEach(function(alert) {
+            if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
+              const bsAlert = new bootstrap.Alert(alert);
+              if (bsAlert) {
+                bsAlert.close();
+              }
+            }
+          });
+        }, 5000);
+      });
+      
+      // Toggle password visibility
+      document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.getElementById('toggle-password');
+        if (togglePassword) {
+          togglePassword.addEventListener('click', function() {
+            const passwordField = document.getElementById('pwd');
+            const icon = this.querySelector('i');
+            if (passwordField.type === 'password') {
+              passwordField.type = 'text';
+              icon.classList.remove('ri-eye-line');
+              icon.classList.add('ri-eye-off-line');
+            } else {
+              passwordField.type = 'password';
+              icon.classList.remove('ri-eye-off-line');
+              icon.classList.add('ri-eye-line');
+            }
+          });
+        }
+      });
+
+
+
+      
+      $(document).ready(function () {
+    const currentPath = window.location.pathname;
+
+    $('.sidebar-body-menu a').each(function () {
+      if ($(this).attr('href') === currentPath) {
+        $(this).parent().addClass('active');
+      }
+    });
+  });
+    </script>
+    
+    
+    <!-- FullCalendar CSS & JS -->
+          
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridDay',
+        height: '100%',
+        contentHeight: 'auto',
+        expandRows: true,
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'timeGridDay,timeGridWeek,dayGridMonth'
+        },
+        events: {{ calendar_events|safe }}
+        });
+        calendar.render();
+      });
+    </script>
+    
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/bcf1718b9e.js" crossorigin="anonymous"></script>
+    
+    <!-- Custom block for additional JS -->
+    {% block extra_js %}{% endblock %}
+
+  </body>
+</html>

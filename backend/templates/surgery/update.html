@@ -1,0 +1,316 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="px-4">
+    <div class="card shadow mb-4 mx-4">
+        <div class="p-3 mb-4 rounded bg-primary text-light">
+            <h4 class="mb-0"><i class="bi bi-activity me-2"></i>Update Surgery</h4>
+        </div>
+        <div class="card-body">
+                <form method="post" enctype="multipart/form-data" id="surgeryUpdateForm" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="row g-4">
+                        <!-- Doctor & Surgery Team -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="doctor_id">
+                                    <i class="bi bi-person-fill-add me-1"></i>Doctor (Surgeon) <span class="text-danger">*</span>
+                                </label>
+                                <select id="doctor_id" name="doctor" class="form-select" required>
+                                    <option value="">Select Doctor</option>
+                                    {% for doctor in doctors %}
+                                        <option value="{{ doctor.id }}"
+                                            {% if surgery.doctor == doctor.id or surgery.doctor == doctor %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            {{ doctor.name }} ({{ doctor.expertise }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">
+                                    <i class="bi bi-person-lines-fill me-1"></i>Assistant Surgeon(s) <span class="text-danger">*</span>
+                                </label>
+                                <div id="assistantSurgeonsContainer">
+                                    {% if surgery.assistant_surgeon_details %}
+                                        {% for assistant in surgery.assistant_surgeon_details %}
+                                        <div class="input-group mb-2 assistant-surgeon-row">
+                                            <select class="form-select" name="assistant_surgeon_details[]" required>
+                                                <option value="">Select Assistant Surgeon</option>
+                                                {% for doctor in doctors %}
+                                                    <option value="{{ doctor.id }}"
+                                                        {% if assistant == doctor.id or assistant == doctor.name %}
+                                                            selected
+                                                        {% endif %}
+                                                    >
+                                                        {{ doctor.name }} ({{ doctor.expertise }})
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                            <button type="button" class="btn btn-outline-success add-surgeon-btn" title="Add Surgeon">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger remove-surgeon-btn" title="Remove Surgeon" style="display:none;">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="input-group mb-2 assistant-surgeon-row">
+                                            <select class="form-select" name="assistant_surgeon_details[]" required>
+                                                <option value="">Select Assistant Surgeon</option>
+                                                {% for doctor in doctors %}
+                                                    <option value="{{ doctor.id }}">{{ doctor.name }} ({{ doctor.expertise }})</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button type="button" class="btn btn-outline-success add-surgeon-btn" title="Add Surgeon">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger remove-surgeon-btn" title="Remove Surgeon" style="display:none;">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="anesthesiologist_name">
+                                    <i class="bi bi-person-hearts me-1"></i>Anesthesiologist <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select" id="anesthesiologist_name" name="anesthesiologist_name" required>
+                                    <option value="">Select Anesthesiologist</option>
+                                    {% for d in doctors %}
+                                        <option value="{{ d.id }}" {% if surgery.anesthesiologist_name == d.id or surgery.anesthesiologist_name == d.name %}selected{% endif %}>{{ d.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Surgery Details -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="surgery_type">
+                                    <i class="bi bi-clipboard2-pulse me-1"></i>Surgery Type
+                                </label>
+                                <input type="text" class="form-control" id="surgery_type" name="surgery_type" placeholder="Enter Surgery Type"
+                                    value="{{ surgery.surgery_type|default_if_none:'' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="surgery_code">
+                                    <i class="bi bi-upc-scan me-1"></i>Surgery Code
+                                </label>
+                                <input type="text" class="form-control" id="surgery_code" name="surgery_code" placeholder="Surgery Code"
+                                    value="{{ surgery.surgery_code|default_if_none:'' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="surgery_description">
+                                    <i class="bi bi-card-text me-1"></i>Surgery Description
+                                </label>
+                                <textarea class="form-control" id="surgery_description" name="surgery_description" placeholder="Describe the surgery">{{ surgery.surgery_description|default_if_none:'' }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="surgery_department">
+                                    <i class="bi bi-building me-1"></i>Surgery Department
+                                </label>
+                                <select class="form-select select2" id="surgery_department" name="surgery_department">
+                                    <option value="">Select Department</option>
+                                    {% for dept in departments %}
+                                        <option value="{{ dept }}" {% if surgery.surgery_department == dept %}selected{% endif %}>{{ dept }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="scheduled_datetime">
+                                    <i class="bi bi-calendar-check me-1"></i>Scheduled Date &amp; Time
+                                </label>
+                                <input type="datetime-local" class="form-control" id="scheduled_datetime" name="scheduled_datetime" placeholder="Date &amp; Time"
+                                    value="{% if surgery.scheduled_datetime %}{{ surgery.scheduled_datetime|date:'Y-m-d\\TH:i' }}{% endif %}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="expected_duration">
+                                    <i class="bi bi-hourglass-split me-1"></i>Expected Duration
+                                </label>
+                                <input type="time" class="form-control" id="expected_duration" name="expected_duration" placeholder="Duration"
+                                    value="{{ surgery.expected_duration|default_if_none:'' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="surgery_room">
+                                    <i class="bi bi-door-open me-1"></i>Surgery Room/Operation Theater
+                                </label>
+                                <select class="form-select" id="surgery_room" name="surgery_room">
+                                    <option value="">Select Room</option>
+                                    {% for room in rooms %}
+                                        <option value="{{ room }}" {% if surgery.surgery_room == room %}selected{% endif %}>{{ room }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Pre/Post Surgery & Tests -->
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="pre_surgery_notes">
+                                    <i class="bi bi-journal-text me-1"></i>Pre-Surgery Instructions
+                                </label>
+                                <textarea class="form-control" id="pre_surgery_notes" name="pre_surgery_notes" placeholder="Instructions">{{ surgery.pre_surgery_notes|default_if_none:'' }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="required_equipment">
+                                    <i class="bi bi-tools me-1"></i>Required Equipment and Tools
+                                </label>
+                                <textarea class="form-control" id="required_equipment" name="required_equipment" placeholder="List equipment">{{ surgery.required_equipment|default_if_none:'' }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="required_tests">
+                                    <i class="bi bi-clipboard2-check me-1"></i>Required Tests (comma separated)
+                                </label>
+                                <input type="text" class="form-control" id="required_tests" name="required_tests" placeholder="Enter required tests"
+                                    value="{{ surgery.required_tests|default_if_none:'' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="post_surgery_notes">
+                                    <i class="bi bi-journal-check me-1"></i>Post-Surgery Notes
+                                </label>
+                                <textarea class="form-control" id="post_surgery_notes" name="post_surgery_notes" placeholder="Notes">{{ surgery.post_surgery_notes|default_if_none:'' }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="medications_prescribed">
+                                    <i class="bi bi-capsule-pill me-1"></i>Medications Prescribed
+                                </label>
+                                <textarea class="form-control" id="medications_prescribed" name="medications_prescribed" placeholder="List medications">{{ surgery.medications_prescribed|default_if_none:'' }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="follow_up_date">
+                                    <i class="bi bi-calendar-event me-1"></i>Follow-up Date
+                                </label>
+                                <input type="date" class="form-control" id="follow_up_date" name="follow_up_date" placeholder="Date"
+                                    value="{% if surgery.follow_up_date %}{{ surgery.follow_up_date|date:'Y-m-d' }}{% endif %}">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+            <!-- Surgery Images -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="surgery_images"><i class="bi bi-image me-1"></i>Surgery Images</label>
+                <div class="input-group">
+                    <input class="form-control d-none" type="file" id="surgery_images" name="surgery_images" accept=".jpg,.jpeg,.png" multiple onchange="previewSurgeryImages(event)">
+                    <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('surgery_images').click();"><i class="bi bi-plus"></i> Add Image</button>
+                </div>
+                <div class="form-text">You can upload multiple images. Only JPEG, JPG, and PNG formats are allowed.</div>
+                <div id="surgeryImagesPreview" class="d-flex flex-wrap gap-2 mt-2">
+                    {% for img_url in surgery.surgery_images %}
+                        <div class="border rounded bg-light d-flex align-items-center justify-content-center shadow-sm" style="width:100px;height:100px;">
+                            <img src="{{ img_url }}" class="img-fluid" style="object-fit:cover;max-height:100%;">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+                    <div class="d-flex justify-content-center gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save2 me-2"></i>Save Changes
+                        </button>
+                    </div>
+                </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function updateRemoveButtons() {
+            const rows = document.querySelectorAll('#assistantSurgeonsContainer .assistant-surgeon-row');
+            rows.forEach((row, idx) => {
+                const removeBtn = row.querySelector('.remove-surgeon-btn');
+                if (rows.length > 1) {
+                    removeBtn.style.display = '';
+                } else {
+                    removeBtn.style.display = 'none';
+                }
+            });
+        }
+
+        document.getElementById('assistantSurgeonsContainer').addEventListener('click', function(e) {
+            if (e.target.closest('.add-surgeon-btn')) {
+                const container = document.getElementById('assistantSurgeonsContainer');
+                const firstRow = container.querySelector('.assistant-surgeon-row');
+                const newRow = firstRow.cloneNode(true);
+                // Reset select value
+                const select = newRow.querySelector('select');
+                select.value = '';
+                // Remove any selected attribute from options
+                Array.from(select.options).forEach(opt => opt.selected = false);
+                container.appendChild(newRow);
+                updateRemoveButtons();
+            }
+            if (e.target.closest('.remove-surgeon-btn')) {
+                const row = e.target.closest('.assistant-surgeon-row');
+                row.remove();
+                updateRemoveButtons();
+            }
+        });
+
+        updateRemoveButtons();
+    });
+    function previewSurgeryImages(event) {
+        const previewContainer = document.getElementById('surgeryImagesPreview');
+        const files = event.target.files;
+        Array.from(files).forEach(file => {
+            if (file.type.match('image.*')) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'border rounded bg-light d-flex align-items-center justify-content-center shadow-sm';
+                    wrapper.style.width = '100px';
+                    wrapper.style.height = '100px';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'img-fluid';
+                    img.style.objectFit = 'cover';
+                    img.style.maxHeight = '100%';
+
+                    wrapper.appendChild(img);
+                    previewContainer.appendChild(wrapper);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    $(document).ready(function() {
+        if ($.fn.select2) {
+            $('.select2').select2({
+                placeholder: "Select a Department",
+                allowClear: true
+            });
+        }
+    });
+</script>
+{% endblock %}

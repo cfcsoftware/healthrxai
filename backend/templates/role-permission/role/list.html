@@ -1,0 +1,174 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<div class="mx-4">
+  <div class="card border-0">
+       <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-0 text-light">
+        Roles
+      </h5>
+      <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#addRoleModal">
+        Add Role
+      </button>
+      </div>
+
+      <div class="card-body px-0">
+        <div class="table-responsive">
+          <table id="example" class="table table-striped table-bordered align-middle">
+            <thead class="table-secondary text-dark">
+              <tr>
+                <th></th>
+                <th>Role ID</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for role in all_roles %}
+              <tr>
+                <td class="text-center align-middle">{{ forloop.counter }}</td>
+                <td class="align-middle fw-semibold">ROLE-000{{ role.id }}</td>
+                <td class="align-middle">{{ role.name }}</td>
+                <td class="text-center align-middle">
+                  <div class="d-flex justify-content-center gap-2">
+                    <!-- Edit Button -->
+                    <button class="btn btn-outline-primary btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editRoleModal"
+                            data-id="{{ role.id }}"
+                            data-name="{{ role.name }}">
+                      <i class="bi bi-pencil-square"></i> Edit
+                    </button>
+                    <!-- Delete Button -->
+                    <form method="post" action="{% url 'role-delete' role.id %}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this Role?');">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-trash"></i> Delete
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="text-center text-muted">No roles found.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+
+  <!-- The Modal -->
+  <div class="modal" id="addRoleModal">
+    <div class="modal-dialog ">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header bg-primary text-light">
+          <h4 class="modal-title">Add Role</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form method="POST" action="/roles/add/{{ patient.id }}">
+            {% csrf_token %}
+          
+            <div class="row">
+              
+              <div class="col-md-10 mb-3">
+                <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Role Name" required />
+              </div>
+          
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Edit Role Modal -->
+  <div class="modal" id="editRoleModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header bg-primary text-light">
+          <h4 class="modal-title">Edit Role</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body">
+          <form method="POST" id="editRoleForm" action="" onsubmit="return false;">
+            {% csrf_token %}
+            <input type="hidden" name="_method" value="PUT">
+            <div class="row">
+              <div class="col-md-10 mb-3">
+                <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="editRoleName" name="name" placeholder="Enter Role Name" value="" required />
+              </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <script>
+    // Populate the edit modal with permission data
+    document.addEventListener('DOMContentLoaded', function () {
+      const editModal = document.getElementById('editRoleModal');
+      editModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        console.log(button);
+        const id = button.getAttribute('data-id');
+        console.log(id);
+        const name = button.getAttribute('data-name');
+        console.log(name);
+
+        const form = document.getElementById('editRoleForm');
+        form.action = `/roles/update/${id}/`;
+
+        document.getElementById('editRoleName').value = name;
+      });
+    });
+
+
+    $('#editRoleForm').on('submit', function (e) {
+      alert('edit1');
+        e.preventDefault();
+        const formData = $(this).serialize();
+        const id = $(this).val('data-id');
+        $.ajax({
+            url: "/roles/update/" + id,
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                alert('Role updated successfully!');
+            },
+            error: function (error) {
+                console.error('Error updating role:', error);
+            }
+        });
+    });
+
+  </script>
+
+{% endblock %}

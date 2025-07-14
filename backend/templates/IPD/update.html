@@ -1,0 +1,724 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- jQuery CDN (add before any script using $) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<div class="px-4">    
+    <h4 class="fw-bold text-center">UPDATE IPD PATIENT</h4>
+    
+    <form action="/ipd/update/{{ipd.id}}" method="POST">
+        {% csrf_token %}
+        <div class="mb-2">
+            <div class="container mt-3">
+                <!-- Section: Patient Details -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary fw-bold" style="color: #fff;">
+                        <i class="fa fa-user-md me-2"></i> Patient Details
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="appointment" class="form-label">Appointment <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="appointment" id="appointment">
+                                        <option value="">Select</option>
+                                        {% for appointment in appointments %}
+                                        <option value="{{ appointment.id }}" {% if appointment.id == ipd.appointment_id %}selected{% endif %}>{{ appointment.appointment_record_id }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="patient" class="form-label">Patient Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="patient" id="patient" value="{{ ipd.patient.name }}" required readonly>
+                                </div>
+                            </div>  
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="doctor" class="form-label">Consultant Doctor <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="doctor" id="doctor" value="{{ ipd.doctor.name }}" required readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="admission_date" class="form-label">Admission Date</label>
+                                    <input type="date" class="form-control" name="admission_date" id="admission_date" value="{{ ipd.admission_date|date:'Y-m-d' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="discharge_date" class="form-label">Discharge Date</label>
+                                    <input type="date" class="form-control" name="discharge_date" id="discharge_date" value="{{ ipd.discharge_date|date:'Y-m-d' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mt-3 align-items-end">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="height" class="form-label">Height</label>
+                                    <input type="text" class="form-control" name="height" id="height" value="{{ ipd.appointment.height }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="weight" class="form-label">Weight</label>
+                                    <input type="text" class="form-control" name="weight" id="weight" value="{{ ipd.appointment.weight }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="bp" class="form-label">BP</label>
+                                    <input type="text" class="form-control" name="bp" id="bp" value="{{ ipd.appointment.bp }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="pulse" class="form-label">Pulse</label>
+                                    <input type="text" class="form-control" name="pulse" id="pulse" value="{{ ipd.appointment.pulse }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="temperature" class="form-label">Temperature</label>
+                                    <input type="text" class="form-control" name="temperature" id="temperature" value="{{ ipd.appointment.temperature }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="respiration" class="form-label">Respiration</label>
+                                    <input type="text" class="form-control" name="respiration" id="respiration" value="{{ ipd.appointment.rbs }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-3 align-items-end">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="symptoms" class="form-label">Symptoms</label>
+                                    <select class="form-control" name="symptoms" id="symptoms">
+                                        <option value="">Select</option>
+                                        <option value="Fever" {% if ipd.symptoms == "Fever" %}selected{% endif %} >Fever</option>
+                                        <option value="Cough" {% if ipd.symptoms == "Cough" %}selected{% endif %} >Cough</option>
+                                        <option value="Headache" {% if ipd.symptoms == "Headache" %}selected{% endif %} >Headache</option>
+                                        <option value="Chest Pain" {% if ipd.symptoms == "Chest Pain" %}selected{% endif %} >Chest Pain</option>
+                                        <option value="Abdominal Pain" {% if ipd.symptoms == "Abdominal Pain" %}selected{% endif %} >Abdominal Pain</option>
+                                        <option value="Nausea" {% if ipd.symptoms == "Nausea" %}selected{% endif %} >Nausea</option>
+                                        <option value="Dizziness" {% if ipd.symptoms == "Dizziness" %}selected{% endif %} >Dizziness</option>
+                                        <option value="Other" {% if ipd.symptoms == "Other" %}selected{% endif %} >Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="allergies" class="form-label">Any Known Allergies</label>
+                                    <textarea class="form-control" name="allergies" id="allergies" rows="3">{{ ipd.allergies }}</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="previous_medical_issue" class="form-label">Previous Medical Issue</label>
+                                    <textarea class="form-control" name="previous_medical_issue" id="previous_medical_issue" rows="3">{{ ipd.previous_medical_issue }}</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="note" class="form-label">Description</label>
+                                    <textarea class="form-control" name="notes" id="notes" rows="3" title="Description" placeholder="Enter description">{{ ipd.appointment.trasncription }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-3 align-items-end">
+                            <div class="col-md-2">
+                                <label for="casualty" class="form-label">Casualty</label>
+                                <select class="form-select" name="casualty" id="casualty">
+                                    <option value="">Select</option>
+                                    <option value="Yes" {% if ipd.casualty == "Yes" %}selected{% endif %}>Yes</option>
+                                    <option value="No" {% if ipd.casualty == "No" %}selected{% endif %}>No</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="old_patient" class="form-label">Old Patient</label>
+                                <select class="form-select" name="old_patient" id="old_patient">
+                                    <option value="">Select</option>
+                                    <option value="Yes" {% if ipd.old_patient == "Yes" %}selected{% endif %}>Yes</option>
+                                    <option value="No" {% if ipd.old_patient == "No" %}selected{% endif %}>No</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" name="status" id="status">
+                                    <option value="">Select</option>
+                                    <option value="Admitted" {% if ipd.status == "Admitted" %}selected{% endif %}>Admitted</option>
+                                    <option value="Discharged" {% if ipd.status == "Discharged" %}selected{% endif %}>Discharged</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="tpa" class="form-label">TPA (Insurance Name)</label>
+                                <input type="text" class="form-control" name="tpa" id="tpa" value="{{ ipd.tpa }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Section: Bed & Ward Details -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary fw-bold" style="color: #fff;">
+                        <i class="fa fa-bed me-2"></i> Bed & Ward Details
+                    </div>
+                    <div class="card-body">
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <table class="table table-bordered" id="bed-ward-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date<span class="text-danger">*</span></th>
+                                            <th>Floor<span class="text-danger">*</span></th>
+                                            <th>Ward<span class="text-danger">*</span></th>
+                                            <th>Bed No.<span class="text-danger">*</span></th>
+                                            <th>Bed Charge</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>    
+                                    <tbody>
+                                        {% if ipd.bed_ward_history %}
+                                            {% for detail in ipd.bed_ward_history %}
+                                            <tr>
+                                                <td>
+                                                    <input type="date" class="form-control" name="date[]" value="{{ detail.date }}" required >
+                                                </td>
+                                                <td>
+                                                    <select class="form-select floor-select" name="floor[]" required title="Select Floor">
+                                                        <option value="">Select</option>
+                                                        <option value="Ground Floor" {% if detail.floor == "Ground Floor" %}selected{% endif %}>Ground Floor</option>
+                                                        <option value="1st Floor" {% if detail.floor == "1st Floor" %}selected{% endif %}>1st Floor</option>
+                                                        <option value="2nd Floor" {% if detail.floor == "2nd Floor" %}selected{% endif %}>2nd Floor</option>
+                                                        <option value="3rd Floor" {% if detail.floor == "3rd Floor" %}selected{% endif %}>3rd Floor</option>
+                                                        <option value="4th Floor" {% if detail.floor == "4th Floor" %}selected{% endif %}>4th Floor</option>
+                                                        <option value="5th Floor" {% if detail.floor == "5th Floor" %}selected{% endif %}>5th Floor</option>
+                                                    </select>
+                                                </td>
+                                              
+                                                <td>
+                                                    <select class="form-select ward-select" name="ward[]" required title="Select Ward">
+                                                        <option value="">Select</option>
+                                                        <option value="General" {% if detail.ward == "General" %}selected{% endif %}>General</option>
+                                                        <option value="Private" {% if detail.ward == "Private" %}selected{% endif %}>Private</option>
+                                                        <option value="Semi-Private" {% if detail.ward == "Semi-Private" %}selected{% endif %}>Semi-Private</option>
+                                                        <option value="ICU" {% if detail.ward == "ICU" %}selected{% endif %}>ICU</option>
+                                                        <option value="Emergency" {% if detail.ward == "Emergency" %}selected{% endif %}>Emergency</option>
+                                                        <option value="Other" {% if detail.ward == "Other" %}selected{% endif %}>Other</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="form-select bed-select" name="bed_no[]" required title="Select Bed Number">
+                                                        <option value="">Select</option>
+                                                        <option value="GF-001" {% if detail.bed_no == "GF-001" %}selected{% endif %}>GF-001</option>
+                                                        <option value="GF-002" {% if detail.bed_no == "GF-002" %}selected{% endif %}>GF-002</option>
+                                                        <option value="GF-003" {% if detail.bed_no == "GF-003" %}selected{% endif %}>GF-003</option>
+                                                        <option value="GF-004" {% if detail.bed_no == "GF-004" %}selected{% endif %}>GF-004</option>
+                                                        <option value="GF-005" {% if detail.bed_no == "GF-005" %}selected{% endif %}>GF-005</option>
+
+                                                        <option value="1F-101" {% if detail.bed_no == "1F-101" %}selected{% endif %}>1F-101</option>
+                                                        <option value="1F-102" {% if detail.bed_no == "1F-102" %}selected{% endif %}>1F-102</option>
+                                                        <option value="1F-103" {% if detail.bed_no == "1F-103" %}selected{% endif %}>1F-103</option>
+                                                        <option value="1F-104" {% if detail.bed_no == "1F-104" %}selected{% endif %}>1F-104</option>
+                                                        <option value="1F-105" {% if detail.bed_no == "1F-105" %}selected{% endif %}>1F-105</option>
+
+
+                                                        <option value="2F-201" {% if detail.bed_no == "2F-201" %}selected{% endif %}>2F-201</option>
+                                                        <option value="2F-202" {% if detail.bed_no == "2F-202" %}selected{% endif %}>2F-202</option>
+                                                        <option value="2F-203" {% if detail.bed_no == "2F-203" %}selected{% endif %}>2F-203</option>
+                                                        <option value="2F-204" {% if detail.bed_no == "2F-204" %}selected{% endif %}>2F-204</option>
+                                                        <option value="2F-205" {% if detail.bed_no == "2F-205" %}selected{% endif %}>2F-205</option>
+
+                                                        <option value="3F-301" {% if detail.bed_no == "3F-301" %}selected{% endif %}>3F-301</option>
+                                                        <option value="3F-302" {% if detail.bed_no == "3F-302" %}selected{% endif %}>3F-302</option>
+                                                        <option value="3F-303" {% if detail.bed_no == "3F-303" %}selected{% endif %}>3F-303</option>
+                                                        <option value="3F-304" {% if detail.bed_no == "3F-304" %}selected{% endif %}>4F-304</option>
+                                                        <option value="3F-305" {% if detail.bed_no == "3F-305" %}selected{% endif %}>4F-305</option>
+
+                                                        <option value="4F-401" {% if detail.bed_no == "4F-401" %}selected{% endif %}>4F-401</option>
+                                                        <option value="4F-402" {% if detail.bed_no == "4F-402" %}selected{% endif %}>4F-402</option>
+                                                        <option value="4F-403" {% if detail.bed_no == "4F-403" %}selected{% endif %}>4F-403</option>
+                                                        <option value="4F-404" {% if detail.bed_no == "4F-404" %}selected{% endif %}>4F-404</option>
+                                                        <option value="4F-405" {% if detail.bed_no == "4F-405" %}selected{% endif %}>4F-405</option>
+
+                                                        <option value="5F-501" {% if detail.bed_no == "5F-501" %}selected{% endif %}>5F-501</option>
+                                                        <option value="5F-502" {% if detail.bed_no == "5F-502" %}selected{% endif %}>5F-502</option>
+                                                        <option value="5F-503" {% if detail.bed_no == "5F-503" %}selected{% endif %}>5F-503</option>
+                                                        <option value="5F-504" {% if detail.bed_no == "5F-504" %}selected{% endif %}>5F-504</option>
+                                                        <option value="5F-505" {% if detail.bed_no == "5F-505" %}selected{% endif %}>5F-505</option>
+
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" name="bed_charge[]" value="{{ detail.bed_charge }}" title="Bed Charge" placeholder="Enter bed charge">
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary add-bed-ward-row" title="Add Bed/Ward Row" aria-label="Add Bed/Ward Row"><i class="fa fa-plus"></i></button>
+                                                    <button type="button" class="btn btn-danger remove-bed-ward-row" title="Remove Bed/Ward Row" aria-label="Remove Bed/Ward Row"><i class="fa fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                 <td>
+                                                    <input type="date" class="form-control" name="date[]" value="{{ detail.date|date:'Y-m-d' }}" required >
+                                                </td>
+                                                <td>
+                                                    <select class="form-select floor-select" name="floor[]" required>
+                                                        <option value="">Select</option>
+                                                        <option value="Ground Floor" {% if detail.floor == "Ground Floor" %}selected{% endif %}>Ground Floor</option>
+                                                        <option value="1st Floor" {% if detail.floor == "1st Floor" %}selected{% endif %}>1st Floor</option>
+                                                        <option value="2nd Floor" {% if detail.floor == "2nd Floor" %}selected{% endif %}>2nd Floor</option>
+                                                        <option value="3rd Floor" {% if detail.floor == "3rd Floor" %}selected{% endif %}>3rd Floor</option>
+                                                        <option value="4th Floor" {% if detail.floor == "4th Floor" %}selected{% endif %}>4th Floor</option>
+                                                        <option value="5th Floor" {% if detail.floor == "5th Floor" %}selected{% endif %}>5th Floor</option>
+                                                    </select>
+                                                    <span class="floor-error text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <select class="form-select ward-select" name="ward[]" required>
+                                                        <option value="">Select</option>
+                                                        <option value="General" {% if detail.ward == "General" %}selected{% endif %}>General</option>
+                                                        <option value="Private" {% if detail.ward == "Private" %}selected{% endif %}>Private</option>
+                                                        <option value="Semi-Private" {% if detail.ward == "Semi-Private" %}selected{% endif %}>Semi-Private</option>
+                                                        <option value="ICU" {% if detail.ward == "ICU" %}selected{% endif %}>ICU</option>
+                                                        <option value="Emergency" {% if detail.ward == "Emergency" %}selected{% endif %}>Emergency</option>
+                                                        <option value="Other" {% if detail.ward == "Other" %}selected{% endif %}>Other</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="form-select bed-select" name="bed_no[]" required>
+                                                        <option value="">Select</option>
+                                                        {% for bed in beds %}
+                                                        <option value="{{ bed.number }}" {% if detail.bed_no == bed.number %}selected{% endif %}>{{ bed.number }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </td>
+                                               
+                                                <td>
+                                                    <input type="text" class="form-control" name="bed_charge[]" value="{{ ipd.bed_charge }}" title="Bed Charge" placeholder="Enter bed charge">
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary add-bed-ward-row"><i class="fa fa-plus"></i></button>
+                                                    <button type="button" class="btn btn-danger remove-bed-ward-row"><i class="fa fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                                <!-- Template row for cloning -->
+                                <template id="bed-ward-row-template">
+                                    <tr>
+                                         <td>
+                                            <input type="date" class="form-control" name="date[]" required >
+                                        </td>
+                                        <td>
+                                            <select class="form-select floor-select" name="floor[]" required>
+                                                <option value="">Select</option>
+                                                <option value="Ground Floor">Ground Floor</option>
+                                                <option value="1st Floor">1st Floor</option>
+                                                <option value="2nd Floor">2nd Floor</option>
+                                                <option value="3rd Floor">3rd Floor</option>
+                                                <option value="4th Floor">4th Floor</option>
+                                                <option value="5th Floor">5th Floor</option>
+                                            </select>
+                                            <span class="floor-error text-danger"></span>
+                                        </td>
+                                        <td>
+                                            <select class="form-select ward-select" name="ward[]" required>
+                                                <option value="">Select</option>
+                                                <option value="General">General</option>
+                                                <option value="Private">Private</option>
+                                                <option value="Semi-Private">Semi-Private</option>
+                                                <option value="ICU">ICU</option>
+                                                <option value="Emergency">Emergency</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select bed-select" name="bed_no[]" required>
+                                                <option value="">Select</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="bed_charge[]">
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary add-bed-ward-row"><i class="fa fa-plus"></i></button>
+                                            <button type="button" class="btn btn-danger remove-bed-ward-row"><i class="fa fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+
+
+               
+                <!-- Section: IPD Patient History -->
+                <!-- {% if request.session.role_id == 5 %}
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary fw-bold" style="color: #fff;">
+                        <i class="fa fa-list-alt me-2"></i> IPD Patient History
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th><i class="fa fa-clock-o"></i> Date & Time</th>
+                                    <th><i class="fa fa-commenting"></i> Remarks</th>
+                                    <th><i class="fa fa-medkit"></i> Service Details</th>
+                                    <th><i class="fa fa-user-nurse"></i> Nurse Name</th>
+                                    <th><i class="fa fa-cogs"></i> Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="nurse-checkin-table-main">
+                                {% for history in ipd.ipd_patient_history %}
+                                <tr>
+                                    <td><input type="datetime-local" name="date_time[]" class="form-control" value="{{ history.date_time }}" title="Date & Time" placeholder="Select date and time"></td>
+                                    <td>
+                                        <textarea name="remarks[]" class="form-control" title="Remarks" placeholder="Enter remarks">{{ history.remarks }}</textarea>
+                                    </td>
+                                    <td><input type="text" name="medicine_details[]" class="form-control" value="{{ history.medicine_details }}" title="Service Details" placeholder="Enter service details"></td>
+                                    <td><input type="text" name="nurse_name[]" class="form-control" value="{{ history.nurse_name|default:request.session.username }}" title="Nurse Name" placeholder="Enter nurse name"></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary add-checkin-row" title="Add Row" aria-label="Add Row"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td><input type="datetime-local" name="date_time[]" class="form-control" title="Date & Time" placeholder="Select date and time"></td>
+                                    <td>
+                                        <textarea name="remarks[]" class="form-control" title="Remarks" placeholder="Enter remarks"></textarea>
+                                    </td>
+                                    <td><input type="text" name="medicine_details[]" class="form-control" title="Service Details" placeholder="Enter service details"></td>
+                                    <td><input type="text" name="nurse_name[]" class="form-control" value="{{ request.session.username }}" title="Nurse Name" placeholder="Enter nurse name"></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" id="add-checkin-row" title="Add Row" aria-label="Add Row"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %} -->
+
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary fw-bold" style="color: #fff;">
+                        <i class="fa fa-list-alt me-2"></i> IPD Patient History
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Remarks</th>
+                                    <th>Service Details</th>
+                                    <th>Nurse Name</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="nurse-checkin-table">
+                                {% for history in ipd.ipd_patient_history %}
+                                <tr>
+                                    <td><input type="datetime-local" name="date_time[]" class="form-control" value="{{ history.date_time }}"></td>
+                                    <td><textarea name="remarks[]" class="form-control">{{ history.remarks }}</textarea></td>
+                                    <td><input type="text" name="medicine_details[]" class="form-control" value="{{ history.medicine_details }}"></td>
+                                    <td><input type="text" name="nurse_name[]" class="form-control" value="{{ history.nurse_name|default:request.session.username }}"></td>
+                                    <td><input type="number" step="0.01" name="amount[]" class="form-control" value="{{ history.amount }}"></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary add-checkin-row"><i class="fa fa-plus"></i></button>
+                                        <button type="button" class="btn btn-danger remove-checkin-row" title="Remove Row" aria-label="Remove Row"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td><input type="datetime-local" name="date_time[]" class="form-control"></td>
+                                    <td><textarea name="remarks[]" class="form-control"></textarea></td>
+                                    <td><input type="text" name="medicine_details[]" class="form-control"></td>
+                                    <td><input type="text" name="nurse_name[]" class="form-control" value="{{ request.session.username }}"></td>
+                                    <td><input type="number" step="0.01" name="amount[]" class="form-control"></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary add-checkin-row"><i class="fa fa-plus"></i></button>
+                                        <button type="button" class="btn btn-danger remove-checkin-row"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                
+                        <!-- Hidden template row -->
+                        <template id="row-template">
+                            <tr>
+                                <td><input type="datetime-local" name="date_time[]" class="form-control"></td>
+                                <td><textarea name="remarks[]" class="form-control"></textarea></td>
+                                <td><input type="text" name="medicine_details[]" class="form-control"></td>
+                                <td><input type="text" name="nurse_name[]" class="form-control" value="{{ request.session.username }}"></td>
+                                <td><input type="number" step="0.01" name="amount[]" class="form-control"></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary add-checkin-row"><i class="fa fa-plus"></i></button>
+                                    <button type="button" class="btn btn-danger remove-checkin-row"><i class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </template>
+                    </div>
+                </div>
+
+
+                 <!-- Section: Billing Details -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary fw-bold" style="color: #fff;">
+                        <i class="fa fa-briefcase-medical me-2"></i> Final Billing Details
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label for="bed_charge" class="form-label"><i class="fa fa-bed me-1"></i> Bed Charges</label>
+                                <input type="number" step="0.01" class="form-control" name="bed_charge" id="bed_charge" value="{{ total_bed_charge }}" readonly>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="service_charge" class="form-label"><i class="fa fa-stethoscope me-1"></i> Service Charges</label>
+                                <input type="number" step="0.01" class="form-control" name="service_charge" id="service_charge" value="{{ ipd.service_charge }}" readonly>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="miscellaneous_charge" class="form-label"><i class="fa fa-money me-1"></i> Miscellaneous Charges</label>
+                                <input type="number" step="0.01" class="form-control" name="miscellaneous_charge" id="miscellaneous_charge" value="{{ ipd.miscellaneous_charge|default:0.00 }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="total_charge" class="form-label"><i class="fa fa-calculator me-1"></i> Total Charges</label>
+                                <input type="number" step="0.01" class="form-control" name="total_charge" id="total_charge" value="{{ ipd.total_charge }}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                
+               
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-save me-1"></i> Update</button>
+        </div>
+    </form>
+</div>
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // For nurse-checkin-table
+        const tableBody = document.getElementById('nurse-checkin-table');
+        const rowTemplate = document.getElementById('row-template');
+        if (tableBody && rowTemplate) {
+            tableBody.addEventListener('click', function (e) {
+                const target = e.target.closest('button');
+                if (!target) return;
+                // Add row
+                if (target.classList.contains('add-checkin-row')) {
+                    const clone = rowTemplate.content.cloneNode(true);
+                    tableBody.appendChild(clone);
+                }
+                // Remove row
+                if (target.classList.contains('remove-checkin-row')) {
+                    const row = target.closest('tr');
+                    const allRows = tableBody.querySelectorAll('tr');
+                    if (allRows.length > 1) {
+                        row.remove();
+                    }
+                }
+            });
+        }
+        // For nurse-checkin-table-main (if present)
+        const tableBodyMain = document.getElementById('nurse-checkin-table-main');
+        if (tableBodyMain && rowTemplate) {
+            tableBodyMain.addEventListener('click', function (e) {
+                const target = e.target.closest('button');
+                if (!target) return;
+                // Add row
+                if (target.classList.contains('add-checkin-row')) {
+                    const clone = rowTemplate.content.cloneNode(true);
+                    tableBodyMain.appendChild(clone);
+                }
+                // Remove row
+                if (target.classList.contains('remove-checkin-row')) {
+                    const row = target.closest('tr');
+                    const allRows = tableBodyMain.querySelectorAll('tr');
+                    if (allRows.length > 1) {
+                        row.remove();
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+<script>
+    // Use delegated event handling for dynamic rows
+    $(document).ready(function(){
+        // Floor select change
+        $('#bed-ward-table').on('change', '.floor-select', function(){
+            let floor = $(this).val();
+            let $row = $(this).closest('tr');
+            $.ajax({
+                url: '/ipd/get-bed-ward',
+                type: 'POST',
+                data: { floor: floor },
+                success: function(response) {
+                    if(response.success){
+                        $row.find('.ward-select').empty().append('<option value="">Select</option>');
+                        $row.find('.bed-select').empty().append('<option value="">Select</option>');
+                        if (response.data) {
+                            $.each(response.data, function(index, value) {
+                                $row.find('.ward-select').append('<option value="' + value.ward + '">' + value.ward + '</option>');
+                                $row.find('.bed-select').append('<option value="' + value.bed_number + '">' + value.bed_number + '</option>');
+                            });
+                        } else {
+                            $row.find('.ward-select').append('<option value="">No Wards Available</option>');
+                            $row.find('.bed-select').append('<option value="">No Beds Available</option>');
+                        }
+                    } else {
+                        $row.find('.floor-error').text('All Beds are occupied.');
+                    }
+                }
+            });
+        });
+
+        // Bed select change
+        $('#bed-ward-table').on('change', '.bed-select', function(){
+            let bed_no = $(this).val();
+            let $select = $(this);
+            $.ajax({
+                url: '/ipd/get-bed-charges',
+                type: 'POST',
+                data: { bed_no: bed_no },
+                success: function(response) {
+                    if(response.success){
+                        if (response.bed_charges) {
+                            let $row = $select.closest('tr');
+                            $row.find('input[name="bed_charge[]"]').val(response.bed_charges);
+
+                            // After setting bed charge, update total bed charge field
+                            updateTotalBedChargeInput();
+                        } else {
+                            alert('No charges found for this bed.');
+                        }
+                    } else {
+                        alert('Error fetching bed charges.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('An error occurred while fetching bed charges.');
+                }
+            });
+        });
+
+        // When bed_charge[] input changes, update total
+        $('#bed-ward-table').on('input', 'input[name="bed_charge[]"]', function(){
+            updateTotalBedChargeInput();
+        });
+
+        // Function to sum all bed_charge[] and update total
+        function updateTotalBedChargeInput() {
+            let total = 0;
+            $('input[name="bed_charge[]"]').each(function(){
+                let val = parseFloat($(this).val());
+                if(!isNaN(val)) total += val;
+            });
+            $('#bed_charge').val(total.toFixed(2));
+            updateTotalChargeInput(); // update total charges as well
+        }
+
+        // Also update total on page load
+        updateTotalBedChargeInput();
+
+        // --- IPD History Amount Calculation ---
+
+        // When amount[] input changes, update total service charge
+        $('#nurse-checkin-table').on('input', 'input[name="amount[]"]', function(){
+            updateTotalServiceChargeInput();
+        });
+
+        // Function to sum all amount[] and update service_charge
+        function updateTotalServiceChargeInput() {
+            let total = 0;
+            $('input[name="amount[]"]').each(function(){
+                let val = parseFloat($(this).val());
+                if(!isNaN(val)) total += val;
+            });
+            $('#service_charge').val(total.toFixed(2));
+            updateTotalChargeInput(); // update total charges as well
+        }
+
+        // Also update service charge on page load
+        updateTotalServiceChargeInput();
+
+        // Optionally, update total_charge when bed_charge, service_charge, or miscellaneous_charge changes
+        $('#bed_charge, #service_charge, #miscellaneous_charge').on('input', function(){
+            updateTotalChargeInput();
+        });
+
+        function updateTotalChargeInput() {
+            let bed = parseFloat($('#bed_charge').val()) || 0;
+            let service = parseFloat($('#service_charge').val()) || 0;
+            let misc = parseFloat($('#miscellaneous_charge').val()) || 0;
+            let total = bed + service + misc;
+            $('#total_charge').val(total.toFixed(2));
+        }
+
+        // Update total_charge on page load
+        updateTotalChargeInput();
+
+        // Also update total_charge when service charge or bed charge changes
+        $('#bed_charge, #service_charge').on('change', function(){
+            updateTotalChargeInput();
+        });
+
+        // Also update total_charge when miscellaneous_charge changes
+        $('#miscellaneous_charge').on('input change', function(){
+            updateTotalChargeInput();
+        });
+    });
+    
+    // Bed/Ward Row Add/Remove Functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        const bedWardTable = document.getElementById('bed-ward-table').getElementsByTagName('tbody')[0];
+        const bedWardRowTemplate = document.getElementById('bed-ward-row-template');
+
+        // Delegate click events for add/remove buttons
+        bedWardTable.addEventListener('click', function (e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+
+            // Add new row
+            if (btn.classList.contains('add-bed-ward-row')) {
+                if (bedWardRowTemplate) {
+                    const clone = bedWardRowTemplate.content.cloneNode(true);
+                    bedWardTable.appendChild(clone);
+                }
+            }
+
+            // Remove row
+            if (btn.classList.contains('remove-bed-ward-row')) {
+                const row = btn.closest('tr');
+                const allRows = bedWardTable.querySelectorAll('tr');
+                if (allRows.length > 1) {
+                    row.remove();
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}

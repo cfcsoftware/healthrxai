@@ -1,0 +1,152 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="px-4">
+    <div class="card shadow border-0">
+      <div class="card-header bg-primary text-light text-center py-2 rounded-top-4">
+        <h3 class="mb-0 text-light">UPDATE ASSIGNED ROLE &amp; PERMISSIONS</h3>
+      </div>
+      <div class="card-body bg-white p-4">
+        <form method="post" action="/permission/update-assigned-to-role/{{ role.id }}/" novalidate>
+          {% csrf_token %}
+
+          <!-- Role Selection -->
+          <div class="mb-4">
+            <label for="role_id" class="form-label fw-semibold fs-5">Role Name</label>
+            <select
+              id="role_id"
+              name="role_id"
+              class="form-select form-select-lg"
+              required
+              aria-describedby="roleHelp"
+            >
+              <option value="" disabled selected>Select Role</option>
+              {% for r in all_roles %}
+                <option value="{{ r.id }}" {% if role.id == r.id %}selected{% endif %}>{{ r.name }}</option>
+              {% endfor %}
+            </select>
+            <div id="roleHelp" class="form-text">Choose the role to update permissions for.</div>
+          </div>
+
+          <!-- Global Select All -->
+          <div class="form-check form-switch mb-5 d-flex align-items-center" style="gap: 0.75rem;">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="select_all"
+              aria-label="Select or deselect all permissions"
+              style="margin-right: 0.75rem;"
+            >
+            <label class="form-check-label fw-semibold fs-6 text-primary mb-0" for="select_all" style="margin-left: 0.25rem;">
+              Select All Permissions
+            </label>
+          </div>
+
+          <!-- Permissions grouped by modules -->
+          <section>
+            {% for module, perms in permissions.items %}
+            <div class="mb-4 p-3 rounded-3 border border-2 bg-light shadow-sm">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="w-100 text-center mb-3">
+                  <h5 class="text-dark fw-bold mb-1 d-inline-block">{{ module }}</h5>
+                  <div class="mx-auto" style="height:2px; background:linear-gradient(90deg,#6a11cb 0%,#2575fc 100%); width:60px; border-radius:1px;"></div>
+                </div>
+                <div class="form-check form-switch d-flex align-items-center" style="gap: 0.5rem;">
+                  <input
+                    class="form-check-input module-select-all"
+                    type="checkbox"
+                    id="module_{{ module }}"
+                    data-module="{{ module }}"
+                    aria-label="Select or deselect all permissions in {{ module }}"
+                    style="margin-right: 0.5rem;"
+                  >
+                  <label class="form-check-label fw-semibold fs-6 text-violet mb-0" for="module_{{ module }}" style="margin-left: 0.25rem;">Select All</label>
+                </div>
+              </div>
+              <div class="row g-3">
+                {% for perm in perms %}
+                <div class="col-6 col-md-4 col-lg-3">
+                  <div class="form-check form-switch d-flex align-items-center" style="gap: 0.5rem;">
+                    <input
+                      class="form-check-input module-permission"
+                      type="checkbox"
+                      name="permission_id[]"
+                      value="{{ perm.id }}"
+                      id="perm_{{ perm.id }}"
+                      data-module="{{ module }}"
+                      {% if perm.assigned %}checked{% endif %}
+                      aria-checked="{{ perm.assigned|yesno:'true,false' }}"
+                      style="margin-right: 0.5rem;"
+                    >
+                    <label class="form-check-label mb-0" for="perm_{{ perm.id }}" style="margin-left: 0.25rem;">{{ perm.code }}</label>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endfor %}
+          </section>
+  
+          <!-- Submit Button -->
+          <div class="text-end">
+            <button type="submit" class="btn btn-primary btn-lg px-5 fw-semibold shadow-sm">
+              Update Permissions
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const selectAllCheckbox = document.getElementById('select_all');
+    const moduleCheckboxes = document.querySelectorAll('.module-select-all');
+    const permissionCheckboxes = document.querySelectorAll('input.module-permission');
+  
+    // Global Select All toggle
+    selectAllCheckbox.addEventListener('change', function() {
+      permissionCheckboxes.forEach(chk => chk.checked = this.checked);
+      moduleCheckboxes.forEach(chk => chk.checked = this.checked);
+    });
+  
+    // Module Select All toggle
+    moduleCheckboxes.forEach(moduleChk => {
+      moduleChk.addEventListener('change', function() {
+        const module = this.dataset.module;
+        const perms = document.querySelectorAll(`.module-permission[data-module="${module}"]`);
+        perms.forEach(chk => chk.checked = this.checked);
+        updateGlobalSelectAll();
+      });
+    });
+  
+    // Permission checkbox change listener
+    permissionCheckboxes.forEach(permChk => {
+      permChk.addEventListener('change', function() {
+        const module = this.dataset.module;
+        const moduleChk = document.querySelector(`.module-select-all[data-module="${module}"]`);
+        const perms = document.querySelectorAll(`.module-permission[data-module="${module}"]`);
+        const allChecked = Array.from(perms).every(chk => chk.checked);
+        moduleChk.checked = allChecked;
+        updateGlobalSelectAll();
+      });
+    });
+  
+    function updateGlobalSelectAll() {
+      const allChecked = Array.from(permissionCheckboxes).every(chk => chk.checked);
+      selectAllCheckbox.checked = allChecked;
+    }
+  
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', () => {
+      moduleCheckboxes.forEach(moduleChk => {
+        const module = moduleChk.dataset.module;
+        const perms = document.querySelectorAll(`.module-permission[data-module="${module}"]`);
+        moduleChk.checked = Array.from(perms).every(chk => chk.checked);
+      });
+      updateGlobalSelectAll();
+    });
+  </script>
+  
+
+{% endblock %}

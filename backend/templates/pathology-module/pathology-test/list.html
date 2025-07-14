@@ -1,0 +1,232 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="mx-4">   <div class="card border-0">        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0">
+                Pathology Tests
+            </h5>
+            {% if 'pathology-test-add' in request.session.user_permissions %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Create Test
+            </button>
+            {%endif%}
+        </div>
+      <div class="card-body px-0">
+        <div class="table-responsive">
+          <table id="example" class="table text-start table-striped table-hover align-middle" style="white-space:nowrap;">
+            <thead class="table-secondary text-start text-dark" style="white-space:nowrap;">
+            <tr>
+                <th></th>
+                <th>Sr.</th>
+                <th>Test ID</th>
+                <th>Name</th>
+                <th>Shortcut</th>
+                <th>Sample Type</th>
+                <th>Price</th>
+                <th>Action</th>
+              </tr>
+        </thead>
+        <tbody> 
+            {% for pt in pathology_tests %}
+            <tr>
+                <td></td>
+                <td>{{ forloop.counter }}</td>
+                <td>PathoTest - #000{{ pt.id }}</td>
+                <td>{{ pt.test_name }}</td>
+                <td>{{ pt.short_name }}</td>
+                <td>{{ pt.sample_type }}</td>
+                <td>{{ pt.total_amount }}</td>
+                <td>
+                    {% if 'pathology-test-edit' in request.session.user_permissions %}
+                    <a
+                    href="/pathology/test/update/{{pt.id}}"
+                    type="button"
+                    class="btn btn-primary-light"
+                    ><i class="bi bi-pencil-square"></i></a>
+                    {% endif %}
+                    {% if 'pathology-test-view' in request.session.user_permissions %}
+                    <a
+                    href="/pathology/test/view/{{pt.id}}"
+                    type="button"
+                    class="btn btn-warning-light"
+                    ><i class="bi bi-eye-fill"></i></a>
+                    {% endif %}
+                    {% if 'pathology-test-delete' in request.session.user_permissions %}
+                    <a
+                    href="/pathology/test/delete/{{pt.id}}"
+                    type="button"
+                    class="btn btn-danger-light"
+                    onclick="return confirm('Are you sure you want to delete this Test?');"
+                    ><i class="bi bi-trash3-fill"></i></a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        
+        </table>
+      </div>
+    </div>
+</div>
+
+
+
+
+ <!-- Modal -->
+ <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-light">
+        <h5 class="modal-title text-center w-100" id="exampleModalLabel">Add Pathology Test</h5>
+        <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="/pathology/test/add">
+            {% csrf_token %}
+            <div class="container mt-3">
+                <div class="row">
+                    <!-- Test Name Input -->
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Test Name <span class="text-danger">*</span></label>
+                            <input type="text" name="test_name" class="form-control" id="test_name" required>
+                        </div>
+                    </div>
+                    <!-- Short Name Input -->
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label> Shortcut </label>
+                            <input type="text" name="short_name" class="form-control" id="short_name">
+                        </div>
+                    </div>
+                    <!-- Test Type Selection -->
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Sample Type <span class="text-danger">*</span></label>
+                            <select name="sample_type" class="form-control" id="sample_type" required>
+                                <option value="">Select Sample Type</option>
+                                <option value="Blood">Blood</option>
+                                <option value="Urine">Urine</option>
+                                <option value="Stool">Stool</option>
+                                <option value="Saliva">Saliva</option>
+                                <option value="Tissue">Tissue</option>
+                                <option value="Sputum">Sputum</option>
+                                <option value="Swab">Swab</option>
+                                <option value="Other">Other</option>
+                                <!-- Add more options as needed -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Sub Category -->
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input type="number" name="total_amount" id="total_amount" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <label>Precautions</label>
+                            <textarea name="precaution" id="precaution" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                
+                <!-- Test Parameters Table -->
+                <div class="table-responsive mt-5">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6>Test Component</h6>
+                        <div>
+                            <button type="button" id="addRowTitle" class="btn btn-primary me-2"><i class="bi bi-plus"></i>Title</button>
+                            <button type="button" id="addRowComponent" class="btn btn-primary"><i class="bi bi-plus"></i>component</button>
+                        </div>
+                    </div>
+                    <table class="table table-bordered mt-3 text-center align-middle">
+                        <thead>
+                            <tr>
+                                <td>Name</td>
+                                <td>Unit</td>
+                                <td>Result</td>
+                                <td>Male Reference Range</td>
+                                <td>Female Reference Range</td>
+                                <td>Status</td>
+                                <td>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody id="test-tbody">
+                        </tbody>
+                    </table>
+                </div>                
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>   
+            
+        
+            <script>
+                document.getElementById("addRowComponent").addEventListener("click", function () {
+                    const tbody = document.getElementById("test-tbody");
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><input type="text" name="component_name[]" class="form-control" /></td>
+                        <td>
+                            <select name="component_unit[]" class="form-control">
+                                <option value="mg/dL">mg/dL</option>
+                                <option value="g/L">g/L</option>
+                                <option value="mmol/L">mmol/L</option>
+                                <option value="IU/L">IU/L</option>
+                                <option value="%">%</option>
+                                <option value="mEq/L">mEq/L</option>
+                                <option value="ng/mL">ng/mL</option>
+                                <option value="pg/mL">pg/mL</option>
+                                <option value="U/L">U/L</option>
+                                <option value="cells/uL">cells/uL</option>
+                                <!-- Add more options as needed -->
+                            </select>
+                        </td>
+                        <td><input type="text" name="component_result[]" class="form-control" /></td>
+                        <td><input type="text" name="male_reference_range[]" class="form-control" /></td>
+                        <td><input type="text" name="female_reference_range[]" class="form-control" /></td>
+                        <td><input type="text" name="test_status[]" class="form-control" /></td>
+                        <td><button type="button" class="btn btn-danger btn-sm remove-row">x</button></td>
+                    `;
+                    tbody.appendChild(row);
+            
+                    row.querySelector(".remove-row").addEventListener("click", function () {
+                        row.remove();
+                    });
+                });
+                
+                // Add row for test title
+                document.getElementById("addRowTitle").addEventListener("click", function () {
+                    const tbody = document.getElementById("test-tbody");
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td colspan="5">
+                            <input type="text" name="title[]" class="form-control fw-bold" placeholder="Title" />
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm remove-row">x</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+            
+                    row.querySelector(".remove-row").addEventListener("click", function () {
+                        row.remove();
+                    });
+                });
+                
+            </script>
+        </form>
+      </div> 
+    </div>
+</div>
+
+
+
+
+{% endblock %}

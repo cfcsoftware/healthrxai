@@ -1,0 +1,348 @@
+{% extends 'cms/tenant/base.html' %}
+{% load static %}
+
+{% block title %}CMS Dashboard - {{ website_settings.site_title|default:"Hospital Management System" }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">CMS Dashboard</h1>
+            <p class="text-muted">Manage your website content and settings</p>
+        </div>
+        <div>
+            <a href="{% url 'cms:landing_page' %}" target="_blank" class="btn btn-outline-primary">
+                <i class="fas fa-external-link-alt me-2"></i>View Website
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Pages
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_pages }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Published Pages
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.published_pages }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Features
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_features }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-star fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                New Messages
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.contact_submissions }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-envelope fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="{% url 'cms:settings' %}" class="btn btn-outline-primary btn-block">
+                                <i class="fas fa-cog me-2"></i>Website Settings
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="{% url 'cms:menu_builder' %}" class="btn btn-outline-success btn-block">
+                                <i class="fas fa-bars me-2"></i>Menu Builder
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="{% url 'cms:features' %}" class="btn btn-outline-info btn-block">
+                                <i class="fas fa-star me-2"></i>Manage Features
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="/admin/cms/" class="btn btn-outline-warning btn-block">
+                                <i class="fas fa-images me-2"></i>Gallery Manager
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Management -->
+    <div class="row">
+        <!-- Recent Pages -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Pages</h6>
+                    <a href="/admin/cms/page/" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus me-1"></i>Add New
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if recent_pages %}
+                        <div class="list-group list-group-flush">
+                            {% for page in recent_pages %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">{{ page.title }}</h6>
+                                        <small class="text-muted">
+                                            {% if page.is_published %}
+                                                <span class="badge bg-success">Published</span>
+                                            {% else %}
+                                                <span class="badge bg-warning">Draft</span>
+                                            {% endif %}
+                                            {{ page.updated_at|date:"M d, Y" }}
+                                        </small>
+                                    </div>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="/admin/cms/page/{{ page.id }}/change/" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        {% if page.is_published %}
+                                            <a href="{% url 'cms:page_detail' page.slug %}" target="_blank" class="btn btn-outline-success btn-sm">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No pages created yet.</p>
+                            <a href="/admin/cms/page/add/" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Create Your First Page
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Contact Messages -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Messages</h6>
+                    <a href="/admin/cms/contactform/" class="btn btn-sm btn-primary">
+                        <i class="fas fa-envelope me-1"></i>View All
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if recent_contacts %}
+                        <div class="list-group list-group-flush">
+                            {% for contact in recent_contacts %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">{{ contact.subject }}</h6>
+                                            <p class="mb-1 text-muted">From: {{ contact.name }} ({{ contact.email }})</p>
+                                            <small class="text-muted">{{ contact.created_at|date:"M d, Y H:i" }}</small>
+                                        </div>
+                                        <div>
+                                            {% if not contact.is_read %}
+                                                <span class="badge bg-danger">New</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-envelope fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No messages received yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Website Preview -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Website Preview</h6>
+                    <div>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="refreshPreview()">
+                            <i class="fas fa-sync-alt me-1"></i>Refresh
+                        </button>
+                        <a href="{% url 'cms:landing_page' %}" target="_blank" class="btn btn-sm btn-primary">
+                            <i class="fas fa-external-link-alt me-1"></i>Open in New Tab
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="embed-responsive embed-responsive-16by9" style="height: 600px;">
+                        <iframe id="websitePreview" 
+                                src="{% url 'cms:landing_page' %}" 
+                                class="embed-responsive-item w-100 h-100 border-0"
+                                style="min-height: 600px;">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .border-left-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+    
+    .border-left-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+    
+    .border-left-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+    
+    .border-left-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+    
+    .text-gray-800 {
+        color: #5a5c69 !important;
+    }
+    
+    .text-gray-300 {
+        color: #dddfeb !important;
+    }
+    
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+    
+    .card {
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .list-group-item {
+        border-left: none;
+        border-right: none;
+    }
+    
+    .list-group-item:first-child {
+        border-top: none;
+    }
+    
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+    
+    .embed-responsive {
+        position: relative;
+        display: block;
+        width: 100%;
+        padding: 0;
+        overflow: hidden;
+    }
+    
+    .embed-responsive-16by9::before {
+        padding-top: 56.25%;
+    }
+    
+    .embed-responsive-item {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function refreshPreview() {
+    const iframe = document.getElementById('websitePreview');
+    iframe.src = iframe.src;
+}
+
+// Auto-refresh preview every 30 seconds
+setInterval(function() {
+    refreshPreview();
+}, 30000);
+
+// Add loading indicator for iframe
+document.getElementById('websitePreview').addEventListener('load', function() {
+    console.log('Website preview loaded');
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,77 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container p-0 p-md-5">
+
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h4 class="d-flex align-items-center justify-content-between">
+                <b>Notifications</b>
+            </h4>
+        </div>
+    </div>
+
+    <!-- Notification List -->
+    <div class="list-group">
+
+        <!-- Appointment Reminder -->
+        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1">Appointment Reminder</h6>
+                <p class="mb-1">You have an appointment scheduled with Dr. Smith tomorrow at 10:00 AM. Please be on time.</p>
+            </div>
+            <small class="text-muted">1 day ago</small>
+        </a>
+
+        <!-- Test Result Available -->
+        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1">Test Result Available</h6>
+                <p class="mb-1">Your blood test results are now available. Please log in to your portal to view them.</p>
+            </div>
+            <small class="text-muted">3 hours ago</small>
+        </a>
+
+        <!-- Prescription Refill Reminder -->
+        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1">Prescription Refill Reminder</h6>
+                <p class="mb-1">Your prescription for 'Amlodipine' is running low. Refill it before your next dose is due.</p>
+            </div>
+            <small class="text-muted">2 days ago</small>
+        </a>
+
+        <!-- Upcoming Procedure -->
+        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1">Upcoming Procedure</h6>
+                <p class="mb-1">Your surgery for the knee replacement is scheduled for next week, on Monday at 9:00 AM.</p>
+            </div>
+            <small class="text-muted">5 days ago</small>
+        </a>
+
+        <!-- Vaccination Reminder -->
+        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1">Vaccination Reminder</h6>
+                <p class="mb-1">Your annual flu vaccination is due next week. Please book an appointment for the vaccine.</p>
+            </div>
+            <small class="text-muted">1 week ago</small>
+        </a>
+
+        <!-- Health Check-Up Reminder -->
+        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1">Health Check-Up Reminder</h6>
+                <p class="mb-1">Your routine health check-up is due next month. Please schedule an appointment.</p>
+            </div>
+            <small class="text-muted">2 weeks ago</small>
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid py-4" style="background: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 16px rgba(0,0,0,0.07); max-width: 1100px;">
+    <h2 class="mb-4 mt-2 text-center">IPD Patient Details</h2>
+    <table class="table table-bordered table-striped shadow-sm">
+        <tbody>
+            <tr class="table-primary">
+                <th colspan="4" class="text-center">Patient Details</th>
+            </tr>
+            <tr>
+                <th>Appointment</th>
+                <td>{{ ipd.appointment.appointment_record_id }}</td>
+                <th>Patient Name</th>
+                <td>{{ ipd.patient.name }}</td>
+            </tr>
+            <tr>
+                <th>Consultant Doctor</th>
+                <td>{{ ipd.doctor.name }}</td>
+                <th>Admission Date</th>
+                <td>{{ ipd.admission_date }}</td>
+            </tr>
+            <tr>
+                <th>Discharge Date</th>
+                <td>{{ ipd.discharge_date }}</td>
+                <th>Status</th>
+                <td>{{ ipd.status }}</td>
+            </tr>
+            <tr class="table-success">
+                <th colspan="4" class="text-center">Vitals &amp; Symptoms</th>
+            </tr>
+            <tr>
+                <th>Height</th>
+                <td>{{ ipd.height }}</td>
+                <th>Weight</th>
+                <td>{{ ipd.weight }}</td>
+            </tr>
+            <tr>
+                <th>BP</th>
+                <td>{{ ipd.bp }}</td>
+                <th>Pulse</th>
+                <td>{{ ipd.pulse }}</td>
+            </tr>
+            <tr>
+                <th>Temperature</th>
+                <td>{{ ipd.temperature }}</td>
+                <th>Respiration</th>
+                <td>{{ ipd.respiration }}</td>
+            </tr>
+            <tr>
+                <th>Symptoms</th>
+                <td colspan="3">{{ ipd.symptoms }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td colspan="3">{{ ipd.notes }}</td>
+            </tr>
+            <tr class="table-info">
+                <th colspan="4" class="text-center">Medical History</th>
+            </tr>
+            <tr>
+                <th>Allergies</th>
+                <td colspan="3">{{ ipd.allergies }}</td>
+            </tr>
+            <tr>
+                <th>Previous Medical Issue</th>
+                <td colspan="3">{{ ipd.previous_medical_issue }}</td>
+            </tr>
+            <tr>
+                <th>Casualty</th>
+                <td>{{ ipd.casualty }}</td>
+                <th>Old Patient</th>
+                <td>{{ ipd.old_patient }}</td>
+            </tr>
+            <tr>
+                <th>TPA (Insurance Name)</th>
+                <td colspan="3">{{ ipd.tpa }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4 class="mt-5 mb-3 text-center">Bed & Ward Details</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Date &amp; Time</th>
+                    <th>Floor</th>
+                    <th>Ward</th>
+                    <th>Bed No.</th>
+                    <th>Bed Charge</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for history in ipd.bed_ward_history %}
+                <tr>
+                    <td>{{ history.date }}</td>
+                    <td>{{ history.floor }}</td>
+                    <td>{{ history.ward }}</td>
+                    <td>{{ history.bed_no }}</td>
+                    <td>{{ history.bed_charge }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">No Bed & Ward history available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h4 class="mt-5 mb-3 text-center">IPD Patient History</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Date &amp; Time</th>
+                    <th>Remarks</th>
+                    <th>Medicine Details</th>
+                    <th>Nurse Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for history in ipd.ipd_patient_history %}
+                <tr>
+                    <td>{{ history.date_time }}</td>
+                    <td>{{ history.remarks }}</td>
+                    <td>{{ history.medicine_details }}</td>
+                    <td>{{ history.nurse_name }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">No history available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

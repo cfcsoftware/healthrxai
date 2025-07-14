@@ -1,0 +1,137 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+
+  
+<div class="mx-4">
+  <div class="card border-0">
+       <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-0 text-light">
+        Department List
+      </h5>
+      {% if 'department-add' in request.session.user_permissions %}
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Add Department
+      </button>
+      {% endif %}
+    </div>
+    <div class="card-body bg-light">
+      <div class="table-responsive">
+        <table id="example" class="table table-striped table-hover align-middle mb-0">
+          <thead class="table-secondary text-dark">
+            <tr>
+              <th class="text-center" style="width: 30px;"></th>
+              <th class="text-center">#</th>
+              <th>Department Name</th>
+              <th>Description</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for department in departments %}
+            <tr>
+              <td class="text-center"></td>
+              <td class="text-center fw-semibold">{{ forloop.counter }}</td>
+              <td class="fw-semibold">{{ department.name }}</td>
+              <td>{{ department.description }}</td>
+              <td class="text-center">
+                {% if 'department-edit' in request.session.user_permissions %}
+                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ department.id }}">
+                  <i class="bi bi-pencil-fill"></i>
+                </button>
+                {% endif %}
+
+                <!-- Edit Modal -->
+                <div class="modal fade" id="editModal{{ department.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ department.id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content bg-dark text-white">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel{{ department.id }}">Edit Department</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" action="/departments/department/edit/{{ department.id }}">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                            <div class="row">
+                              <!-- Department Name -->
+                              <div class="col-md-6">
+                                <label for="name{{ department.id }}" class="form-label">Department Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name{{ department.id }}" name="name" value="{{ department.name }}" required>
+                              </div>
+                              <!-- Description -->
+                              <div class="col-md-6">
+                                <label for="description{{ department.id }}" class="form-label">Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="description{{ department.id }}" name="description" required>{{ department.description }}</textarea>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {% if 'department-delete' in request.session.user_permissions %}
+                <form method="POST" action="/departments/department/delete/{{ department.id }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this department?');">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></button>
+                </form>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add Department</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form method="POST" action="/departments/department/add">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <div class="row">
+                    <!-- Department Name -->
+                    <div class="col-md-6">
+                      <label for="a1" class="form-label">Department Name <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="a1" name="name" placeholder="Enter Department Name" required>
+                    </div>
+      
+                    <!-- Description -->
+                    <div class="col-md-6">
+                      <label for="a2" class="form-label">Description <span class="text-danger">*</span></label>
+                      <textarea class="form-control" id="a2" name="description" placeholder="Enter Description"></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+      
+
+{% endblock %}

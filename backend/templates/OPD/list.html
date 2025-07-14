@@ -1,0 +1,433 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="p-0 p-md-5">
+    <h2><b>OPD Patient List</b></h2> <hr>
+    
+    <div class="card-body px-0">
+        <div class="card-header bg-dark text-center">
+            <span class="display-6 text-white mb-0 text-capitalize"></span>
+            <button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal" data-bs-target="#addOPDpatientsModal">
+                Add OPD Patient
+            </button>
+        </div><br><br>
+        <table class="table table-striped" id="example">
+            <thead>
+                <tr>
+                  <th>Sr.</th>
+                  <th>OPD ID</th>
+                  <th>Patient Name</th>
+                  <th>Cosultant Doctor</th>
+                  <th>Appointment</th>
+                  <th>Symptoms</th>
+                  <th>OPD Charge Type</th>
+                  <th>Charge Amount</th>
+                  <th>Action</th>
+                </tr>
+            </thead>
+           
+            <tbody> 
+                {% for opd in all_opd %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td color="primary">{{opd.opd_record_id}}</td>
+                    <td>{{ opd.patient.name }}</td>
+                    <td>{{ opd.doctor.name }}</td>
+                    <td>{{ opd.appointment.appointment_record_id }}</td>
+                    <td>{{ opd.symptoms }}</td>
+                    <td>{{ opd.charge_category }}</td>
+                    <td>{{ opd.charge }}</td>
+                
+                    <td>
+                        <a href="/opd/update/{{opd.id}}" class="btn btn-primary">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        
+                        <!-- <a href="/opd/delete/{{opd.id}}" class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i>
+                        </a> -->
+                        <!-- <a href="/opd/view/{{opd.id}}" class="btn btn-info btn-sm">
+                            <i class="bi bi-eye"></i>
+                        </a> -->
+                    </td>
+                </tr> 
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="addOPDpatientsModal" tabindex="-1" aria-labelledby="addOPDpatientsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+        <h5 class="modal-title text-center" id="addOPDpatientsModalLabel">Add OPD Patient</h5>
+            <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/opd/opd" method="POST">
+            {% csrf_token %}
+            <div class="modal-body">
+                    <div class="container mt-3">
+                        <div class="row mt-2">
+
+                            <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                    <label for="appointment">Appointment <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="appointment" id="appointment" >
+                                        <option value="">Select</option>
+                                        {% for appointment in appointments %}
+                                        <option value="{{ appointment.id }}" >{{ appointment.appointment_record_id }} ({{ appointment.patient.name }})</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                    <label for="patient">Patient Name <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="patient" id="patient" required>
+                                        <option value="">Select</option>
+                                        {% for patient in patients %}
+                                        <option value="{{ patient.id }}"  >{{ patient.name }}</option>
+                                        {% endfor %}  
+                                    </select>
+                                </div>
+                            </div>  
+                            <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                    <label for="doctor">Consultant Doctor <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="doctor" id="doctor" required>
+                                        <option value="">Select</option>
+                                        {% for doctor in doctors %}
+                                        <option value="{{ doctor.id }}" >{{ doctor.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            
+
+                        </div>
+
+                       
+                        <div class="row mt-2">
+                            <div class="col-md-2 mt-2">
+                                <div class="form-group">
+                                <label for="height">Height</label>
+                                <input type="text" class="form-control" name="height" id="height">
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-2 mt-2">
+                                <div class="form-group">
+                                <label for="weight">Weight</label>
+                                <input type="text" class="form-control" name="weight" id="weight">
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-2 mt-2">
+                                <div class="form-group">
+                                <label for="bp">BP</label>
+                                <input type="text" class="form-control" name="bp" id="bp">
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-2 mt-2">
+                                <div class="form-group">
+                                <label for="pulse">Pulse</label>
+                                <input type="text" class="form-control" name="pulse" id="pulse">
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-2 mt-2">
+                                <div class="form-group">
+                                <label for="temperature">Temperature</label>
+                                <input type="text" class="form-control" name="temperature" id="temperature">
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-2 mt-2">
+                                <div class="form-group">
+                                <label for="respiration">Respiration(Breathing)</label>
+                                <input type="text" class="form-control" name="respiration" id="respiration">
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-6 mt-2">
+                                <div class="form-group">
+                                <label for="symptoms">Symptoms</label>
+                                <select class="form-control" name="symptoms" id="symptoms">
+                                    <option value="">Select</option>
+                                    <option value="Eating or weight problems">Eating or weight problems</option>
+                                    <option value="Emotional problems">Emotional problems</option>
+                                    <option value="Muscle or joint problems">Muscle or joint problems</option>
+                                    <option value="Skin problems">Skin problems</option>
+                                    <option value="Bladder problems">Bladder problems</option>
+                                    <option value="Stomach problems">Stomach problems</option>
+                                    <option value="Lung problems">Lung problems</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                </div>
+                            </div>
+                    
+                            
+                    
+                            <!-- <div class="col-md-6 mt-2">
+                                <div class="form-group">
+                                <label for="symptomsDescription">Symptoms Description</label>
+                                <textarea class="form-control" name="symptomsDescription" id="symptomsDescription" rows="3"></textarea>
+                                </div>
+                            </div> -->
+
+                            <div class="col-md-6 mt-2">
+                                <div class="form-group">
+                                <label for="note">Note</label>
+                                <textarea class="form-control" name="notes" id="notes" rows="3"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                
+                        <div class="row mt-2">
+                            
+                    
+                            <div class="col-md-6 mt-2">
+                                <div class="form-group">
+                                <label for="allergies">Any Known Allergies</label>
+                                <textarea class="form-control" name="allergies" id="allergies" rows="3"></textarea>
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-6 mt-2">
+                                <div class="form-group">
+                                <label for="previous_medical_issue">Previous Medical Issue</label>
+                                <textarea class="form-control" name="previous_medical_issue" id="previous_medical_issue" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- <div class="row mt-2">
+                            
+                    
+                            <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="case">Case</label>
+                                <input type="text" class="form-control" name="case" id="case">
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="casualty">Casualty</label>
+                                <select class="form-control" name="casualty" id="casualty">
+                                    <option value="">Select</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                                </div>
+                            </div>
+                        </div> -->
+                
+                        <div class="row mt-2">
+                            <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="old_patient">Old Patient</label>
+                                <select class="form-control" name="old_patient" id="old_patient">
+                                    <option value="">Select</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                                </div>
+                            </div>
+                            
+                    
+                            <!-- <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="tpa">TPA</label>
+                                <select class="form-control" name="tpa" id="tpa">
+                                    <option value="">Select</option>
+                                    <option value="Health Life Insurance">Health Life Insurance</option>
+                                    <option value="Star Health Insurance">Star Health Insurance</option>
+                                    <option value="CGHS">CGHS</option>
+                                </select>
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="reference">Reference</label>
+                                <input type="text" class="form-control" name="reference" id="reference">
+                                </div>
+                            </div> -->
+
+                            <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="charge_category">Charge Category</label>
+                                <select class="form-control" name="charge_category" id="charge_category">
+                                    <option value="">Select</option>
+                                    <option value="OPD Consultation Fees">OPD Consultation Fees</option>
+                                    <option value="OPD Service">OPD Service</option>
+                                    <option value="OPD Insurance">OPD Insurance</option>
+                                    <option value="Blood pressure check">Blood pressure check</option>
+                                    <option value="Eye check">Eye check</option>
+                                    <option value="Cholesterol level check">Cholesterol level check</option>
+                                    <option value="Sterilization and Cleaning Equipment">Sterilization and Cleaning Equipment</option>
+                                    <option value="Oxygen cylinder">Oxygen cylinder</option>
+                                    <option value="Fire extinguisher">Fire extinguisher</option>
+                                    <option value="Operation Services">Operation Services</option>
+                                    <option value="Other Charges">Other Charges</option>
+                                </select>
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="charge">Charge</label>
+                                <input type="text" class="form-control" name="charge" id="charge" oninput="calculateAmounts()">
+                                </div>
+                            </div>
+
+                        </div>
+                
+                        
+                
+                        <div class="row mt-2">
+                            
+                    
+                            <!-- <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="tax">Tax(%)</label>
+                                <input type="number" class="form-control" name="tax" id="tax" value="0">
+                                </div>
+                            </div> -->
+
+                        </div>
+                
+                        <div class="row mt-2">
+                            <!-- <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="charge">Total Amount</label>
+                                <input type="text" class="form-control" name="charge" id="charge">
+                                </div>
+                            </div> -->
+                    
+                            <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="payment_mode">Payment Mode</label>
+                                <select class="form-control" name="payment_mode" id="payment_mode">
+                                    <option value="">Select</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Cheque">Cheque</option>
+                                    <option value="Transfer to Bank Account">Transfer to Bank Account</option>
+                                    <option value="UPI">UPI</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                </div>
+                            </div>
+
+                            
+                            <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="paid_amount">Paid Amount</label>
+                                <input type="text" class="form-control" name="paid_amount" id="paid_amount" oninput="calculateAmounts()">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="due_amount">Due Amount</label>
+                                <input type="text" class="form-control" name="due_amount" id="due_amount" readonly>
+                                </div>
+                            </div>
+
+                            <script>
+                                function calculateAmounts() {
+                                    var charge = parseFloat(document.getElementById('charge').value) || 0;
+                                    var paidAmount = parseFloat(document.getElementById('paid_amount').value) || 0;
+                                    var dueAmount = charge - paidAmount;
+                                    document.getElementById('due_amount').value = dueAmount > 0 ? dueAmount : 0;
+                                }
+                            </script>
+
+                        </div>
+                
+                        <div class="row mt-2">
+                            
+                    
+                            <!-- <div class="col-md-4 mt-2">
+                                <div class="form-group">
+                                <label for="live_consult">Live Consultation</label>
+                                <select class="form-control" name="live_consult" id="live_consult">
+                                    <option value="">Select</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                                </div>
+                            </div> -->
+                        </div>
+                
+                        
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div> 
+        </form>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#appointment").change(function () {
+            var appointmentId = $(this).val(); // Get selected appointment's ID
+            
+            if (appointmentId) {
+                $.ajax({
+                    url: "/opd/get-patient-doctor/" + appointmentId, 
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data) {
+                            $("#patient option").each(function () {
+                                if ($(this).val() == data.patient_id) {
+                                    $(this).prop("selected", true);
+                                } else {
+                                    $(this).prop("selected", false);
+                                }
+                            });
+    
+                            $("#doctor option").each(function () {
+                                if ($(this).val() == data.doctor_id) {
+                                    $(this).prop("selected", true);
+                                } else {
+                                    $(this).prop("selected", false);
+                                }
+                            });
+                        } else {
+                            $("#patient").val(""); // Clear selection if no data found
+                            $("#doctor").val("");
+                        }
+                    },
+                    error: function () {
+                        alert("Error fetching patient & doctor. Please try again.");
+                    }
+                });
+            } else {
+                $("#patient").val(""); // Clear selection if no appointment is selected
+                $("#doctor").val("");
+            }
+        });
+    });
+    
+</script>
+
+
+{% endblock %}

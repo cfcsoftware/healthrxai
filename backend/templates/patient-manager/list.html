@@ -1,0 +1,332 @@
+{% extends 'dashboard/base.html' %} 
+{% load static %} 
+{% block content %} 
+
+
+
+<div class="mx-4">
+  <div class="card border-0">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h4 class="mb-0">Patient List</h4>
+      <div class="d-flex gap-2">
+        {% if 'patient-add' in request.session.user_permissions %}
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addpatientsModal">
+          Create Patient
+        </button>
+        {% endif %}
+        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#uploadRecordsModal">
+          Upload Records
+        </button>
+
+        <!-- Upload Patient Records Modal -->
+        <div class="modal fade" id="uploadRecordsModal" tabindex="-1" aria-labelledby="uploadRecordsModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content bg-dark text-white">
+              <div class="modal-header">
+                <h5 class="modal-title text-center" id="uploadRecordsModalLabel">Upload Patient Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form method="post" action="/patients/upload_data" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  
+                  <!-- Upload Excel File -->
+                  <div class="mb-3">
+                    <label for="upload_data" class="form-label">Upload Excel</label>
+                    <input type="file" class="form-control" id="upload_data" name="upload_data" required>
+                    <small class="form-text text-muted">You can upload Excel file only.</small>
+                  </div>
+
+                  <!-- Submit -->
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+      <div class="card-body px-0">
+        <div class="table-responsive">
+          <table id="example" class="table text-start table-striped table-hover align-middle" style="white-space:nowrap;">
+            <thead class="table-secondary text-start text-dark" style="white-space:nowrap;">
+              <tr>
+                <th></th>
+                <th scope="col" class="text-start">S.No.</th>
+                <th scope="col" class="text-start">Patient ID</th>
+                <th scope="col" class="text-start">Patient Name</th>
+                <th scope="col" class="text-start">Patient Contact</th>
+                <th scope="col" class="text-start">Guardian Name</th>
+                <th scope="col" class="text-start">Guardian Phone</th>
+                <th scope="col" class="text-start">Age</th>
+                <th scope="col" class="text-start">Gender</th>
+                <th scope="col" class="text-start">Address</th>
+                <th scope="col" class="text-start">Admission Date</th>
+                <th scope="col" class="text-start">Patient History</th>
+                <th scope="col" class="text-start">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for patient in all_patients %}
+              <tr>
+                <td></td>
+                <td class="text-start">
+                  <span class="fw-semibold text-primary d-block text-center">{{ forloop.counter }}</span>
+                </td>
+                <td class="text-start">{{ patient.patient_record_id }}</td>
+                <td class="text-start">{{ patient.name }}</td>
+                <td class="text-start">{{ patient.phone }}</td>
+                <td class="text-start">{{ patient.guardian_name }}</td>
+                <td class="text-start">{{ patient.guardian_phone }}</td>
+                <td class="text-start">{{ patient.age }}</td>
+                <td class="text-start">{{ patient.gender }}</td>
+                <td class="text-start">{{ patient.address }}</td>
+                <td class="text-start">{{ patient.created_at }}</td>
+                <td class="text-start">
+                  <a href="/patients/history/{{patient.id}}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-clock-history"></i> History
+                  </a>
+                </td>
+                <td class="text-center">
+                  {% if 'patient-edit' in request.session.user_permissions %}
+                  <button type="button" class="btn btn-outline-primary btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editPatientsModal{{ patient.id }}" title="Edit">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <!-- Edit Patient Modal -->
+                  <div class="modal fade" id="editPatientsModal{{ patient.id }}" tabindex="-1" aria-labelledby="editPatientsModalLabel{{ patient.id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                          <h5 class="modal-title" id="editPatientsModalLabel{{ patient.id }}">
+                            <i class="bi bi-pencil-square me-2" style="color: white;"></i><span style="color: white;">Edit Patient</span>
+                          </h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <form method="post" action="/patients/patient/edit/{{ patient.id }}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden" name="_method" value="PATCH">
+                            <div class="row g-3 mb-3">
+                              <div class="col-md-4">
+                                <label for="name" class="form-label"><i class="bi bi-person-fill me-1"></i>Patient Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{patient.name}}" placeholder="Enter Patient Name" required>
+                              </div>
+                              <div class="col-md-4">
+                                <label for="phone" class="form-label"><i class="bi bi-telephone-fill me-1"></i>Patient Phone No.</label>
+                                <input type="number" class="form-control" id="phone" name="phone" placeholder="Enter Patient Phone No." value="{{patient.phone}}" required>
+                              </div>
+                              <div class="col-md-4">
+                                <label for="age" class="form-label"><i class="bi bi-calendar-fill me-1"></i>Age</label>
+                                <input type="number" class="form-control" id="age" name="age" value="{{patient.age}}" placeholder="Enter Patient Age" required>
+                              </div>
+                            </div>
+                            <div class="row g-3 mb-3">
+                              <div class="col-md-4">
+                                <label for="gender" class="form-label"><i class="bi bi-gender-ambiguous me-1"></i>Gender</label>
+                                <select class="form-select" name="gender" id="gender" required>
+                                  <option value="Male" {% if patient.gender == 'Male' %}selected{% endif %}>Male</option>
+                                  <option value="Female" {% if patient.gender == 'Female' %}selected{% endif %}>Female</option>
+                                  <option value="Not Specified" {% if patient.gender == 'Not Specified' %}selected{% endif %}>Not Specified</option>
+                                </select>
+                              </div>
+                              <div class="col-md-4">
+                                <label for="guardian_name" class="form-label"><i class="bi bi-person-badge-fill me-1"></i>Guardian Name</label>
+                                <input type="text" class="form-control" id="guardian_name" name="guardian_name" placeholder="Enter Guardian Name" value="{{patient.guardian_name}}" required>
+                              </div>
+                              <div class="col-md-4">
+                                <label for="guardian_phone" class="form-label"><i class="bi bi-telephone-fill me-1"></i>Guardian Phone No.</label>
+                                <input type="number" class="form-control" id="guardian_phone" name="guardian_phone" placeholder="Enter Guardian Phone No." value="{{patient.guardian_phone}}" required>
+                              </div>
+                            </div>
+                            <div class="mb-3">
+                              <label for="address" class="form-label"><i class="bi bi-house-fill me-1"></i>Address</label>
+                              <textarea class="form-control" id="address" rows="2" name="address" placeholder="Enter Address" required>{{patient.address}}</textarea>
+                            </div>
+                            <div class="row g-3 mb-3">
+                              <div class="col-md-6">
+                                <label for="city" class="form-label"><i class="bi bi-building me-1"></i>City</label>
+                                <input type="text" class="form-control" id="city" name="city" placeholder="Enter Your City" value="{{patient.city}}">
+                              </div>
+                              <div class="col-md-6">
+                                <label for="state" class="form-label"><i class="bi bi-geo-alt-fill me-1"></i>State</label>
+                                <input type="text" class="form-control" id="state" name="state" placeholder="Enter Your State" value="{{patient.state}}">
+                              </div>
+                            </div>
+                            <div class="row g-3 mb-3">
+                              <div class="col-md-6">
+                                <label for="aadhar_card" class="form-label"><i class="bi bi-credit-card-fill me-1"></i>Aadhar Card</label>
+                                <input type="number" class="form-control" id="aadhar_card" name="aadhar_card" placeholder="Enter Aadhar Card" value="{{patient.aadhar_card}}">
+                              </div>
+                              <div class="col-md-6">
+                                <label for="ayushman_card" class="form-label"><i class="bi bi-credit-card-2-back-fill me-1"></i>Ayushman Card</label>
+                                <input type="text" class="form-control" id="ayushman_card" name="ayushman_card" placeholder="Enter Ayushman Card" value="{{patient.ayushman_card}}">
+                              </div>
+                            </div>
+                            <div class="mb-3">
+                              <label for="marital_status" class="form-label"><i class="bi bi-heart-fill me-1"></i>Marital Status</label>
+                              <select class="form-select" id="marital_status" name="marital_status">
+                                <option value="Single" {% if patient.marital_status == 'Single' %}selected{% endif %}>Single</option>
+                                <option value="Married" {% if patient.marital_status == 'Married' %}selected{% endif %}>Married</option>
+                                <option value="Divorced" {% if patient.marital_status == 'Divorced' %}selected{% endif %}>Divorced</option>
+                                <option value="Widowed" {% if patient.marital_status == 'Widowed' %}selected{% endif %}>Widowed</option>
+                              </select>
+                            </div>
+                            <div class="row g-3 mb-3">
+                              <div class="col-md-4">
+                                <label for="image" class="form-label"><i class="bi bi-image-fill me-1"></i>Image</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                                {% if patient.image %}
+                                  <div class="mt-2">
+                                    <img src="{{ patient.image }}" alt="Uploaded Image" class="img-thumbnail" style="max-width: 50px; max-height: 50px;">
+                                    <p class="text-success">Image uploaded</p>
+                                  </div>
+                                {% endif %}
+                              </div>
+                              <div class="col-md-4">
+                                <label for="allergies" class="form-label"><i class="bi bi-exclamation-triangle-fill me-1"></i>Allergies</label>
+                                <textarea class="form-control" id="allergies" name="allergies" placeholder="Enter Allergies">{{patient.allergies}}</textarea>
+                              </div>
+                              <div class="col-md-4">
+                                <label for="remarks" class="form-label"><i class="bi bi-chat-left-text-fill me-1"></i>Remarks</label>
+                                <textarea class="form-control" id="remarks" name="remarks" placeholder="Enter Remarks">{{patient.remarks}}</textarea>
+                              </div>
+                            </div>
+                            <div class="row g-3 mb-3">
+                              <div class="col-md-4">
+                                <label for="tpa_id" class="form-label"><i class="bi bi-card-checklist me-1"></i>TPA ID</label>
+                                <input type="text" class="form-control" id="tpa_id" name="tpa_id" placeholder="Enter TPA ID" value="{{patient.tpa_id}}">
+                              </div>
+                              <div class="col-md-4">
+                                <label for="tpa_validity" class="form-label"><i class="bi bi-calendar-check-fill me-1"></i>TPA Validity</label>
+                                <input type="date" class="form-control" id="tpa_validity" name="tpa_validity" value="{{patient.tpa_validity}}">
+                              </div>
+                              <div class="col-md-4">
+                                <label for="social_security_no" class="form-label"><i class="bi bi-shield-lock-fill me-1"></i>Social Security Number</label>
+                                <input type="text" class="form-control" id="social_security_no" name="social_security_no" placeholder="Enter Social Security Number" value="{{patient.social_security_no}}">
+                              </div>
+                            </div>
+                            <div class="text-center">
+                              <button type="submit" class="btn btn-violet"><i class="bi bi-save-fill me-1"></i>Update</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% if 'patient-delete' in request.session.user_permissions %}
+                  <a href="/patients/patient/delete/{{patient.id}}" class="btn btn-outline-danger btn-sm" title="Delete" onclick="return confirm('Are you sure you want to delete this patient?');">
+                    <i class="bi bi-trash3-fill"></i>
+                  </a>
+                  {% endif %}
+                  <!--
+                  <a href="/patients/patient/view/{{patient.id}}" class="btn btn-info btn-sm">
+                    <i class="bi bi-eye"></i>
+                  </a> 
+                  <a href="#" class="btn btn-info btn-sm">
+                    <i class="bi bi-printer"></i>
+                  </a>
+                  -->
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+  </div>
+
+  
+<!-- Modal -->
+<div class="modal fade" id="addpatientsModal" tabindex="-1" aria-labelledby="addpatientsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="addpatientsModalLabel">Add Patient</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/patients/patient/add" enctype="multipart/form-data">
+          {% csrf_token %}
+          
+          <!-- Patient Name, Phone & Age -->
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="name" class="form-label">Patient Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Patient Name" required>
+              </div>
+              <div class="col-md-4">
+                <label for="phone" class="form-label">Patient Phone No.</label>
+                <input type="number" class="form-control" id="phone" name="phone" placeholder="Enter Patient Phone No." required>
+              </div>
+              <div class="col-md-4">
+                <label for="age" class="form-label">Age</label>
+                <input type="number" class="form-control" id="age" name="age" placeholder="Enter Patient Age" required>
+              </div>
+              <div class="col-md-4">
+                <label for="blood_group" class="form-label">Blood Group</label>
+                <select class="form-control" name="blood_group" id="blood_group" required>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gender, Guardian Name & Guardian Phone -->
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-md-4">
+                <label for="gender" class="form-label">Gender</label>
+                <select class="form-control" name="gender" id="gender" required>
+                  <option value="Male" >Male</option>
+                  <option value="Female" >Female</option>
+                  <option value="Not Specified" >Not Specified</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label for="guardian_name" class="form-label">Guardian Name</label>
+                <input type="text" class="form-control" id="guardian_name" name="guardian_name" placeholder="Enter Guardian Name" required>
+              </div>
+              <div class="col-md-4">
+                <label for="guardian_phone" class="form-label">Guardian Phone No.</label>
+                <input type="number" class="form-control" id="guardian_phone" name="guardian_phone" placeholder="Enter Guardian Phone No." required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doctor, Department & Address -->
+          <div class="mb-3">
+            <div class="row">
+              
+              <div class="col-md-12">
+                <label for="address" class="form-label">Address</label>
+                <textarea class="form-control" id="address" rows="1" name="address" placeholder="Enter Address" required></textarea>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Submit -->
+          <div class="text-center">
+            <button type="submit" class="btn btn-success-light">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

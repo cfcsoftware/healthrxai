@@ -1,0 +1,12 @@
+{
+    "name": "Node Dev",
+    "build": {
+      "dockerfile": "Dockerfile"
+    },
+    "workspaceFolder": "/app",
+    "forwardPorts": [5173], 
+    "customizations": {
+      "terminal.integrated.shell.linux": "/bin/bash"
+    }
+  }
+  

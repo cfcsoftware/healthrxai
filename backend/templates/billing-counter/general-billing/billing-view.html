@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Invoice - {{request.session.username}}</title>
+    <style>
+      .invoice2 {
+        font-family: Arial, sans-serif;
+        padding: 30px;
+        color: #000;
+        line-height: 1.4;
+        font-size: 14px;
+        position: relative;
+      }
+      .copyright-logo {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        translate: -50% -50%;
+        opacity: 0.1;
+        filter: brightness(0.5);
+        z-index: -1;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .bold {
+        font-weight: bold;
+      }
+
+      .header {
+        text-align: left;
+        margin-bottom: 20px;
+        line-height: 1.4;
+      }
+      .header p {
+        margin: 0;
+        font-size: 14px;
+      }
+      .header h5 {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      .no-border {
+        border: none;
+        width: 100%;
+      }
+      .no-border th {
+        border: 1px solid #000;
+        border-left: 0;
+        border-right: 0;
+        text-align: left;
+        padding: 8px 0;
+      }
+      .no-border td {
+        border: none;
+        padding: 5px 0;
+      }
+      .contact {
+        font-size: 13px;
+      }
+
+      
+
+      .signature {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+        font-size: 14px;
+      }
+
+      .footer {
+        margin-top: 20px;
+        text-align: center;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="invoice2">
+        <img
+        src="https://healthsrx.com/static/images/main_logo.png"
+        alt=""
+        height="100px" class="copyright-logo"        
+      />
+      <div class="header">
+        <table class="no-border">
+          <tr>
+            <td style="width: 40%">
+              <h1 style="margin:0">{{request.session.username|upper}}</h1>
+              <p class="">
+                {{request.session.address|default:"Address not provided"}}
+              </p>
+              <p class="">
+                <span class="me-3 d-inline-block"><i class="bi bi-globe"></i>
+                  www.healthrxai.com</span>
+                  <br />
+                <span class="me-3 d-inline-block"><i class="bi bi-envelope"></i> {{request.session.email}}</span>
+              </p>
+              <p class="">
+                <span>CIN: UR142CFFD5D4V1D9B7</span>
+              </p>
+              <p class="">ISO 17201:2012</p>
+            </td>
+            <td style="width: 20%; text-align: center">
+              <img
+                src="https://healthsrx.com/static/images/main_logo.png"
+                alt=""
+                height="100px"
+                class="mb-2"
+              />
+            </td>
+            <td style="width: 40%; text-align: right">
+              <h5 style="color: red">Most Trusted Brand</h5>
+              <p class="mb-1"><strong>100%</strong><br />satisfied customers</p>
+              <p><strong>10,000+</strong><br />lab tests booked</p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="gst">
+             <p>
+                <strong>GST No:</strong> {{request.session.gst_no|default:"Not provided"}}
+              </p>
+            </td>
+            <td style="text-align: right">
+              <p>
+                <strong>DL No.:</strong> {{request.session.dl|default:"Not provided"}}
+              </p>
+          </tr>
+        </table>
+      </div>
+
+      <div class="center bold" style="
+          border-bottom: 1px solid #000;
+          padding: 10px;
+          background: #f2f2f2;
+          margin-bottom: 10px;font-size: 20px;">
+        <strong>INVOICE / RECEIPT</strong>
+      </div>
+
+      <table class="no-border" style="margin-bottom: 15px">
+        <tr>
+          <td><strong>Patient Name</strong>: {{billing.patient.name}}</td>
+          <td><strong>Bill Date</strong>: {{billing.created_at}}</td>
+        </tr>
+        <tr>
+          <td><strong>Age / Sex</strong>: {{billing.patient.age}} Years/{{billing.patient.gender}}</td>
+          <td><strong>Bill No</strong>: {{billing.billing_record_id}}</td>
+        </tr>
+        <tr>
+          <td><strong>Address</strong>: {{billing.patient.address}}</td>
+          <td><strong>Dr. Name</strong>: DR. {{billing.doctor.name}}</td>
+          <td></td>
+        </tr>
+
+      </table>
+
+      <table class="no-border">
+        <tr>
+          <th>Sr No.</th>
+          <th>Service Details</th>
+          <th>Unit Cost (₹)</th>
+          <th>Quantity</th>
+          <th>Amount</th>
+          <th>Tax (%)</th>
+          <th style="text-align: right">Total</th>
+        </tr>
+        {% for item in billing.service_details %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ item.service }}</td>
+          <td>{{ item.cost }}</td>
+          <td>{{ item.qty }}</td>
+          <td>{{ item.price }}</td>
+          <td>0%</td>
+          <td  style="text-align: right">{{ item.amount }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      <table class="no-border">
+        <tr>
+          <th><strong>Pay Mode</strong>: {{billing.payment_mode}}</th>
+          <th><strong>Card No</strong>:</th>
+          <th style="text-align: right">
+            <strong>Total Amount</strong>:
+            <span style="width: 120px; text-align: right; display: inline-block">{{billing.subtotal}}</span>
+          </th>
+        </tr>
+        <tr>
+          <td colspan="2" rowspan="4" style="line-height: 1.7">
+            <strong>Received with thanks an amount of</strong><br />
+            By {{billing.payment_mode}}: <strong>{{ billing.subtotal|floatformat:2|capfirst }} rupees only</strong><br />
+            GST is included in Total Amount<br />
+            Medicine can be returned only within 7 days.
+          </td>
+          <td style="text-align: right">
+            <strong>Discount (%)</strong>:
+            <span style="width: 120px; text-align: right; display: inline-block">{{billing.discount_percentage}}</span>
+          </td>
+        </tr>
+        
+        <tr>
+          <td style="text-align: right">
+            <strong>Paid Amount</strong>:
+            <span style="width: 120px; text-align: right; display: inline-block">{{billing.amount_paid}}</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: right">
+            <strong>Due Amount</strong>:
+            <span style="width: 120px; text-align: right; display: inline-block">{{billing.amount_due}}</span>
+          </td>
+        </tr>
+      </table>
+
+      <div class="signature">
+        <div><strong>(WISH YOU A SPEEDY RECOVERY)</strong></div>
+        <h2>(Receptionist)</h2>
+      </div>
+      <div style="text-align: center; margin-top: 20px;">
+        <button style="padding: 8px 20px; font-size: 16px; background: #555; color: #fff; border: none; border-radius: 4px; cursor: pointer;" onclick="window.print()">
+           Print
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

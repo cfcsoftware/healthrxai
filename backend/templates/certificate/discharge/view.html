@@ -1,0 +1,67 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div 
+  class="border border-4 border-dark rounded-4 shadow-lg mx-auto my-5 bg-light"
+  style="max-width: 800px; padding: 40px 30px; border-style: double; position: relative;"
+>
+  <div class="text-center mb-4">
+    <img src="http://gayatri.localhost:8000/static/images/healthrx.png" alt="Hospital Logo" style="height:70px; margin-bottom:10px;">
+    <div 
+      style="font-family: 'Georgia', serif; font-size:2.5rem; color:#2c3e50; letter-spacing:2px; font-weight:bold;"
+      class="mb-1"
+    >
+      Discharge Certificate
+    </div>
+    <div style="font-size:1.1rem; color:#555; margin-bottom:10px;">
+      This is to certify the following details:
+    </div>
+    <hr style="border-top:2px solid #2c3e50; width:60px; margin:18px auto 0;">
+  </div>
+  <table class="table mb-0">
+    <tbody>
+      <tr>
+        <th 
+          class="bg-light fw-semibold" 
+          style="color:#34495e; width:220px; font-size:1.1rem;"
+        >Patient Name</th>
+        <td style="background:#fff; color:#222; font-size:1.1rem;">{{ discharge.patient_name }}</td>
+      </tr>
+      <tr>
+        <th class="bg-light fw-semibold" style="color:#34495e; width:220px; font-size:1.1rem;">Date of Admission</th>
+        <td style="background:#fff; color:#222; font-size:1.1rem;">{{ discharge.admission_date }}</td>
+      </tr>
+      <tr>
+        <th class="bg-light fw-semibold" style="color:#34495e; width:220px; font-size:1.1rem;">Date of Discharge</th>
+        <td style="background:#fff; color:#222; font-size:1.1rem;">{{ discharge.discharge_date }}</td>
+      </tr>
+      <tr>
+        <th class="bg-light fw-semibold" style="color:#34495e; width:220px; font-size:1.1rem;">Diagnosis</th>
+        <td style="background:#fff; color:#222; font-size:1.1rem;">{{ discharge.diagnosis }}</td>
+      </tr>
+      <tr>
+        <th class="bg-light fw-semibold" style="color:#34495e; width:220px; font-size:1.1rem;">Remarks</th>
+        <td style="background:#fff; color:#222; font-size:1.1rem;">{{ discharge.remarks }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div 
+    class="mt-5 text-end"
+    style="font-family:'Georgia',serif; font-size:1.1rem; color:#444;"
+  >
+    Date: {{ discharge.discharge_date|date:"F d, Y" }}
+    <div 
+      class="mt-5"
+      style="text-align:right; font-family:'Brush Script MT',cursive,sans-serif; font-size:1.5rem; color:#2c3e50;"
+    >
+      <span>__________________________</span><br>
+      <span style="font-family:'Georgia',serif; font-size:1.1rem; color:#444;">Authorized Signature</span>
+    </div>
+  </div>
+  <div class="text-center mt-4">
+    <button class="btn btn-primary" onclick="window.print()">Print Certificate</button>
+  </div>
+</div>
+
+{% endblock %}

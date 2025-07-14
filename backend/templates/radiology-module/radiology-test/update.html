@@ -1,0 +1,153 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="px-4">
+  <div class="bg-primary text-light rounded-top p-3 mb-0">
+    <h5 class="mb-0 text-light">Update Radiology Test</h5>
+  </div>
+    <div class="card-dark shadow-sm p-4">
+      <div class="card-body position-relative">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="container mt-3">
+              <div class="row">
+                <!-- Test Name -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Test Name <span class="text-danger">*</span></label>
+                    <input type="text" name="test_name" class="form-control" value="{{ radiology_test.test_name }}" required>
+                  </div>
+                </div>
+    
+                <!-- Short Name -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Shortcut</label>
+                    <input type="text" name="short_name" class="form-control" value="{{ radiology_test.short_name }}">
+                  </div>
+                </div>
+    
+                <!-- Sample Type -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Sample Type <span class="text-danger">*</span></label>
+                    <input type="text" name="sample_type" class="form-control" value="{{ radiology_test.sample_type }}">
+                  </div>
+                </div>
+              </div>
+    
+              <div class="row mt-3">
+                <!-- Price -->
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" name="total_amount" class="form-control" value="{{ radiology_test.total_amount }}">
+                  </div>
+                </div>
+    
+                <!-- Precaution -->
+                <div class="col-sm-9">
+                  <div class="form-group">
+                    <label>Precautions</label>
+                    <textarea name="precaution" class="form-control" rows="3">{{ radiology_test.precaution }}</textarea>
+                  </div>
+                </div>
+              </div>
+    
+              <!-- Test Parameters Table -->
+              <div class="table-responsive mt-5">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6>Test Component</h6>
+                  <div>
+                    <button type="button" id="addRowTitleupdate-{{ radiology_test.id }}" class="btn btn-primary me-2">
+                      <i class="bi bi-plus"></i> Title
+                    </button>
+                    <button type="button" id="addRowComponentUpdate-{{ radiology_test.id }}" class="btn btn-primary">
+                      <i class="bi bi-plus"></i> Component
+                    </button>
+                  </div>
+                </div>
+    
+                <table class="table table-bordered mt-3 text-center align-middle">
+                  <thead>
+                    <tr>
+                      <td>Name</td>
+                      <td>Unit</td>
+                      <td>Result</td>
+                      <td>Reference Range</td>
+                      <td>Status</td>
+                      <td>Action</td>
+                    </tr>
+                  </thead>
+                  <tbody id="test-tbody-{{ radiology_test.id }}">
+                    {% for name, unit, result, reference, status in components %}
+                    <tr>
+                      <td><input type="text" name="title[]" class="form-control" value="{{ title }}"></td>
+                      <td><input type="text" name="component_name[]" class="form-control" value="{{ name }}"></td>
+                      <td><input type="text" name="component_unit[]" class="form-control" value="{{ unit }}"></td>
+                      <td><input type="text" name="component_result[]" class="form-control" value="{{ result }}"></td>
+                      <td><input type="text" name="reference_range[]" class="form-control" value="{{ reference }}"></td>
+                      <td><input type="text" name="test_status[]" class="form-control" value="{{ status }}"></td>
+                      <td><button type="button" class="btn btn-danger btn-sm remove-row">x</button></td>
+                    </tr>
+                    {% endfor %}
+                    {% for t in title %}
+                    <tr>
+                        <td colspan="5"><input type="text" name="title[]" class="form-control fw-bold" value="{{ t }}" placeholder="Title"></td>
+                        <td><button type="button" class="btn btn-danger btn-sm remove-row" fdprocessedid="hobqs">x</button></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+    
+            <div class="modal-footer d-flex justify-content-center">
+              <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const ptId = "{{ radiology_test.id }}";
+                    const tbody = document.getElementById(`test-tbody-${ptId}`);
+                
+                    document.getElementById(`addRowComponentUpdate-${ptId}`).addEventListener("click", function () {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><input type="text" name="component_name[]" class="form-control" /></td>
+                        <td><input type="text" name="component_unit[]" class="form-control" /></td>
+                        <td><input type="text" name="component_result[]" class="form-control" /></td>
+                        <td><input type="text" name="reference_range[]" class="form-control" /></td>
+                        <td><input type="text" name="test_status[]" class="form-control" /></td>
+                        <td><button type="button" class="btn btn-danger btn-sm remove-row">x</button></td>
+                    `;
+                    tbody.appendChild(row);
+                    row.querySelector(".remove-row").addEventListener("click", () => row.remove());
+                    });
+                
+                    document.getElementById(`addRowTitleupdate-${ptId}`).addEventListener("click", function () {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td colspan="5"><input type="text" name="title[]" class="form-control fw-bold" placeholder="Title" /></td>
+                        <td><button type="button" class="btn btn-danger btn-sm remove-row">x</button></td>
+                    `;
+                    tbody.appendChild(row);
+                    row.querySelector(".remove-row").addEventListener("click", () => row.remove());
+                    });
+                
+                    // Attach remove handler to existing rows
+                    tbody.querySelectorAll(".remove-row").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        btn.closest("tr").remove();
+                    });
+                    });
+                });
+              </script>
+        </form>
+      </div>
+    </div>
+      
+
+
+{% endblock %}

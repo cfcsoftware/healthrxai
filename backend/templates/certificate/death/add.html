@@ -1,0 +1,109 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="px-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 text-light">
+                
+                Add Death Certificate
+            </h5>
+        </div>
+        <div class="card-body">
+            <form id="deathForm" method="post" enctype="multipart/form-data" autocomplete="off">
+                {% csrf_token %}
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <label class="form-label" for="patient_mobile">Deceased Mobile <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                            <input type="number" class="form-control" id="patient_mobile" name="patient_mobile" placeholder="Enter Deceased Mobile No." required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="patient_name">Deceased Name <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                            <input type="text" class="form-control" id="patient_name" name="patient_name" placeholder="Enter Deceased Name" required>
+                            <input type="hidden" id="patient_id" value="" name="patient">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="date_of_death">Date Of Death <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar-fill"></i></span>
+                            <input type="date" class="form-control" id="date_of_death" name="date_of_death" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="place_of_death">Place Of Death <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-geo"></i></span>
+                            <input type="text" class="form-control" id="place_of_death" name="place_of_death" placeholder="Enter Place Of Death" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="cause_of_death">Cause Of Death <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-clipboard2-pulse"></i></span>
+                            <textarea class="form-control" id="cause_of_death" name="cause_of_death" placeholder="Enter Cause of Death" rows="2" required></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="death_certificate">Death Certificate (if you have a physical copy)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-file-earmark-text-fill"></i></span>
+                            <input type="file" class="form-control" id="death_certificate" name="death_certificate" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary px-4">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+      
+
+<script>
+
+    $(document).ready(function() { 
+            $('#patient_mobile').on('input', function() {
+                var phone = $(this).val();
+
+                if (phone.length >= 10 && phone.length <= 10) {
+                $('#patientError').text('');
+                $.ajax({
+                    url: '/billing/get_patient_by_phone',
+                    method: 'GET',
+                    data: { phone: phone },
+                    success: function(response) {
+                    console.log(response);
+                    if (response.success) {
+                        $('#patient_id').val(response.patient.id);
+                        $('#patient_name').val(response.patient.name);
+                        $('#address').text(response.patient.address);
+                        $("input[name='gender'][value='" + response.patient.gender + "']").prop('checked', true);
+                        $('#guardian_name').val(response.patient.guardian_name);
+                        $('#city').val(response.patient.city);
+                    } else {
+                        $('#patient_id').val('');
+                        $('#patient_name').val('');
+                        $('#age').val('');
+                        $('#address').text('');
+                        $('#guardian_name').val('');
+                        $('#city').val('');
+                    }
+                    }
+                });
+                } else {
+                $('#patientError').text('Please enter a valid phone number.');
+                }
+            });
+        }); 
+</script>
+
+{% endblock %}

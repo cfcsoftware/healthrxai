@@ -1,0 +1,169 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %} 
+{% block content %} 
+
+
+
+
+<div class="mx-4">
+  <div class="card shadow mb-4">
+    <div class="card-header bg-primary d-flex justify-content-between">
+      <h5 class="mb-0 text-light">
+        <i class="bi bi-clipboard-check-fill me-2"></i>Role &amp; Permission
+      </h5>
+      <a href="/permission/assign-to-role" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>Assign Role &amp; Permission
+      </a>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table id="example" class="table table-striped table-bordered align-middle">
+          <thead class="table-secondary text-dark">
+            <tr>
+              <th style="width: 40px;"></th>
+              <th style="min-width: 80px;">#</th>
+              <th style="min-width: 180px;">Role</th>
+              <th style="min-width: 300px;">Permissions</th>
+              <th style="min-width: 120px;" class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for rp in all_roles_permissions %}
+            <tr>
+              <td class="text-center align-middle"></td>
+              <td class="align-middle fw-semibold text-center">{{ forloop.counter }}</td>
+              <td class="align-middle">{{ rp.role }}</td>
+              <td class="align-middle">
+                <div class="permission-collapse-wrapper" style="overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);" id="perm-wrapper-{{ forloop.counter }}">
+                  <div class="d-flex flex-wrap gap-2 permission-collapse-inner" id="perm-container-{{ forloop.counter }}">
+                    {% for perm in rp.permissions %}
+                      <span class="permission-badge-btn permission-item {% if forloop.counter > 5 %}d-none{% endif %}">
+                        <i class="bi bi-shield-lock-fill me-1"></i>
+                        {{ perm.code|upper }}
+                      </span>
+                    {% empty %}
+                      <span class="text-muted">No permissions assigned</span>
+                    {% endfor %}
+                  </div>
+                </div>
+                {% if rp.permissions|length > 5 %}
+                <button class="btn btn-link p-0 mt-1" type="button"
+                        onclick="togglePermissions(this, {{ forloop.counter }})"
+                        aria-expanded="false">
+                  Show more
+                </button>
+                {% endif %}
+              </td>
+              <td class="text-center align-middle">
+                <a href="/permission/update-assigned-to-role/{{ rp.id }}" class="btn btn-outline-primary btn-sm" title="Edit Permissions">
+                  <i class="bi bi-pencil-square"></i> Edit
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="text-center text-muted">No roles with permissions found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .permission-collapse-wrapper {
+    max-height: 120px; /* enough for 5 badges, adjust as needed */
+    will-change: max-height;
+  }
+  .permission-collapse-wrapper.expanded {
+    max-height: 1000px !important; /* large enough for all badges */
+  }
+  .permission-item {
+    transition: opacity 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    opacity: 1;
+    transform: translateY(0);
+    display: inline-block;
+  }
+  .permission-item.d-none {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    position: absolute;
+  }
+
+  /* New design for permission badge buttons */
+  .permission-badge-btn {
+    display: inline-flex
+;
+    align-items: center;
+    background: #3c5dcc17;
+    color: #3c5dcc;
+    font-weight: normal;
+    border-radius: 8px;
+    padding: 0.35em 1.1em 0.35em 0.9em;
+    font-size: 12px;
+    box-shadow: 0 2px 8px rgba(106, 17, 203, 0.08);
+    border: none;
+    margin-bottom: 0.25em;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+    position: relative;
+    gap: 0.4em;
+  }
+  .permission-badge-btn i {
+    font-size: 1em;
+    opacity: 0.85;
+  }
+  .permission-badge-btn:hover, .permission-badge-btn:focus {
+    background: #3c5dcc;
+    box-shadow: 0 4px 16px rgba(37,117,252,0.13);
+    /* transform: translateY(-2px) scale(1.04); */
+    text-decoration: none;
+    color: #fff;
+  }
+</style>
+
+<script>
+  function togglePermissions(btn, rowId) {
+    const wrapper = document.getElementById('perm-wrapper-' + rowId);
+    const container = document.getElementById('perm-container-' + rowId);
+    const items = container.querySelectorAll('.permission-item');
+    const hiddenItems = container.querySelectorAll('.permission-item.d-none');
+    const isHidden = hiddenItems.length > 0;
+
+    if (isHidden) {
+      // Show all with smooth transition
+      wrapper.classList.add('expanded');
+      items.forEach((item, idx) => {
+        setTimeout(() => {
+          item.classList.remove('d-none');
+        }, idx * 5); // stagger for effect
+      });
+      btn.textContent = 'Show less';
+      btn.setAttribute('aria-expanded', 'true');
+    } else {
+      // Hide all after the 5th with smooth transition
+      items.forEach((item, idx) => {
+        if (idx >= 5) {
+          setTimeout(() => {
+            item.classList.add('d-none');
+          }, (idx-5) * 30); // stagger for effect
+        }
+      });
+      // Wait for the transition to finish before collapsing
+      setTimeout(() => {
+        wrapper.classList.remove('expanded');
+      }, Math.max(0, (items.length-5)*30) + 300);
+      btn.textContent = 'Show more';
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  }
+</script>
+
+
+
+{% endblock %}

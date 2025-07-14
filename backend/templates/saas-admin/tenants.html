@@ -1,0 +1,43 @@
+{% extends "saas-admin/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="px-4">
+    <h5 class="mb-1 text-start text-dark">Tenants List</h5>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered shadow-sm" id="example">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col" class="text-center"><i class="fas fa-hashtag"></i></th>
+                    <th scope="col" class="text-center">ID</th>
+                    <th scope="col" class="text-center">Schema Name</th>
+                    <th scope="col" class="text-center">Full Name</th>
+                    <th scope="col" class="text-center">Hospital Name</th>
+                    <th scope="col" class="text-center">Mobile Number</th>
+                    <th scope="col" class="text-center">Username</th>
+                    <th scope="col" class="text-center">Email</th>
+                    <th scope="col" class="text-center">Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tenant in tenants %}
+                <tr>
+                    <td class="text-center"><i class="fas fa-user"></i></td>
+                    <td class="text-center">{{ tenant.id }}</td>
+                    <td class="text-center">{{ tenant.schema_name }}</td>
+                    <td class="text-center">{{ tenant.full_name }}</td>
+                    <td class="text-center">{{ tenant.hospital_name }}</td>
+                    <td class="text-center">{{ tenant.mobile_number }}</td>
+                    <td class="text-center">{{ tenant.username }}</td>
+                    <td class="text-center">{{ tenant.email }}</td>
+                    <td class="text-center">{{ tenant.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+

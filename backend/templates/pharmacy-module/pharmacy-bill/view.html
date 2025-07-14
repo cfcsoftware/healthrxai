@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  
+  <style>
+    body {
+      background-color: #f4f6f9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .invoice-box {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px 40px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .invoice-header {
+      border-bottom: 2px solid #6851d6;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+    }
+
+    .invoice-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #6851d6;
+      margin-bottom: 5px;
+    }
+
+    .logo {
+      max-height: 60px;
+      margin-right: 15px;
+    }
+
+    .table th {
+      background-color: #f1ecfc;
+      font-weight: 600;
+    }
+
+    .table td, .table th {
+      vertical-align: middle !important;
+      text-align: center;
+    }
+
+    h6 {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .btn-download {
+      margin-right: 10px;
+      margin-top: 20px;
+    }
+
+    .text-purple {
+      color: #6851d6;
+      font-weight: 600;
+    }
+
+    @media print {
+      .btn-download {
+        display: none !important;
+      }
+
+      .invoice-box {
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+      }
+
+      @page {
+        size: A4;
+        margin: 20mm;
+      }
+    }
+  </style>
+
+</head>
+  
+<body>
+    <div class="invoice-box" id="invoice">
+      <div class="invoice-header d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <div>
+            <div class="invoice-title">Invoice</div>
+            <p class="mb-0">Invoice #<span id="invoice-number"> PBILL100{{billing.id}}</span></p>
+            <p class="mb-0">Date: <span id="invoice-date"> {{billing.created_at}} </span></p> <!--June 5, 2025 -->
+          </div>
+          <div class="mx-5">
+            <img src="{{request.session.profile_image|default:'https://healthsrx.com/static/images/main_logo.png'}}" class="logo offset-3" alt="Company Logo">
+          </div>
+        </div>
+        <div class="text-end">
+          <h5 id="company-name" style="font-weight: bold;">{{request.session.username}}</h5>
+          <p class="mb-0" id="company-address">{{request.session.address}}</p>
+          <p class="mb-0" id="company-email">{{request.session.email}}</p>
+        </div>
+      </div>
+  
+      <div class="row mb-4">
+        <div class="col-sm-6">
+          <h6>Billed To:</h6>
+          <p class="mb-0" id="client-name">{{billing.patient.name}}</p>
+          <p class="mb-0" id="client-address">{{billing.patient.address|default:"N/A"}}</p>
+          <p class="mb-0" id="client-phone">{{billing.patient.phone|default:"N/A"}}</p>
+          <p class="mb-0" id="client-email">{{billing.patient.email|default:"N/A"}}</p>
+        </div>
+        <div class="col-sm-6 text-end">
+          <h6>Payment Details:</h6>
+          <p class="mb-0">Mode: <span id="bank-name">{{billing.payment_mode}}</span></p>
+          <p class="mb-0">Bank: <span id="bank-name">ABC Bank</span></p>
+          <p class="mb-0">Account #: <span id="account-number">000123456789</span></p>
+          <p class="mb-0">IBAN: <span id="iban">XX00 XXXX 0000 0000 0000</span></p>
+        </div>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <td class="text-center">Sr No.</td>
+            <td class="text-center">Service Details</td>
+            <td class="text-center">Unit Cost (₹)</td>
+            <td class="text-center">Quantity</td>
+            <td class="text-center">Amount</td>
+            <td class="text-center">SGST+CGST (%)</td>
+            <td class="text-center">Total Amount</td>
+          </tr>
+        </thead>
+        <tbody id="invoice-items">
+          {% for item in billing.medicine_details %}
+          <tr>
+            <td class="text-center">{{ forloop.counter }}</td>
+            <td class="text-center">{{ item.medicine_name }}</td>
+            <td class="text-center">{{ item.cost }}</td>
+            <td class="text-center">{{ item.qty }}</td>
+            <td class="text-center">{{ item.amount }}</td>
+            <td class="text-center">18%</td>
+            <td class="text-center">{{ item.total_amount }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="6" class="text-end">Subtotal</th>
+            <th class="text-end" id="subtotal">{{billing.subtotal}}</th>
+          </tr>
+          <tr>
+            <th colspan="6" class="text-end">Discount</th>
+            <th class="text-end" id="discount">{{billing.discount|default:0.00}}</th>
+          </tr>
+          <tr>
+            <th colspan="2" class="text-end">Payment Mode</th>
+            <th class="text-end" id="payment_mode">{{billing.payment_mode|default:"Cash"}}</th>
+          
+            <th colspan="3" class="text-end">Service Charge</th>
+            <th class="text-end" id="service_charge">{{billing.service_charge|default:0.00}}</th>
+          </tr>
+          <tr>
+            <th colspan="6" class="text-end">Advance Amount</th>
+            <th class="text-end" style="color: #6851d6;" id="paid_amount">{{billing.advance_amount}}</th>
+          </tr>
+          <tr>
+            <th colspan="6" class="text-end">Paid Amount</th>
+            <th class="text-end" style="color: #6851d6;" id="paid_amount">{{billing.payable_amount}}</th>
+          </tr>
+          <tr>
+            <th colspan="6" class="text-end">Due Amount</th>
+            <th class="text-end" style="color: #6851d6;" id="due_amount">0.00</th>
+          </tr>
+          
+        </tfoot>
+      </table>
+  
+      <div class="mt-4">
+        <h6>Notes:</h6>
+        <p id="invoice-notes">Thank you for trusting us your healthcare needs. Wishing you a speedy recovery and good health.</p>        
+      </div>
+      <button class="btn btn-secondary btn-download" onclick="window.print()">Print Invoice</button>
+      <button class="btn btn-primary btn-download" style="background: #6851d6; border-color: #6851d6;" onclick="downloadPDF()">Download PDF</button>
+    </div>
+  
+  <script>
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('p', 'pt', 'a4');
+      const elementHTML = document.getElementById('invoice');
+
+      await doc.html(elementHTML, {
+        callback: function (doc) {
+          doc.save("invoice.pdf");
+        },
+        x: 10,
+        y: 10,
+        width: 580,
+        windowWidth: 900
+      });
+    }
+  </script>
+
+  </body>
+  </html>

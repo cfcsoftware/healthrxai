@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <title>HealthRx-Super Admin</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'assets_superadmin/img/logo.png' %}" type="image/x-icon"> 
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="{% static 'assets_superadmin/css/style.min.css' %}" /> 
+
+    <link rel="stylesheet" href="{% static 'assets_superadmin/css/dataTables.dataTables.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets_superadmin/css/buttons.dataTables.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets_superadmin/css/fixedColumns.dataTables.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets_superadmin/css/select.dataTables.css' %}"/> 
+    <script src="{% static 'assets_superadmin/js/jquery-3.6.0.min.js' %}"></script>
+
+  </head>
+
+  <body >
+    <div class="layer"></div>
+    <!-- ! Body -->
+    <div class="page-flex">
+      <!-- ! Sidebar -->      <aside class="sidebar">
+        <div class="sidebar-start">
+          <div class="sidebar-head">
+            <a href="#" class="logo-wrapper w-100" title="Home" style="display: flex; justify-content: center;">
+              <span class="sr-only">Home</span>
+              <!-- <img src="" alt="Logo" class="logo"> -->
+              <img src="{% static 'images/main_logo.png' %}" alt="HealthRx Logo" class="logo" height="50">
+            </a>
+
+          </div>
+          <div class="sidebar-body">
+            <ul class="sidebar-body-menu">
+              
+              <li>
+                <a class="active" href="/saas/dashboard">
+                  <i class="bi bi-house" aria-hidden="true"></i> Admin Dashboard
+                </a>
+              </li>
+
+              <li>
+                <a class="show-cat-btn" href="##">
+                  <i class="bi bi-people" aria-hidden="true"></i>
+                  User Management
+                  <span class="category__btn transparent-btn" title="Open list">
+                    <span class="sr-only">Open list</span>
+                    <span class="icon arrow-down" aria-hidden="true"></span>
+                  </span>
+                </a>
+                <ul class="cat-sub-menu">
+                  <li>
+                    <a href="/saas/admins">
+                      <i class="bi bi-person" aria-hidden="true"></i> Clients
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/saas/domains">
+                      <i class="bi bi-globe" aria-hidden="true"></i> Domains
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/saas/users">
+                      <i class="bi bi-people" aria-hidden="true"></i> Users
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li>
+                <a class="show-cat-btn" href="##">
+                  <i class="bi bi-currency-dollar" aria-hidden="true"></i>
+                  Earning Management
+                  <span class="category__btn transparent-btn" title="Open list">
+                    <span class="sr-only">Open list</span>
+                    <span class="icon arrow-down" aria-hidden="true"></span>
+                  </span>
+                </a>
+                <ul class="cat-sub-menu">
+                  <li>
+                    <a href="">
+                      <i class="bi bi-bar-chart" aria-hidden="true"></i> Overview
+                    </a>
+                  </li>
+                  <li>
+                    <a href="">
+                      <i class="bi bi-file-earmark-text" aria-hidden="true"></i> Reports
+                    </a>
+                  </li>
+                  <li>
+                    <a href="">
+                      <i class="bi bi-cash-stack" aria-hidden="true"></i> Transactions
+                    </a>
+                  </li>
+                </ul>
+              </li>             
+
+              <li>
+                <a class="show-cat-btn" href="##">
+                  <i class="bi bi-file-earmark" aria-hidden="true"></i>Settings
+                  <span class="category__btn transparent-btn" title="Open list">
+                    <span class="sr-only">Open list</span>
+                    <span class="icon arrow-down" aria-hidden="true"></span>
+                  </span>
+                </a>
+                <ul class="cat-sub-menu">
+                </ul>
+              </li>
+
+              <li>
+                <a class="show-cat-btn" href="/saas/logout">
+                  <i class="bi bi-house" aria-hidden="true"></i>Logout
+                </a>
+              </li>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+      </aside>
+      <div class="main-wrapper">
+        <!-- ! Main nav -->
+        <nav class="main-nav--bg">
+          <div class="container main-nav">
+            <div class="main-nav-start"></div>
+            <div class="main-nav-end">
+              <div class="text-white me-2">
+                <span>Welcome! Super-Admin</span>
+              </div>
+              <button 
+                class="sidebar-toggle transparent-btn"
+                title="Menu"
+                type="button"
+              >
+                <span class="sr-only">Toggle menu</span>
+                <span class="icon menu-toggle--gray" aria-hidden="true"></span>
+              </button>
+
+              <div class="nav-user-wrapper">
+                <button
+                  class="nav-user-btn dropdown-btn p-0"
+                  title="My profile"
+                  type="button"
+                >
+                  <i class="bi bi-person-circle text-dark fs-3"></i>
+                  <span class="sr-only">My profile</span>
+                </button>
+                <ul class="users-item-dropdown nav-user-dropdown dropdown">
+                  <li>
+                    <a class="danger" href="/saas/logout">
+                      <i data-feather="log-out" aria-hidden="true"></i>
+                      <span>Logout</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              
+              
+            </div>
+          </div>
+        </nav>
+
+         
+
+        <!-- ! Main -->
+        <main class="main users chart-page" id="skip-target">
+
+          <!-- Alert Messages -->
+         {% if messages %}
+         {% for message in messages %}
+           {% if message.tags == 'error' %}
+             <div class="alert alert-danger alert-dismissible fade show" role="alert">
+           {% elif message.tags == 'success' %}
+             <div class="alert alert-success alert-dismissible fade show" role="alert">
+           {% else %}
+             <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+           {% endif %}
+             {{ message }}
+             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+           </div>
+         {% endfor %}
+       {% endif %}
+
+          {% block content %} {% endblock content %}
+        </main>
+        <!-- ! Footer -->
+        <!-- <footer class="footer">
+          <div class="container footer--flex">
+            <div class="footer-start">
+              <p>Copyright © {% now "Y" %} HealthRx AI | All rights reserved. </p>
+            </div>
+          </div>
+        </footer> -->
+      </div>
+    </div>
+
+    
+ 
+
+    <!-- Chart library -->
+    <script src="{% static 'assets_superadmin/plugins/chart.min.js' %}"></script>
+    <!-- Icons library -->
+    <script src="{% static 'assets_superadmin/plugins/feather.min.js' %}"></script>
+    <!-- Custom scripts -->
+    <script src="{% static 'assets_superadmin/js/script.js' %}"></script>
+    <!-- DataTables and related plugins -->
+    <script src="{% static 'assets_superadmin/js/dataTables.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/dataTables.buttons.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/buttons.dataTables.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/dataTables.fixedColumns.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/fixedColumns.dataTables.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/dataTables.select.js' %}"></script>
+    <script src="{% static 'assets_superadmin/js/select.dataTables.js' %}"></script>
+    <script>
+      $(document).ready(function () {
+      const exampleTable = $('#example');
+      exampleTable.DataTable({
+              layout: {
+                topStart: {
+                  buttons: ["copy", "csv", "excel", "pdf", "print", "Send"],
+                },
+              },
+              columnDefs: [
+                {
+                  orderable: false,
+                  render: DataTable.render.select(),
+                  targets: 0,
+                },
+              ],
+              fixedColumns: {
+                start: 1,
+              },
+              order: [[1, "asc"]],           
+              select: {
+                style: "os",
+                selector: "td:first-child",
+              },
+              initComplete: function () {
+                $('#example').show(); 
+              }
+            });
+            });
+     
+    </script>
+
+    
+  </body>
+</html>

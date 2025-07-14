@@ -1,0 +1,493 @@
+{% extends 'dashboard/base.html' %} 
+{% load static %} 
+{% block content %}
+
+
+<div class="px-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0 text-center fw-bold" style="color: white;">Create Final Bill</h2>
+    </div>
+    <div class="card-body p-4">
+      <form action="/billing/final/add" method="POST" autocomplete="off">
+        {% csrf_token %}
+        <div class="row g-4">
+          <!-- Patient Details Sidebar -->
+          <div class="col-lg-4 col-xl-3">
+            <div class="bg-light border-0 shadow rounded-4 p-4 h-100">
+              <h5 class="fw-semibold mb-4 text-primary">Patient Details</h5>
+              <div class="mb-3">
+                <label for="patient_mobile" class="form-label">Patient Mobile No. <span class="text-danger">*</span></label>
+                <input class="form-control" id="patient_mobile" name="name" placeholder="Enter Patient Mobile No." type="number" required />
+                <span class="text-danger small" id="patientMobileError"></span>
+              </div>
+              <div class="mb-3">
+                <label for="patientName" class="form-label">Patient Name</label>
+                <input class="form-control" id="patientName" name="patient_name" placeholder="Patient Name" type="text" />
+                <input type="hidden" id="patient" name="patient" />
+              </div>
+              <div class="row g-2">
+                <div class="col-4 mb-3">
+                  <label for="patientAge" class="form-label">Age</label>
+                  <input class="form-control" id="patientAge" name="age" placeholder="28" type="text" />
+                </div>
+                <div class="col-4 mb-3">
+                  <label for="patientGender" class="form-label">Gender</label>
+                  <input class="form-control" id="patientGender" name="gender" placeholder="Gender" type="text" />
+                </div>
+                <div class="col-4 mb-3">
+                  <label for="category" class="form-label">Category</label>
+                  <input class="form-control" id="category" name="category" placeholder="General" type="text" />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="doctorName" class="form-label">Consultant Dr <span class="text-danger">*</span></label>
+                <select class="form-select" id="doctorName" name="doctor_name" required>
+                  <option value="">Select Doctor</option>
+                  {% for doctor in doctors %}
+                  <option value="{{ doctor.name }}" data-doctor-id="{{ doctor.id }}">{{ doctor.name }}</option>
+                  {% endfor %}
+                </select>
+                <input type="hidden" id="doctor" name="doctor" />
+              </div>
+              <script>
+                $(document).ready(function() {
+                  $('#doctorName').on('change', function() {
+                    var selectedOption = $(this).find('option:selected');
+                    var doctorId = selectedOption.data('doctor-id') || '';
+                    $('#doctor').val(doctorId);
+                  });
+                });
+              </script>
+              <div class="mb-3">
+                <label for="aadhar_card" class="form-label">Aadhar Card</label>
+                <input class="form-control" id="aadhar_card" name="aadhar_card" placeholder="Aadhar details" type="text" />
+              </div>
+              <div class="mb-3">
+                <label for="ayushman_card" class="form-label">Ayushman Card</label>
+                <input class="form-control" id="ayushman_card" name="ayushman_card" placeholder="Ayushman details" type="text" />
+              </div>
+              <h6 class="fw-semibold mt-4 mb-3 text-primary">Ward Details</h6>
+              <div class="row g-2">
+                <div class="col-md-4 mb-2">
+                  <input class="form-control" id="exampleFloor" name="floor" placeholder="1st Floor" type="text" />
+                </div>
+                <div class="col-md-4 mb-2">
+                  <input class="form-control" id="exampleWard" name="ward" placeholder="General Ward" type="text" />
+                </div>
+                <div class="col-md-4 mb-2">
+                  <input class="form-control" id="exampleBedNo" name="bed" placeholder="1F - 003" type="text" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Main Content -->
+          <div class="col-lg-8 col-xl-9">
+            <div class="row g-3 mb-4">
+              <div class="col-md-3">
+                <label for="AdmissionDate" class="form-label">Admitted On</label>
+                <input class="form-control" id="AdmissionDate" name="admission_date" type="date" />
+              </div>
+              <div class="col-md-3">
+                <label for="patientStatus" class="form-label">Discharge Status <span class="text-danger">*</span></label>
+                <select class="form-select" id="patientStatus" name="patient_status" required>
+                  <option value="">Select Status</option>
+                  <option value="Admitted">Admitted</option>
+                  <option value="Discharged">Discharged</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label for="surgeon" class="form-label">Consultant/Surgeon</label>
+                <input class="form-control" id="surgeon" name="surgeon" placeholder="Dr Vasant Gavde" type="text" />
+              </div>
+              <div class="col-md-3">
+                <label for="AdmissionPurpose" class="form-label">Admission Purpose</label>
+                <input class="form-control" id="AdmissionPurpose" name="admission_purpose" placeholder="Fever" type="text" />
+              </div>
+              <div class="col-md-4">
+                <label for="packageName" class="form-label">Package Details</label>
+                <input class="form-control" id="packageName" name="package_details" placeholder="Platinum Package" type="text" />
+              </div>
+            </div>
+            <!-- Billing Table -->
+            <div class="mb-4">
+              <div class="border-0 shadow rounded-4 p-3 bg-light">
+                <div class="table-responsive">
+                  <table class="table table-hover table-bordered align-middle final_billing mb-0">
+                    <thead class="table-primary">
+                      <tr class="align-middle text-center">
+                        <th scope="col">Sr.</th>
+                        <th scope="col" style="width:120px;">Bill No.</th>
+                        <th scope="col" style="width:180px;">Bill Type</th>
+                        <th scope="col" style="width:140px;">Patient</th>
+                        <th scope="col">Bill Amount</th>
+                        <th scope="col">Disc.(%)</th>
+                        <th scope="col">Paid Amount</th>
+                        <th scope="col">Due Amount</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-dark">
+                      <tr>
+                        <td colspan="9" class="text-center text-muted py-4">No billing records found.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div id="billingSections" style="display: none;">
+              <h5 class="mt-5">Detailed Breakup</h5>
+              <!-- Detailed Breakup Section -->
+              <table class="table table-striped mb-5">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Date & Time</th>
+                    <th>Particulars</th>
+                    <th>Rate</th>
+                    <th>Qty</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Dynamic rows will be added here -->
+                  <tr>
+                    <td colspan="6" class="text-center text-muted py-4">No details available.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <br>
+            <!-- Billing Summary and Payment -->
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="row g-3">
+                  <!-- <div class="col-md-6">
+                    <label for="sgst" class="form-label">SGST (%)</label>
+                    <input class="form-control" id="sgst" name="sgst" type="text" placeholder="0%" value="0%" />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="cgst" class="form-label">CGST (%)</label>
+                    <input class="form-control" id="cgst" name="cgst" type="text" placeholder="0%" value="0%" />
+                  </div> -->
+                  <div class="col-12">
+                    <label for="remarks" class="form-label">Remarks</label>
+                    <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="Enter Additional Remarks"></textarea>
+                  </div>
+                  <div class="col-12">
+                    <label for="payment_type" class="form-label">Payment Type <span class="text-danger">*</span></label>
+                    <select class="form-select" id="payment_type" name="payment_type" required>
+                      <option value="Cash" selected>Cash</option>
+                      <option value="Credit Card">Credit Card</option>
+                      <option value="Debit Card">Debit Card</option>
+                      <option value="Net Banking">Net Banking</option>
+                      <option value="UPI">UPI</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label for="IPDBedCharges" class="form-label">IPD Bed Charges</label>
+                    <input class="form-control" id="IPDBedCharges" name="ipd_bed_charges" type="text" placeholder="Rs.0" />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="IPDServiceCharges" class="form-label">IPD Service Charges</label>
+                    <input class="form-control" id="IPDServiceCharges" name="ipd_service_charges" type="text" placeholder="Rs.0" />
+                  </div>
+                  <div class="col-6">
+                    <label for="IPDMiscCharges" class="form-label">IPD Miscellaneous Charges</label>
+                    <input class="form-control" id="IPDMiscCharges" name="ipd_misc_charges" type="text" placeholder="Rs.0" />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="TotalBillAmount" class="form-label">Total Bill Amount</label>
+                    <input class="form-control" id="TotalBillAmount" name="total_bill_amount" type="text" placeholder="Rs.0" />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="TotalPaidAmount" class="form-label">Previous Paid Amount</label>
+                    <input class="form-control" id="TotalPaidAmount" name="total_paid_amount" type="text" placeholder="Rs.0" />
+                  </div>
+                  <div class="col-6">
+                    <label for="TotalDueAmount" class="form-label">Final Due Amount</label>
+                    <input class="form-control" id="TotalDueAmount" name="total_due_amount" type="text" placeholder="Rs.0" />
+                  </div>
+                  <div class="col-6">
+                    <label for="FinalDiscount" class="form-label">Final Discount (Rs.)</label>
+                    <input class="form-control" id="FinalDiscount" name="final_discount" type="text" placeholder="Rs.0" value="0.00" />
+                  </div>
+                  <div class="col-6">
+                    <label for="FinalBillingAmount" class="form-label">Final Billing Amount</label>
+                    <input class="form-control" id="FinalBillingAmount" name="final_billing_amount" type="text" placeholder="Rs.0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            
+            <!-- Submit Button -->
+            <div class="row mt-5">
+              <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary btn-lg fw-bold px-5 py-2 rounded-pill shadow-sm">
+                  <i class="bi bi-check-circle me-2"></i>Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div id="loadingSpinner" class="text-center my-4" style="display:none;">
+  <div class="spinner-border text-primary" role="status"></div>
+</div>
+
+
+    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {        
+
+        $('#patient_mobile').on('input', function() {
+
+          $('#loadingSpinner').show();
+          var patient_phone = $(this).val();
+
+          $('#patientMobileError').text('');
+          $.ajax({
+            url: '/patients/get_patient_details_by_mobile',
+            method: 'POST',
+            data : {
+              patient_phone : patient_phone,
+              csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(response) {
+              console.log(response);
+              if (response.success) {
+                $('#loadingSpinner').hide();
+
+                $('#patientName').val(response.patient_name);
+                $('#patient').val(response.patient_id);
+                $('#patientPhone').val(response.patient_phone);
+                $('#patientAge').val(response.patient_age);
+                $('#patientGender').val(response.patient_gender);
+                $('#doctorName').val(response.patient_doctor_name);
+                $('#doctor').val(response.patient_doctor_id);
+                $('#AdmissionDate').val(response.patient_admitted_on);
+                $('#patientID').val(response.patient_record_id);
+                $('#aadhar_card').val(response.aadhar_card);
+                $('#ayushman_card').val(response.ayushman_card);
+
+                  if (response.patient_id){
+                    $.ajax({
+                      url: '/billing/get_billing_details_by_patient_id/' + response.patient_id,
+                      method: 'GET',
+                        success: function(response) {
+                          console.log('response 2',response);
+                          console.log('final_data', response.data);
+                          console.log('ipd_data', response.ipd);
+                          console.log('pharmacy_data', response.pharmacy_data);
+                          if (response.data.length > 0) {
+                            $('#billingSections').show();
+                            $('table.final_billing tbody').empty();
+                            let totalBillAmount  = 0;
+                            let totalPaidAmount = 0;
+                            let totalDueAmount = 0;
+                            
+                            response.data.forEach(function(billing, index){
+                              
+                              var row = '<tr>';
+                              row += '<td>' + (index + 1) + '</td>';
+                              row += '<td><input type="text" class="form-control" name="billing_record_id[]" value="' + billing.billing_record_id + '" readonly /></td>';
+                              row += '<td><input type="text" class="form-control" name="bill_type[]" value="' + (billing.bill_type ? billing.bill_type.toUpperCase() : '') + '" readonly /></td>';
+                              row += '<td><input type="text" class="form-control" name="patient_name[]" value="' + (billing.patient && billing.patient.name ? billing.patient.name : '') + '" readonly /></td>';
+                              row += '<td><input type="text" class="form-control" name="subtotal[]" value="' + billing.subtotal + '" readonly /></td>';
+                              row += '<td><input type="text" class="form-control" name="discount_percentage[]" value="' + (billing.discount_percentage ? billing.discount_percentage : '0') + '" readonly /></td>';
+                              row += '<td><input type="text" class="form-control" name="amount_paid[]" value="' + (billing.amount_paid ? billing.amount_paid : '0.00') + '" readonly /></td>';
+                              row += '<td><input type="text" class="form-control" name="amount_due[]" value="' + (billing.amount_due ? billing.amount_due : '0.00') + '" readonly /></td>';
+                              row += '<td>';
+                              row += '<button type="button" class="btn btn-danger removeRow" data-amount="' + billing.subtotal + '" data-paid_amount="' + (billing.amount_paid ? billing.amount_paid : '0.00') + '" data-due_amount="' + (billing.amount_due ? billing.amount_due : '0.00') + '">';
+                              row += '<i class="bi bi-x-lg"></i>';
+                              row += '</button>';
+                              row += '</td>';
+                              row += '</tr>';
+                              $('table.final_billing tbody').append(row);
+                              totalBillAmount += parseFloat(billing.subtotal) || 0;
+                              totalPaidAmount += parseFloat(billing.amount_paid) || 0;
+                              totalDueAmount += parseFloat(billing.amount_due) || 0;
+                            });
+                            
+                            if (response.ipd) {
+                              $('#IPDBedCharges').val(response.ipd.bed_charge);
+                              $('#IPDServiceCharges').val(response.ipd.service_charge);
+                              $('#IPDMiscCharges').val(response.ipd.miscellaneous_charge);
+                            } else {
+                              $('#IPDBedCharges').val('0');
+                              $('#IPDServiceCharges').val('0');
+                              $('#IPDMiscCharges').val('0');
+                            }
+
+                            // Add IPD charges to totalBillAmount and totalDueAmount
+                            let ipdBed = response.ipd ? parseFloat(response.ipd.bed_charge) || 0 : 0;
+                            let ipdService = response.ipd ? parseFloat(response.ipd.service_charge) || 0 : 0;
+                            let ipdMisc = response.ipd ? parseFloat(response.ipd.miscellaneous_charge) || 0 : 0;
+
+                            totalBillAmount += ipdBed + ipdService + ipdMisc;
+                            totalDueAmount += ipdBed + ipdService + ipdMisc;
+                            $('#TotalBillAmount').val(totalBillAmount.toFixed(2));
+                            $('#TotalPaidAmount').val(totalPaidAmount.toFixed(2));
+                            $('#TotalDueAmount').val(totalDueAmount.toFixed(2));
+                            $('#FinalBillingAmount').val(totalDueAmount.toFixed(2));
+                          }
+                          else{
+                            $('#billingSections').hide();
+                            $('table.final_billing tbody').empty();
+                            var row = '<tr>';
+                            row += '<td colspan="11" class="text-center">No billing records found.</td>';
+                            row += '</tr>';
+                            $('table.final_billing tbody').append(row);
+                            $('#TotalBillAmount').val('0.00');
+                          }
+
+                          // ✅ Now add this block: for Detailed Breakup Table
+                          $("table.table-striped tbody").empty();
+                          $('#billingSections').show();
+
+                          // OPD
+                          if (response.data) {
+                            response.data.forEach(function (bill, i) {
+                              bill.service_details.forEach(function (item, j) {
+                                var row = "<tr>";
+                                row += '<td>' + (i + 1) + '.' + (j + 1) + '</td>';
+                                row += '<td><input type="text" name="service_date[]" value="' + bill.created_at + '" readonly></td>';
+                                row += '<td><input type="text" name="service_name[]" value="' + item.service + '" readonly></td>';
+                                row += '<td><input type="text" name="service_cost[]" value="' + item.cost + '" readonly></td>';
+                                row += '<td><input type="text" name="service_qty[]" value="' + item.qty + '" readonly></td>';
+                                row += '<td><input type="text" name="service_amount[]" value="' + item.amount + '" readonly></td>';
+                                row += "</tr>";
+                                $("table.table-striped tbody").append(row);
+                              });
+                            });
+                          }
+
+                          // IPD
+                          if (response.ipd) {
+                            response.ipd.bed_ward_history.forEach(function (bed, i) {
+                              var row = "<tr>";
+                                row += '<td>IPD‑' + (i + 1) + '</td>';
+                                row += '<td><input type="text" name="ipd_date[]" value="' + bed.date + '" readonly></td>';
+                                row += '<td><input type="text" name="ipd_description[]" value="Bed Charges – ' + bed.ward + ' (Bed: ' + bed.bed_no + ')" readonly></td>';
+                                row += '<td><input type="text" name="ipd_cost[]" value="' + bed.bed_charge + '" readonly></td>';
+                                row += '<td><input type="text" name="ipd_qty[]" value="1" readonly></td>';
+                                row += '<td><input type="text" name="ipd_amount[]" value="' + bed.bed_charge + '" readonly></td>';
+                              row += "</tr>";
+                              $("table.table-striped tbody").append(row);
+                            });
+
+                            response.ipd.ipd_patient_history.forEach(function (srv, i) {
+                              var row = "<tr>";
+                                row += "<td>IPD‑S‑" + (i + 1) + "</td>";
+                                row += '<td><input type="text" name="ipd_srv_date[]" value="' + srv.date_time + '" readonly></td>';
+                                row += '<td><input type="text" name="ipd_srv_description[]" value="' + srv.medicine_details + " — " + srv.remarks + '" readonly></td>';
+                                row += '<td><input type="text" name="ipd_srv_cost[]" value="' + srv.amount + '" readonly></td>';
+                                row += '<td><input type="text" name="ipd_srv_qty[]" value="1" readonly></td>';
+                                row += '<td><input type="text" name="ipd_srv_amount[]" value="' + srv.amount + '" readonly></td>';
+                              row += "</tr>";
+                              $("table.table-striped tbody").append(row);
+                            });
+                          }
+
+                          // Pharmacy
+                          if (response.pharmacy_data) {
+                            response.pharmacy_data.medicine_details.forEach(function (med, i) {
+                              var row = "<tr>";
+                              row += "<td>Pharma‑" + (i + 1) + "</td>";
+                                row += '<td><input type="text" name="pharma_date[]" value="' + response.pharmacy_data.created_at + '" readonly></td>';
+                                row += '<td><input type="text" name="pharma_name[]" value="' + med.medicine_name + '" readonly></td>';
+                                row += '<td><input type="text" name="pharma_cost[]" value="' + med.cost + '" readonly></td>';
+                                row += '<td><input type="text" name="pharma_qty[]" value="' + med.qty + '" readonly></td>';
+                                row += '<td><input type="text" name="pharma_amount[]" value="' + med.total_amount + '" readonly></td>';
+                              row += "</tr>";
+                              $("table.table-striped tbody").append(row);
+                            });
+                          }
+
+                        }
+                    });
+                  }
+
+              } else {
+                $('#patientName').val('');
+                $('#patientPhone').val('');
+                $('#patientAge').val('');
+                $('#patientGender').val('');
+                $('#doctorName').val('');
+                $('#AdmissionDate').val('');
+                $('#aadhar_card').val('');
+                $('#ayushman_card').val('');
+              }
+              $('#loadingSpinner').hide();
+            }
+          });
+        });
+        
+
+        function toggleRemoveButtons() {
+          const rowCount = $('table.final_billing tbody tr').length;
+          console.log(rowCount);
+          if (rowCount === 1) {
+            $('.removeRow').prop('disabled', true); // Disable remove button for single row
+          } else {
+            $('.removeRow').prop('disabled', false); // Enable remove button if multiple rows exist
+          }
+        }
+
+        toggleRemoveButtons(); // Initial call to set the state of remove buttons
+
+        $(document).on("click", ".removeRow", function () {
+          $(this).closest("tr").remove();
+          let totalAmount = parseFloat($("#TotalBillAmount").val()) || 0;
+          let totalPAmount = parseFloat($("#TotalPaidAmount").val()) || 0;
+          let totalDAmount = parseFloat($("#TotalDueAmount").val()) || 0;
+          const subtotal = parseFloat($(this).data('subtotal')) || 0;
+          const amountPaid = parseFloat($(this).data('paid_amount')) || 0;
+          const amountDue = parseFloat($(this).data('due_amount')) || 0;
+   
+          finalAmount = totalAmount - subtotal;
+          finalPaidAmount = totalPAmount - amountPaid;
+          finalDueAmount = totalDAmount - amountDue;
+     
+          $('#TotalBillAmount').val(finalAmount.toFixed(2));
+          $('#TotalPaidAmount').val(finalPaidAmount.toFixed(2));
+          $('#TotalDueAmount').val(finalDueAmount.toFixed(2));
+          $('#FinalBillingAmount').val(finalDueAmount.toFixed(2));
+          calculateTotals();
+          toggleRemoveButtons(); // Call to update the state of remove buttons
+        });    
+
+        
+        // Calculate Totals
+        function calculateTotals() {
+           
+            const totalDueAmount = parseFloat($("#TotalDueAmount").val()) || 0;
+            const finalDiscount = parseFloat($("#FinalDiscount").val()) || 0;
+
+            const FinalBillingAmount = totalDueAmount - finalDiscount;
+            
+            $("#FinalBillingAmount").val(FinalBillingAmount.toFixed(2)); 
+        }
+
+        $("#FinalDiscount").on("input", calculateTotals);
+
+
+  });
+</script>
+
+  {% endblock %}

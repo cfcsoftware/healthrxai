@@ -1,0 +1,234 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="mx-4">   <div class="card border-0">        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0 text-light">
+                Bed Settings
+            </h5>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBedModal">
+                Add Bed
+            </button>
+            <!-- Add Bed Modal -->
+            <div class="modal fade" id="addBedModal" tabindex="-1" aria-labelledby="addBedModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <form method="post" action="/setting/bed/add">
+                            {% csrf_token %}
+                            <div class="modal-header bg-primary">
+                            <h5 class="modal-title text-light" id="addBedModalLabel">Add Bed</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                        
+                            <div class="modal-body">
+                        
+                            <div class="mb-3">
+                                <label for="floor" class="form-label">Floor</label>
+                                <select class="form-select" id="floor" name="floor" required>
+                                <option value="" disabled selected>Select Floor</option>
+                                <option value="Ground Floor">Ground Floor</option>
+                                <option value="1st Floor">1st Floor</option>
+                                <option value="2nd Floor">2nd Floor</option>
+                                <option value="3rd Floor">3rd Floor</option>
+                                <option value="4th Floor">4th Floor</option>
+                                <option value="5th Floor">5th Floor</option>
+                                <option value="6th Floor">6th Floor</option>
+                                <option value="7th Floor">7th Floor</option>
+                                <option value="8th Floor">8th Floor</option>
+                                <option value="9th Floor">9th Floor</option>
+                                <option value="10th Floor">10th Floor</option>
+                                <option value="11th Floor">11th Floor</option>
+                                </select>
+                            </div>
+                        
+                            <div class="mb-3">
+                                <label for="ward" class="form-label">Ward</label>
+                                <select class="form-select" id="ward" name="ward" required onchange="updateBedTypes()">
+                                <option value="" disabled selected>Select Ward</option>
+                                <option value="General">General</option>
+                                <option value="Private">Private</option>
+                                <option value="Semi-Private">Semi-Private</option>
+                                <option value="ICU">ICU</option>
+                                <option value="Emergency">Emergency</option>
+                                <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        
+                            <div class="mb-3">
+                                <label for="bed_type" class="form-label">Bed Type</label>
+                                <select class="form-select" id="bed_type" name="bed_type" required>
+                                <option value="" disabled selected>Select Bed Type</option>
+                                <option value="General">General</option>
+                                <option value="Private">Private</option>
+                                <option value="Semi-Private">Semi-Private</option>
+                                <option value="ICU">ICU</option>
+                                <option value="Emergency">Emergency</option>
+                                <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        
+                            <div class="mb-3">
+                                <label for="bed_number" class="form-label">Bed Number</label>
+                                <input type="text" class="form-control" id="bed_number" name="bed_number" required placeholder="e.g., GF-101">
+                            </div>
+                        
+                            <div class="mb-3">
+                                <label for="bed_charges" class="form-label">Bed Charges</label>
+                                <input type="number" class="form-control" id="bed_charges" name="bed_charges" required placeholder="1000">
+                            </div>
+                        
+                            <div class="mb-3">
+                                <label for="bed_status" class="form-label">Status</label>
+                                <select class="form-select" id="bed_status" name="bed_status" required>
+                                <option value="Available">Available</option>
+                                <option value="Occupied">Occupied</option>
+                                </select>
+                            </div>
+                            </div>
+                        
+                            <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Add Bed</button>
+                            </div>
+                        </form>                  
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="example" class="table table-striped table-hover align-middle">
+                    <thead class="table-secondary text-dark">
+                        <tr>
+                            <th class="text-center"></th>
+                            <th>Floor</th>
+                            <th>Ward</th>
+                            <th>Bed Type</th>
+                            <th>Bed Number</th>
+                            <th>Bed Charges</th>
+                            <th>Status</th>
+                            <th class="text-center" style="width: 160px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bed in beds %}
+                        <tr>
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td>{{ bed.floor }}</td>
+                            <td>{{ bed.ward }}</td>
+                            <td>{{ bed.bed_type }}</td>
+                            <td>
+                                <span class="fw-semibold text-primary">{{ bed.bed_number }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border border-1 px-2 py-1">
+                                    ₹{{ bed.bed_charges }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if bed.bed_status == 'Available' %}
+                                    <span class="badge bg-success px-3 py-2">Available</span>
+                                {% else %}
+                                    <span class="badge bg-danger px-3 py-2">Occupied</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if bed.id %}
+                                    <button type="button" class="btn btn-outline-primary btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ bed.id }}" title="Edit Bed">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+                                    <!-- Edit Modal -->
+                                    <div class="modal fade" id="editModal{{ bed.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ bed.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-primary text-light">
+                                                    <h5 class="modal-title" id="editModalLabel{{ bed.id }}">Edit Bed</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="POST" action="/setting/bed/update/{{ bed.id }}">
+                                                        {% csrf_token %}
+                                                        <div class="row g-3">
+                                                            <div class="col-md-6">
+                                                                <label for="floor_{{ bed.id }}" class="form-label">Floor</label>
+                                                                <select class="form-select" id="floor_{{ bed.id }}" name="floor" required>
+                                                                    <option value="" disabled>Select Floor</option>
+                                                                    <option value="Ground Floor" {% if bed.floor == "Ground Floor" %}selected{% endif %}>Ground Floor</option>
+                                                                    <option value="1st Floor" {% if bed.floor == "1st Floor" %}selected{% endif %}>1st Floor</option>
+                                                                    <option value="2nd Floor" {% if bed.floor == "2nd Floor" %}selected{% endif %}>2nd Floor</option>
+                                                                    <option value="3rd Floor" {% if bed.floor == "3rd Floor" %}selected{% endif %}>3rd Floor</option>
+                                                                    <option value="4th Floor" {% if bed.floor == "4th Floor" %}selected{% endif %}>4th Floor</option>
+                                                                    <option value="5th Floor" {% if bed.floor == "5th Floor" %}selected{% endif %}>5th Floor</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="ward_{{ bed.id }}" class="form-label">Ward</label>
+                                                                <select class="form-select" id="ward_{{ bed.id }}" name="ward" required>
+                                                                    <option value="" disabled>Select Ward</option>
+                                                                    <option value="General" {% if bed.ward == "General" %}selected{% endif %}>General</option>
+                                                                    <option value="Private" {% if bed.ward == "Private" %}selected{% endif %}>Private</option>
+                                                                    <option value="Semi-Private" {% if bed.ward == "Semi-Private" %}selected{% endif %}>Semi-Private</option>
+                                                                    <option value="ICU" {% if bed.ward == "ICU" %}selected{% endif %}>ICU</option>
+                                                                    <option value="Emergency" {% if bed.ward == "Emergency" %}selected{% endif %}>Emergency</option>
+                                                                    <option value="Other" {% if bed.ward == "Other" %}selected{% endif %}>Other</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="bed_type_{{ bed.id }}" class="form-label">Bed Type</label>
+                                                                <select class="form-select" id="bed_type_{{ bed.id }}" name="bed_type" required>
+                                                                    <option value="" disabled>Select Bed Type</option>
+                                                                    <option value="General" {% if bed.bed_type == "General" %}selected{% endif %}>General</option>
+                                                                    <option value="Private" {% if bed.bed_type == "Private" %}selected{% endif %}>Private</option>
+                                                                    <option value="Semi-Private" {% if bed.bed_type == "Semi-Private" %}selected{% endif %}>Semi-Private</option>
+                                                                    <option value="ICU" {% if bed.bed_type == "ICU" %}selected{% endif %}>ICU</option>
+                                                                    <option value="Emergency" {% if bed.bed_type == "Emergency" %}selected{% endif %}>Emergency</option>
+                                                                    <option value="Other" {% if bed.bed_type == "Other" %}selected{% endif %}>Other</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="bed_number_{{ bed.id }}" class="form-label">Bed Number</label>
+                                                                <input type="text" class="form-control" id="bed_number_{{ bed.id }}" name="bed_number" required value="{{ bed.bed_number }}">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="bed_charges_{{ bed.id }}" class="form-label">Bed Charges</label>
+                                                                <input type="number" class="form-control" id="bed_charges_{{ bed.id }}" name="bed_charges" required value="{{ bed.bed_charges }}">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="bed_status{{ bed.id }}" class="form-label">Status</label>
+                                                                <select class="form-select" id="bed_status{{ bed.id }}" name="bed_status" required>
+                                                                    <option value="Available" {% if bed.bed_status == 'Available' %}selected{% endif %}>Available</option>
+                                                                    <option value="Occupied" {% if bed.bed_status == 'Occupied'%}selected{% endif %}>Occupied</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-center mt-4">
+                                                            <button type="submit" class="btn btn-success px-4">Update</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <form method="POST" action="/setting/bed/delete/{{ bed.id }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this bed setting?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Bed">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-muted">N/A</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

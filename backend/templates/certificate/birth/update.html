@@ -1,0 +1,134 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="px-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 text-light">
+                
+                Update Birth Certificate
+            </h5>
+        </div>
+        <div class="card-body">
+            <form id="birthForm" method="post" enctype="multipart/form-data" autocomplete="off">
+                {% csrf_token %}
+                <input type="hidden" id="patient_id" value="{{ birth.patient_id }}" name="patient">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <label class="form-label" for="patient_mobile">Patient Mobile <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                            <input type="number" class="form-control" id="patient_mobile" name="patient_mobile" placeholder="Enter Patient Mobile No." value="{{ birth.patient_mobile }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="patient_name">Patient Name <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                            <input type="text" class="form-control" id="patient_name" name="patient_name" placeholder="Enter Patient Name" value="{{ birth.patient_name }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar-fill"></i></span>
+                            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required value="{{ birth.date_of_birth|date:'Y-m-d' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="place_of_birth">Place Of Birth <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-geo"></i></span>
+                            <input type="text" class="form-control" id="place_of_birth" name="place_of_birth" placeholder="Enter Place Of Birth" value="{{ birth.place_of_birth }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="child_name">Child Name <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-bounding-box"></i></span>
+                            <input type="text" class="form-control" id="child_name" name="child_name" placeholder="Enter Child Name" value="{{ birth.child_name }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="child_gender">Child Gender <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
+                            <select class="form-select" id="child_gender" name="child_gender" required>
+                                <option value="" disabled {% if not birth.child_gender %}selected{% endif %}>Select Gender</option>
+                                <option value="Male" {% if birth.child_gender == "Male" %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if birth.child_gender == "Female" %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if birth.child_gender == "Other" %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="mother_name">Mother Name <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                            <input type="text" class="form-control" id="mother_name" name="mother_name" placeholder="Enter Mother Name" value="{{ birth.mother_name }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="father_name">Father Name <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                            <input type="text" class="form-control" id="father_name" name="father_name" placeholder="Enter Father Name" value="{{ birth.father_name }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="birth_certificate">Birth Certificate (if you have a physical copy)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-file-earmark-text-fill"></i></span>
+                            <input type="file" class="form-control" id="birth_certificate" name="birth_certificate" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                        </div>
+                        {% if birth.birth_certificate %}
+                            <small>Current file: <a href="{{ birth.birth_certificate.url }}" target="_blank">View</a></small>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary px-4">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+      
+<script>
+    $(document).ready(function() { 
+        $('#patient_mobile').on('input', function() {
+            var phone = $(this).val();
+
+            if (phone.length == 10) {
+                $('#patientError').text('');
+                $.ajax({
+                    url: '/billing/get_patient_by_phone',
+                    method: 'GET',
+                    data: { phone: phone },
+                    success: function(response) {
+                        if (response.success) {
+                            $('#patient_id').val(response.patient.id);
+                            $('#patient_name').val(response.patient.name);
+                            $('#address').text(response.patient.address);
+                            $("input[name='gender'][value='" + response.patient.gender + "']").prop('checked', true);
+                            $('#guardian_name').val(response.patient.guardian_name);
+                            $('#city').val(response.patient.city);
+                        } else {
+                            $('#patient_id').val('');
+                            $('#patient_name').val('');
+                            $('#age').val('');
+                            $('#address').text('');
+                            $('#guardian_name').val('');
+                            $('#city').val('');
+                        }
+                    }
+                });
+            } else {
+                $('#patientError').text('Please enter a valid phone number.');
+            }
+        });
+    }); 
+</script>
+
+{% endblock %}

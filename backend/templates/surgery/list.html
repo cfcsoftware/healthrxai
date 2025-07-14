@@ -1,0 +1,426 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSurgeryModal">
+    <i class="bi bi-plus-lg me-1"></i> Add Surgery
+</button> -->
+
+<div class="mx-4">   <div class="card border-0">        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0">
+                Surgery Records
+            </h5>
+            
+        </div>
+      <div class="card-body px-0">
+        <div class="table-responsive">
+          <table id="example" class="table text-start table-striped table-hover align-middle" style="white-space:nowrap;">
+            <thead class="table-secondary text-start text-dark" style="white-space:nowrap;">
+                    <tr>
+                        <th></th>
+                        <th scope="col">#</th>
+                        <th scope="col">Surgery ID</th>
+                        <th scope="col">Patient Name</th>
+                        <th scope="col">Patient Gender</th>
+                        <th scope="col">Patient Contact</th>
+                        <th scope="col">Patient Age</th>
+                        <th scope="col">Surgeon</th>
+                        <th scope="col">Surgery Type</th>
+                        <th scope="col">Surgery Room</th>
+                        <th scope="col" class="rounded-end text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for surgery in surgeries %}
+                    <tr>
+                        <td></td>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <span class="fw-semibold text-primary d-block text-center">SURG-100{{ surgery.id }}</span>
+                        </td>
+                        <td class="text-center">{{ surgery.patient.name }}</td>
+                        <td class="text-center">{{ surgery.patient.gender|title }}</td>
+                        <td class="text-center">{{ surgery.patient.phone }}</td>
+                        <td class="text-center">{{ surgery.patient.age }} Years</td>
+                        <td class="text-center">{{ surgery.doctor.name }}</td>
+                        <td class="text-center">{{ surgery.surgery_type }}</td>
+                        <td class="text-center">{{ surgery.surgery_room }}</td>
+                        <td class="text-center">
+
+                            {% if 'surgery-view' in request.session.user_permissions %}
+                            <a href="/surgery/surgery_view/{{ surgery.id }}" class="btn btn-outline-secondary btn-sm" title="View Details">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                            {% endif %}
+
+                            {% if 'service-edit' in request.session.user_permissions %}
+                            <a href="/surgery/surgery_edit/{{ surgery.id }}" class="btn btn-outline-primary btn-sm ms-1" title="Edit Surgery">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal 
+ <div class="modal fade" id="addSurgeryModal" tabindex="-1" aria-labelledby="addSurgeryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <form action="/surgery/surgery/add" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header bg-primary text-light">
+                    <h5 class="modal-title" id="addSurgeryModalLabel">Add Surgery</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row gx-3 p-5 border-1 m-3">
+                        <div class="col-xxl-3  col-lg-4 col-sm-6">
+                            <div class="mb-3 ">
+                                <label class="form-label" for="a1">Patient <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="ri-account-circle-line"></i>
+                                    </span>
+                                    <select id="patient_id" name="patient" class="form-select shadow-sm" required>
+                                        <option value="">Select Patient</option>
+                                        {% for patient in patients %}
+                                        <option value="{{patient.id}}">{{patient.name}} ({{patient.phone}})</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a2">Patient ID <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="ri-account-circle-line"></i>
+                                </span>
+                                <input type="text" class="form-control" id="a2" name="patient_code" placeholder="Enter Last Name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a3">Age <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="ri-flower-line"></i>
+                                </span>
+                                <input type="number" class="form-control" id="age" name="age" placeholder="Enter Age">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="selectGender1">Gender<span
+                                    class="text-danger">*</span></label>
+                                <div class="m-0">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="gender" id="selectGender1" value="male">
+                                        <label class="form-check-label" for="selectGender1">Male</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="gender" id="selectGender2" value="female">
+                                        <label class="form-check-label" for="selectGender2">Female</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a4">Doctor<span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-person-fill-add"></i>
+                                </span>
+                                <select id="doctor_id" name="doctor" class="form-select shadow-sm" required>
+                                    <option value="">Select Doctor</option>
+                                    {% for doctor in doctors %}
+                                    <option value="{{doctor.id}}">{{doctor.name}} ({{doctor.phone}})</option>
+                                    {% endfor %}
+                                </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a4">Surgeon Name<span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-person-fill-add"></i>
+                                </span>
+                                <select class="form-select" id="a3" name="surgeon_name">
+                                    <option value="General surgeon">General surgeon</option>
+                                    <option value="Orthopedic surgeon">Orthopedic surgeon</option>
+                                    <option value="Cardiothoracic surgeon">Cardiothoracic surgeon</option>
+                                    <option value="Neurosurgeon">Neurosurgeon</option>
+                                    <option value="Vascular surgeon">Vascular surgeon</option>
+                                </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a6">Assistant Surgeon(s) Name<span
+                                    class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                        <i class="bi bi-person-fill-add"></i>
+                                        </span>
+                                    <select class="form-select" id="a4"  name="assistant_surgeon_name">
+                                        <option value="Assistant Surgeon A">Assistant Surgeon A</option>
+                                        <option value="Assistant Surgeon B">Assistant Surgeon B</option>
+                                        <option value="Assistant Surgeon C">Assistant Surgeon C</option>
+                                        <option value="Assistant Surgeon D">Assistant Surgeon D</option>
+                                        <option value="Assistant Surgeon E">Assistant Surgeon E</option>
+                                    </select>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a1">Anesthesiologist Name
+                                    <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-person-fill-check"></i>
+                                </span>
+                                <input type="text" class="form-control" id="a1" name="anesthesiologist_name" placeholder="Enter First Name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a8">Surgery Type</label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-person-fill-check"></i>
+                                </span>
+                                <select class="form-select" id="a8" name="surgery_type" >
+                                    <option value="General Surgery">General Surgery</option>
+                                    <option value="Appendectomy">Appendectomy </option>
+                                    <option value="Cholecystectomy">Cholecystectomy</option>
+                                    <option value="Herniorrhaphy">Herniorrhaphy</option>
+                                    <option value="Colectomy">Colectomy </option>
+                                    <option value="Mastectomy">Mastectomy </option>
+                                </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a8">Surgery Code</label>
+                                <input type="text" class="form-control" id="a1" name="surgery_code" placeholder="surgery code">
+                            
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a8">Surgery Description</label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="ri-qr-scan-line"></i>
+                                </span>
+                                <textarea type="text" class="form-control" id="a15" name="surgery_description" placeholder="Enter Postal Code"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a9">Surgery Department </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                    <i class="bi bi-person-fill-check"></i>
+                                    </span>
+                                    <select class="form-select" id="a10" name="surgery_department" >
+                                    <option value="Cardiology">Cardiology </option>
+                                    <option value="Dermatology">Dermatology</option>
+                                    <option value="Neurology">Neurology</option>
+                                    <option value="Nephrology">Nephrology</option>
+                                    <option value="Gastroenterology">Gastroenterology </option>
+                                    <option value="Endocrinology">Endocrinology </option>
+                                    <option value="Pulmonology">Pulmonology </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a11">Scheduled Date and Time</label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-calendar-check"></i>
+                                </span>
+                                <input type="datetime-local" class="form-control" id="a1" name="scheduled_datetime" placeholder="date">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a12">Expected Duration</label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="ri-scan-line"></i>
+                                </span>
+                                <input type="time" class="form-control" id="a13" name="expected_duration" placeholder="date">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a13">Surgery Room/Operation Theater</label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="ri-instance-line"></i>
+                                </span>
+                                <select class="form-select" id="a14" name="surgery_room">
+                                    <option value="General Surgery Options">General Surgery Options</option>
+                                    <option value="Specialty Surgery">Specialty Surgery</option>
+                                    <option value="Cardiothoracic Surgery">Cardiothoracic Surgery</option>
+                                    <option value="Neurosurgery">Neurosurgery</option>
+                                    <option value="Orthopedic Surgery">Orthopedic Surgery</option>
+                                    <option value="Urology Surgery">Urology Surgery</option>
+                                </select>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a15">Pre-Surgery Instructions </label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="ri-qr-scan-line"></i>
+                                </span>
+                                <textarea class="form-control" id="a14" name="pre_surgery_notes" placeholder=""></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a15">Required Equipment and Tools </label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="ri-qr-scan-line"></i>
+                                </span>
+                                <textarea class="form-control" id="a14" name="required_equipment" placeholder=""></textarea>
+                               
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a13">Required Tests</label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="ri-instance-line"></i>
+                                </span>
+                                <select class="form-select" id="a14" name="required_tests">
+                                    <option value="Blood Tests">Blood Tests</option>
+                                    <option value="Complete Blood Count (CBC)">Complete Blood Count (CBC)</option>
+                                    <option value="Blood Chemistry Tests (e.g., liver, kidney function)">Blood Chemistry Tests (e.g., liver, kidney function)</option>
+                                    <option value="Blood Glucose Tests">Blood Glucose Tests</option>
+                                    <option value="X-rays">X-rays</option>
+                                </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a13">Test Status</label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-clipboard-check"></i>
+                                </span>
+                                <select class="form-select" id="a14" name="test_status">
+                                    <option value="Pending">Pending</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a15">Post-Surgery Notes</label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="ri-qr-scan-line"></i>
+                                </span>
+                                <textarea class="form-control" id="a14" name="post_surgery_notes" placeholder=""></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a15">Medications Prescribed</label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="ri-qr-scan-line"></i>
+                                </span>
+                                <textarea type="text" class="form-control" id="a15" name="medications_prescribed" placeholder="Enter Postal Code"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a11">Follow-up Date</label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-calendar-check"></i>
+                                </span>
+                                <input type="date" class="form-control" id="a1" name="follow_up_date"  placeholder="date">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a13">Payment Status </label>
+                                <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-clipboard-check"></i>
+                                </span>
+                                <select class="form-select" id="a14" name="payment_status">
+                                    <option value="1">Paid</option>
+                                    <option value="2">Pending</option>
+                                </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="a13">Insurance Details</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-clipboard-check"></i>
+                                    </span>
+                                    <textarea class="form-control" id="a14" name="insurance_details" placeholder=""></textarea>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> -->
+
+
+
+
+
+{% endblock %}

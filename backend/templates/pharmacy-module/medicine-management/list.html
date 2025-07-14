@@ -1,0 +1,288 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="mx-4">   <div class="card border-0">        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="mb-0">
+                Medicine List
+            </h5>
+            <div class="d-flex gap-2">
+                {% if 'medicine-add' in request.session.user_permissions %}
+                <a href="/pharmacy/medicine/add" class="btn btn-primary">
+                    Add Medicine
+                </a>
+                {% endif %}
+                <a href="#" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#uploadCSVModal">
+                    Upload CSV
+                </a>
+            </div>
+            
+            <!-- CSV Upload Modal -->
+            <div class="modal fade" id="uploadCSVModal" tabindex="-1" aria-labelledby="uploadCSVModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content bg-dark text-white">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="uploadCSVModalLabel">Upload CSV File</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="POST" action="{% url 'pharmacy:upload_medicine_csv' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="csv_file" class="form-label">Choose CSV File</label>
+                                    <input class="form-control" type="file" name="csv_file" id="csv_file" accept=".csv" required>
+                                    <small class="text-muted">Ensure your file has headers like: medicine_name, category, batch, unit_cost, qty, total_cost, etc.</small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Upload</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+      <div class="card-body px-0">
+        <div class="table-responsive">
+          <table id="example" class="table text-start table-striped table-hover align-middle" style="white-space:nowrap;">
+            <thead class="table-secondary text-start text-dark" style="white-space:nowrap;">
+        <tr>
+            <th></th>
+            <th>Sr.</th>
+            <th>Medicine Name</th>
+            <th>Composition</th>
+            <th>Unit Cost</th>
+            <th>Stock</th>
+            <th>Category</th>
+            <th>Type</th>
+         <!--    <th>Manufacturers</th>
+            <th>Shelf</th> -->
+            <th>Total Cost</th>
+            <!-- <th>Units</th> -->
+            <!-- <th>Description</th> -->
+            <!-- <th>Image</th> -->
+            <th>Action</th>
+          </tr>
+    </thead>
+    <tbody> 
+        {% for medicine in medicine_list %}
+        <tr>
+            <td></td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ medicine.medicine_name }}</td>
+            <td>{{ medicine.composition }}</td>
+            <!-- <td>{{ medicine.batch }}</td> -->
+            <td>{{ medicine.unit_cost }}</td>
+            <td>{{ medicine.qty }}</td>
+            <td>{{ medicine.category }}</td>
+            <td>{{ medicine.types }}</td>
+           <!--  <td>{{ medicine.manufacturer_name }}</td>
+            <td>{{ medicine.shelf }}</td> -->
+            <td>{{ medicine.total_cost }}</td>
+            <!-- <td>{{ medicine.units }}</td> -->
+            <!-- <td>{{ medicine.description }}</td> -->
+            <!-- <td>{{ medicine.image }}</td> -->
+            <td>
+
+                {% if 'medicine-edit' in request.session.user_permissions %}
+                <a href="/pharmacy/medicine/update/{{ medicine.id }}" class="btn btn-primary"><i class="fa fa-edit"></i></a>
+                {% endif %}
+                {% if 'medicine-delete' in request.session.user_permissions %}
+                <a href="/pharmacy/medicine/delete/{{ medicine.id }}" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                {% endif %}
+               <!--  {% if 'medicine-view' in request.session.user_permissions %}
+                <a href="/pharmacy/medicine/view/{{ medicine.id }}" class="btn btn-info btn-sm">View</a> 
+                 {% endif %} -->
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </div>
+  </div>
+</div>
+
+<table class="table table-striped">   
+</table>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header ">
+                <h5 class="modal-title text-center" id="exampleModalLabel">Add Medicine </h5>
+                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="/pharmacy/medicine/add" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="container mt-3">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="medicineName">Medicine Name <span class="text-danger">*</span></label>
+                                <input id="medicineName" name="medicine_name" placeholder="Medicine Name" type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="category">Category <span class="text-danger">*</span></label>
+                                <select id="category" name="category" class="form-control" required>
+                                    <option value="">Select Category</option>
+                                    {% for category in medicine_category_list %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="genericName">Generic Name</label>
+                                <input id="genericName" name="generic_name" placeholder="Generic Name" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="batch">Batch No. <span class="text-danger">*</span></label>
+                                <input id="batch" name="batch" placeholder="Batch No." type="text" class="form-control" required >
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="unit_cost">Purchase Price<span class="text-danger">*</span></label>
+                                <input id="unit_cost" name="unit_cost" placeholder="Purchase Cost" type="number" class="form-control" required oninput="calculateTotal()">
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="manufacturerPrice">Sale Price(MRP) <span class="text-danger">*</span></label>
+                                <input id="manufacturerPrice" name="manufacturer_price" placeholder="Manufacturer Price" type="number" step="0.01" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="quantity">Quantity <span class="text-danger">*</span></label>
+                                <input id="quantity" name="qty" placeholder="Quantity" type="number" class="form-control" required oninput="calculateTotal()">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="total_cost">Price<span class="text-danger">*</span></label>
+                                <input id="total_cost" name="total_cost" placeholder="Total Cost" type="number" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="boxSize">Box Size <span class="text-danger">*</span></label>
+                                <select id="boxSize" name="box_size" class="form-control" required>
+                                    <option value="">Select Box Size</option>
+                                    <option value="Leaf (1*10) (10)">Leaf (1*10) (10)</option>
+                                    <option value="Bottle (1*1) (1)">Bottle (1*1) (1)</option>
+                                    <option value="Syringe (1*1) (1)">Syringe (1*1) (1)</option>
+                                    <option value="Leaf (1*1) (1)">Leaf (1*1) (1)</option>
+                                    <option value="1 Unit (1)">1 Unit (1)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="units">Units <span class="text-danger">*</span></label>
+                                <select id="units" name="units" class="form-control" required>
+                                    <option value="">Select Unit</option>
+                                    <option value="PC">PC</option>
+                                    <option value="Packet">Packet</option>
+                                    <option value="mg">mg</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="strength">Strength (mg/ml)</label>
+                                <input id="strength" name="strength" placeholder="Strength" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="shelf">Shelf</label>
+                                <input id="shelf" name="shelf" placeholder="Shelf" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <input id="description" name="description" placeholder="Description" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="image">Image</label>
+                                <input id="image" name="image" type="file" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="vendor">Vendor Name<span class="text-danger">*</span></label>
+                                <input id="vendor" name="vendor" placeholder="Vendor" type="text" class="form-control" >
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="manufacturer">Manufacturers <span class="text-danger">*</span></label>
+                                <input id="manufacturer" name="manufacturer_name" placeholder="Manufacturer Name" type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="gst">GST No.</label>
+                                <input id="gst" name="gst" placeholder="GST No." type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group">
+                                <label for="qrCode">Bar/QR Code</label>
+                                <input id="qrCode" name="bar_code" type="file" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>   
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function calculateTotal() {
+        var unitCost = parseFloat(document.getElementById('unit_cost').value) || 0;
+        var quantity = parseFloat(document.getElementById('quantity').value) || 0;
+        var totalCost = unitCost * quantity;
+        document.getElementById('total_cost').value = totalCost.toFixed(2);
+    }
+</script>
+
+
+{% endblock %}

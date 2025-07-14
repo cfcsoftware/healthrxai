@@ -1,0 +1,202 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="px-4">
+  <div class="card h-100">
+    <div class="card-header bg-primary text-center">
+      <h3 class="text-light mb-0 text-capitalize">Update Medicine Stock</h3>
+    </div>
+    <div class="card-body bg-dark pt-0 m-3">
+      <div class="container">
+        <form action="/pharmacy/medicine/update/{{ medicine.id }}" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="medicineName">Medicine Name <span class="text-danger">*</span></label>
+              <input id="medicineName" name="medicine_name" type="text" class="form-control" required value="{{ medicine.medicine_name }}">
+            </div>
+            <div class="col-md-3">
+              <label for="category">Medicine Category <span class="text-danger">*</span></label>
+              <select id="category" name="category" class="form-control" required>
+              <option value="">Select Category</option>
+              <option value="Analgesic" {% if medicine.category == "Analgesic" %}selected{% endif %}>Analgesic</option>
+              <option value="Antibiotic" {% if medicine.category == "Antibiotic" %}selected{% endif %}>Antibiotic</option>
+              <option value="Antiviral" {% if medicine.category == "Antiviral" %}selected{% endif %}>Antiviral</option>
+              <option value="Antifungal" {% if medicine.category == "Antifungal" %}selected{% endif %}>Antifungal</option>
+              <option value="Antiseptic" {% if medicine.category == "Antiseptic" %}selected{% endif %}>Antiseptic</option>
+              <option value="Antipyretic" {% if medicine.category == "Antipyretic" %}selected{% endif %}>Antipyretic</option>
+              <option value="Antacid" {% if medicine.category == "Antacid" %}selected{% endif %}>Antacid</option>
+              <option value="Antihistamine" {% if medicine.category == "Antihistamine" %}selected{% endif %}>Antihistamine</option>
+              <option value="Antidepressant" {% if medicine.category == "Antidepressant" %}selected{% endif %}>Antidepressant</option>
+              <option value="Antipsychotic" {% if medicine.category == "Antipsychotic" %}selected{% endif %}>Antipsychotic</option>
+              <option value="Anti-inflammatory" {% if medicine.category == "Anti-inflammatory" %}selected{% endif %}>Anti-inflammatory</option>
+              <option value="Anticoagulant" {% if medicine.category == "Anticoagulant" %}selected{% endif %}>Anticoagulant</option>
+              <option value="Anticonvulsant" {% if medicine.category == "Anticonvulsant" %}selected{% endif %}>Anticonvulsant</option>
+              <option value="Antiemetic" {% if medicine.category == "Antiemetic" %}selected{% endif %}>Antiemetic</option>
+              <option value="Antimalarial" {% if medicine.category == "Antimalarial" %}selected{% endif %}>Antimalarial</option>
+              <option value="Antidiabetic" {% if medicine.category == "Antidiabetic" %}selected{% endif %}>Antidiabetic</option>
+              <option value="Antihypertensive" {% if medicine.category == "Antihypertensive" %}selected{% endif %}>Antihypertensive</option>
+              <option value="Cardiovascular" {% if medicine.category == "Cardiovascular" %}selected{% endif %}>Cardiovascular</option>
+              <option value="Corticosteroid" {% if medicine.category == "Corticosteroid" %}selected{% endif %}>Corticosteroid</option>
+              <option value="Diuretic" {% if medicine.category == "Diuretic" %}selected{% endif %}>Diuretic</option>
+              <option value="Expectorant" {% if medicine.category == "Expectorant" %}selected{% endif %}>Expectorant</option>
+              <option value="Laxative" {% if medicine.category == "Laxative" %}selected{% endif %}>Laxative</option>
+              <option value="Sedative" {% if medicine.category == "Sedative" %}selected{% endif %}>Sedative</option>
+              <option value="Vaccine" {% if medicine.category == "Vaccine" %}selected{% endif %}>Vaccine</option>
+              <option value="Vitamin Supplement" {% if medicine.category == "Vitamin Supplement" %}selected{% endif %}>Vitamin Supplement</option>
+              <option value="Hormone Replacement" {% if medicine.category == "Hormone Replacement" %}selected{% endif %}>Hormone Replacement</option>
+              <option value="Immunosuppressant" {% if medicine.category == "Immunosuppressant" %}selected{% endif %}>Immunosuppressant</option>
+              <option value="Bronchodilator" {% if medicine.category == "Bronchodilator" %}selected{% endif %}>Bronchodilator</option>
+              <option value="Ophthalmic" {% if medicine.category == "Ophthalmic" %}selected{% endif %}>Ophthalmic</option>
+              <option value="Dermatological" {% if medicine.category == "Dermatological" %}selected{% endif %}>Dermatological</option>
+              <option value="Gastrointestinal" {% if medicine.category == "Gastrointestinal" %}selected{% endif %}>Gastrointestinal</option>
+              <option value="Antiparasitic" {% if medicine.category == "Antiparasitic" %}selected{% endif %}>Antiparasitic</option>
+              <option value="Muscle Relaxant" {% if medicine.category == "Muscle Relaxant" %}selected{% endif %}>Muscle Relaxant</option>
+              <option value="Oral Contraceptive" {% if medicine.category == "Oral Contraceptive" %}selected{% endif %}>Oral Contraceptive</option>
+              <option value="Anesthetic" {% if medicine.category == "Anesthetic" %}selected{% endif %}>Anesthetic</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="type">Medicine Type <span class="text-danger">*</span></label>
+              <select id="type" name="types" class="form-control" required>
+              <option value="">Select Type</option>
+              <option value="Tablet" {% if medicine.types == "Tablet" %}selected{% endif %}>Tablet</option>
+              <option value="Capsule" {% if medicine.types == "Capsule" %}selected{% endif %}>Capsule</option>
+              <option value="Syrup" {% if medicine.types == "Syrup" %}selected{% endif %}>Syrup</option>
+              <option value="Injection" {% if medicine.types == "Injection" %}selected{% endif %}>Injection</option>
+              <option value="Ointment" {% if medicine.types == "Ointment" %}selected{% endif %}>Ointment</option>
+              <option value="Cream" {% if medicine.types == "Cream" %}selected{% endif %}>Cream</option>
+              <option value="Gel" {% if medicine.types == "Gel" %}selected{% endif %}>Gel</option>
+              <option value="Lotion" {% if medicine.types == "Lotion" %}selected{% endif %}>Lotion</option>
+              <option value="Powder" {% if medicine.types == "Powder" %}selected{% endif %}>Powder</option>
+              <option value="Drops" {% if medicine.types == "Drops" %}selected{% endif %}>Drops (Eye/Ear/Nasal)</option>
+              <option value="Suppository" {% if medicine.types == "Suppository" %}selected{% endif %}>Suppository</option>
+              <option value="Spray" {% if medicine.types == "Spray" %}selected{% endif %}>Spray</option>
+              <option value="Patch" {% if medicine.types == "Patch" %}selected{% endif %}>Transdermal Patch</option>
+              <option value="Inhaler" {% if medicine.types == "Inhaler" %}selected{% endif %}>Inhaler</option>
+              <option value="Granules" {% if medicine.types == "Granules" %}selected{% endif %}>Granules</option>
+              <option value="Elixir" {% if medicine.types == "Elixir" %}selected{% endif %}>Elixir</option>
+              <option value="Suspension" {% if medicine.types == "Suspension" %}selected{% endif %}>Suspension</option>
+              <option value="Emulsion" {% if medicine.types == "Emulsion" %}selected{% endif %}>Emulsion</option>
+              <option value="Lozenge" {% if medicine.types == "Lozenge" %}selected{% endif %}>Lozenge</option>
+              <option value="Solution" {% if medicine.types == "Solution" %}selected{% endif %}>Solution</option>
+              <option value="Infusion" {% if medicine.types == "Infusion" %}selected{% endif %}>Infusion</option>
+              <option value="Mouthwash" {% if medicine.types == "Mouthwash" %}selected{% endif %}>Mouthwash</option>
+              <option value="Shampoo" {% if medicine.types == "Shampoo" %}selected{% endif %}>Medicated Shampoo</option>
+              <option value="Paste" {% if medicine.types == "Paste" %}selected{% endif %}>Paste</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="composition">Composition<span class="text-danger">*</span></label>
+              <textarea id="composition" name="composition" class="form-control" rows="1" required>{{ medicine.composition }}</textarea>
+            </div>
+          </div>
+
+
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="batch">Batch No. <span class="text-danger">*</span></label>
+              <input id="batch" name="batch" type="text" class="form-control" required value="{{ medicine.batch }}">
+            </div>
+            <div class="col-md-3">
+              <label for="strength">Strength (mg/ml)</label>
+              <input id="strength" name="strength" type="text" class="form-control" value="{{ medicine.strength }}">
+            </div>
+            <div class="col-md-3">
+              <label for="manufacturering_date">Manufacture Date</label>
+              <input id="manufacturering_date" name="manufacturering_date" type="date" class="form-control" value="{{ medicine.manufacturering_date|date:'Y-m-d' }}">
+            </div>
+            <div class="col-md-3">
+              <label for="expiry_date">Expiry Date</label>
+              <input id="expiry_date" name="expiry_date" type="date" class="form-control" value="{{ medicine.expiry_date|date:'Y-m-d' }}">
+            </div>
+          </div>
+
+          <div class="row mb-3">      
+            <div class="col-md-3">
+              <label for="unit_cost">Purchase Price</label>
+              <input id="unit_cost" name="unit_cost" type="number" class="form-control" step="0.01" value="{{ medicine.unit_cost }}" oninput="calculateTotal()">
+            </div>
+            <div class="col-md-3">
+              <label for="manufacturer_price">Sales Price (MRP)</label>
+              <input id="manufacturer_price" name="manufacturer_price" type="number" class="form-control" step="0.01" value="{{ medicine.manufacturer_price }}">
+            </div>
+            <div class="col-md-3">
+              <label for="qty">Quantity</label>
+              <input id="qty" name="qty" type="number" class="form-control" value="{{ medicine.qty }}" oninput="calculateTotal()">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="total_cost">Total Cost</label>
+              <input id="total_cost" name="total_cost" type="number" class="form-control" value="{{ medicine.total_cost }}" readonly>
+            </div>
+            <div class="col-md-3">
+              <label for="box_size">Box Size</label>
+              <input id="box_size" name="box_size" type="text" class="form-control" value="{{ medicine.box_size }}">
+            </div>
+            <div class="col-md-3">
+              <label for="units">Units</label>
+              <input id="units" name="units" type="text" class="form-control" value="{{ medicine.units }}">
+            </div>        
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="storage">Storage Instructions</label>
+              <input id="storage" name="storage" type="text" class="form-control" value="{{ medicine.storage }}">
+            </div>
+            <div class="col-md-3">
+              <label for="shelf">Shelf</label>
+              <input id="shelf" name="shelf" type="text" class="form-control" value="{{ medicine.shelf }}">
+            </div>
+            <div class="col-md-3">
+              <label for="manufacturer_name">Manufacturer</label>
+              <input id="manufacturer_name" name="manufacturer_name" type="text" class="form-control" value="{{ medicine.manufacturer_name }}">
+            </div>
+            <div class="col-md-3">
+              <label for="vendor">Vendor</label>
+              <input id="vendor" name="vendor" type="text" class="form-control" value="{{ medicine.vendor }}">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label for="gst">GST No.</label>
+              <input id="gst" name="gst" type="text" class="form-control" value="{{ medicine.gst }}">
+            </div>
+            <div class="col-md-3">
+              <label for="image">Medicine Image</label>
+              <input id="image" name="image" type="file" class="form-control">
+            </div>
+            <div class="col-md-3">
+              <label for="bar_code">Bar/QR Code</label>
+              <input id="bar_code" name="bar_code" type="file" class="form-control">
+            </div>
+            <div class="col-md-3">
+              <label for="description">Description</label>
+              <textarea id="description" name="description" class="form-control" rows="1">{{ medicine.description }}</textarea>
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Update Medicine</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function calculateTotal() {
+    const cost = parseFloat(document.getElementById('unit_cost').value) || 0;
+    const qty = parseFloat(document.getElementById('qty').value) || 0;
+    document.getElementById('total_cost').value = (cost * qty).toFixed(2);
+  }
+</script>
+
+{% endblock %}

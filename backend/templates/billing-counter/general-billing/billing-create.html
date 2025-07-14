@@ -1,0 +1,606 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<style>
+    .ui-autocomplete {
+      z-index: 10000 !important;
+      position: absolute;
+    }
+    .form-select 
+    {
+      padding: .575rem 2.25rem .675rem .75rem;
+    }
+  </style>
+
+  
+<div class="px-4" >
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-primary rounded-top-3 mb-0 d-flex align-items-center">
+      <h4 class="mb-0 text-light py-2 px-3">Create Billing</h4>
+    </div>
+    <div class="card-body px-4 py-4">
+      <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <div class="row g-3 mb-3">
+          <!-- Bill, Service, Patient Mobile, Name, Age, Gender -->
+          <div class="col-md-2">
+            <label for="bill_type" class="form-label fw-semibold">Bill Type <span class="text-danger">*</span></label>
+            <select class="form-select" id="bill_type" name="bill_type" required>
+              <option value="">Select Bill Type</option>
+              <option value="Appointment(OPD)">Appointment(OPD)</option>
+              <option value="Radiology">Radiology</option>
+              <option value="Pathology">Pathology</option>
+              <option value="Surgery">Surgery</option>
+              <option value="General">General</option>
+              <option value="Package">Package</option>
+              <option value="Miscellaneous">Miscellaneous</option>
+            </select>
+            <div class="invalid-feedback">Please select a bill type.</div>
+          </div>
+          <div class="col-md-2">
+            <label for="service_type" class="form-label fw-semibold">Service Type</label>
+            <select class="form-select" id="service_type" name="service_type">
+              <option value="">Select Service Type</option>
+            </select>
+            <div class="invalid-feedback">Please select a service type.</div>
+          </div>
+          <div class="col-md-2">
+            <label for="phone" class="form-label fw-semibold">Patient Mobile <span class="text-danger">*</span></label>
+            <input class="form-control" id="phone" name="phone" placeholder="Enter Patient Mobile" required type="number" />
+            <span class="text-danger small" id="patientError"></span>
+            <div class="invalid-feedback">Please enter a valid mobile number.</div>
+          </div>
+          <div class="col-md-2">
+            <label for="name" class="form-label fw-semibold">Patient Name <span class="text-danger">*</span></label>
+            <input class="form-control" id="name" name="name" placeholder="Enter Patient Name" required type="text" />
+            <div class="invalid-feedback">Please enter patient name.</div>
+          </div>
+          <div class="col-md-2">
+            <label for="age" class="form-label fw-semibold">Patient Age <span class="text-danger">*</span></label>
+            <input class="form-control" id="age" name="age" placeholder="Enter Patient Age" required type="number" min="0" />
+            <div class="invalid-feedback">Please enter patient age.</div>
+          </div>
+          <div class="col-md-2">
+            <label for="gender" class="form-label fw-semibold">Patient Gender <span class="text-danger">*</span></label>
+            <select class="form-select" id="gender" name="gender" required>
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Not Specified">Not Specified</option>
+            </select>
+            <div class="invalid-feedback">Please select gender.</div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <!-- Guardian Name, Guardian Mob, Category, Doctor, Appointment Date, Appointment Time -->
+          <div class="col-md-2">
+            <label for="guardian_name" class="form-label fw-semibold">Guardian Name <span class="text-danger">*</span></label>
+            <input class="form-control" id="guardian_name" name="guardian_name" placeholder="Enter Guardian Name" required type="text" />
+            <div class="invalid-feedback">Please enter guardian name.</div>
+          </div>
+          <div class="col-md-2">
+            <label for="guardian_phone" class="form-label fw-semibold">Guardian Mob. <span class="text-danger">*</span></label>
+            <input class="form-control" id="guardian_phone" name="guardian_phone" placeholder="Enter Guardian Mobile" required type="number" />
+            <div class="invalid-feedback">Please enter guardian mobile.</div>
+          </div>
+          <div class="col-md-2">
+            <label for="category" class="form-label fw-semibold">Patient Category</label>
+            <select class="form-select" id="category" name="category">
+              <option value="General">General</option>
+              <option value="Critical">Critical</option>
+              <option value="VIP">VIP</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="doctor" class="form-label fw-semibold">Consultant Dr. <span class="text-danger">*</span></label>
+            <select class="form-select" id="doctor" name="doctor" required>
+              <option value="">Select Doctor</option>
+              {% for doctor in doctors %}
+              <option value="{{ doctor.id }}" data-fees="{{doctor.fees}}">{{ doctor.name }} ({{ doctor.staff_member_id }})</option>
+              {% endfor %}
+            </select>
+            <div class="invalid-feedback" id="doctorError">Please select a doctor.</div>
+          </div>
+          <script>
+            // Show error if doctor is not selected on form submit
+            document.addEventListener('DOMContentLoaded', function() {
+              var doctorSelect = document.getElementById('doctor');
+              if (doctorSelect && $(doctorSelect).data('select2')) {
+                $(doctorSelect).select2('destroy');
+              }
+              var form = document.querySelector('form');
+              if (form) {
+                form.addEventListener('submit', function(e) {
+                  var doctorSelect = document.getElementById('doctor');
+                  var doctorError = document.getElementById('doctorError');
+                  if (doctorSelect && doctorError) {
+                    if (!doctorSelect.value) {
+                      doctorSelect.classList.add('is-invalid');
+                      doctorError.style.display = 'block';
+                      doctorSelect.focus();
+                      e.preventDefault();
+                    } else {
+                      doctorSelect.classList.remove('is-invalid');
+                      doctorError.style.display = 'none';
+                    }
+                  }
+                });
+                var doctorSelect = document.getElementById('doctor');
+                var doctorError = document.getElementById('doctorError');
+                if (doctorSelect && doctorError) {
+                  doctorSelect.addEventListener('change', function() {
+                    if (doctorSelect.value) {
+                      doctorSelect.classList.remove('is-invalid');
+                      doctorError.style.display = 'none';
+                    }
+                  });
+                }
+              }
+            });
+          </script>
+          <div class="col-md-2">
+            <label for="appointment_date" class="form-label fw-semibold">Appointment Date <span class="text-danger">*</span></label>
+            <input type="date" class="form-control" id="appointment_date" name="appointment_date" required>
+            <div class="invalid-feedback">Please select appointment date.</div>
+          </div>
+          <div class="col-md-2">
+            <label for="appointment_time" class="form-label fw-semibold">Appointment Time <span class="text-danger">*</span></label>
+            <input type="time" class="form-control" id="appointment_time" name="appointment_time" required>
+            <div class="invalid-feedback">Please select appointment time.</div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <!-- Aadhar, Ayushman, (4 empty for alignment) -->
+          <div class="col-md-2">
+            <label for="aadhar_card" class="form-label fw-semibold">Aadhar No.</label>
+            <input class="form-control" id="aadhar_card" name="aadhar_card_no" placeholder="Aadhar details" type="text" />
+          </div>
+          <div class="col-md-2">
+            <label for="ayushman_card" class="form-label fw-semibold">Ayushman No.</label>
+            <input class="form-control" id="ayushman_card" name="ayushman_card_no" placeholder="Ayushman details" type="text" />
+          </div>
+          <div class="col-md-2"></div>
+          <div class="col-md-2"></div>
+          <div class="col-md-2"></div>
+          <div class="col-md-2"></div>
+        </div>
+
+        <!-- Service Table -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="table-responsive rounded-3 bg-white p-3 border">
+              <table class="table align-middle mb-0" id="serviceTable">
+                <thead class="table-light text-center">
+                  <tr>
+                    <th style="width: 4%;">S No.</th>
+                    <th style="width: 22%;">Service Name</th>
+                    <th style="width: 10%;">Unit Cost</th>
+                    <th style="width: 10%;">Quantity</th>
+                    <th style="width: 10%;">Price</th>
+                    <th style="width: 7%;">SGST (%)</th>
+                    <th style="width: 7%;">CGST (%)</th>
+                    <th style="width: 15%;">Total Amount</th>
+                    <th style="width: 10%;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-center">#</td>
+                    <td>
+                      <input class="form-control service" id="service" name="service[]" type="text" placeholder="Enter or search Service Name">
+                    </td>
+                    <td>
+                      <input class="form-control cost text-end" id="cost" name="cost[]" type="number" min="0" step="0.01" />
+                    </td>
+                    <td>
+                      <input class="form-control qty text-end" id="qty" name="qty[]" type="number" min="1" value="1" />
+                    </td>
+                    <td>
+                      <input class="form-control price text-end" id="price" name="price[]" type="text" readonly />
+                    </td>
+                    <td class="text-center align-middle">
+                      <span class="text-muted">9%</span>
+                    </td>
+                    <td class="text-center align-middle">
+                      <span class="text-muted">9%</span>
+                    </td>
+                    <td>
+                      <input class="form-control amount text-end" name="amount[]" type="text" readonly />
+                    </td>
+                    <td class="text-center">
+                      <button type="button" class="btn btn-outline-danger btn-sm remove-row" disabled>
+                        <i class="bi bi-trash"></i> Delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="d-flex justify-content-end mt-2">
+                <button type="button" class="btn btn-outline-primary btn-sm" id="addRowBtn">
+                  <i class="bi bi-plus-circle"></i> Add Row
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Mode and Totals -->
+        <div class="row mt-4 align-items-end">
+          <div class="col-md-4 col-lg-4 mb-3">
+            <label for="payment_mode" class="form-label fw-semibold">Payment Mode <span class="text-danger">*</span></label>
+            <select class="form-select" id="payment_mode" name="payment_mode" required>
+              <option value="cash">Cash</option>
+              <option value="upi">UPI</option>
+              <option value="credit_card">Credit Card</option>
+              <option value="debit_card">Debit Card</option>
+              <option value="bank_transfer">Transfer to Bank A/C</option>
+              <option value="ayushman_card">Ayushman Card</option>
+              <option value="insurance">Insurance</option>
+              <option value="charity">Charity</option>
+              <option value="bronze_package">Bronze Package</option>
+              <option value="silver_package">Silver Package</option>
+              <option value="gold_package">Gold Package</option>
+              <option value="platinum_package">Platinum Package</option>
+            </select>
+            <div class="invalid-feedback">Please select payment mode.</div>
+          </div>
+          <div class="col-md-2"></div>
+          <div class="col-md-2 mb-3">
+            <label for="subtotal" class="form-label fw-semibold">Subtotal</label>
+            <div class="input-group">
+              <span class="input-group-text">₹</span>
+              <input class="form-control" id="subtotal" name="subtotal" type="number" placeholder="0" value="0.00" readonly />
+            </div>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="discount_percentage" class="form-label fw-semibold">Discount (%)</label>
+            <input class="form-control" id="discount_percentage" name="discount_percentage" type="number" min="0" max="100" placeholder="0%" value="0" />
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="total_payment" class="form-label fw-semibold">Grand Total</label>
+            <div class="input-group">
+              <span class="input-group-text">₹</span>
+              <input class="form-control" id="total_payment" name="total_payment" type="number" placeholder="0" readonly />
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-2 justify-content-end">
+          <div class="col-md-2 mb-3">
+            <label for="round_off" class="form-label fw-semibold">Round Off</label>
+            <div class="input-group">
+              <span class="input-group-text">₹</span>
+              <input class="form-control" id="round_off" name="round_off" type="text" placeholder="0" value="0.00" readonly />
+            </div>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="paid_payment" class="form-label fw-semibold">Paid Amount <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text">₹</span>
+              <input class="form-control" id="paid_payment" name="paid_payment" type="number" placeholder="0" value="0.00" required />
+            </div>
+            <div class="invalid-feedback">Please enter paid amount.</div>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="due_payment" class="form-label fw-semibold">Dues Amount</label>
+            <div class="input-group">
+              <span class="input-group-text">₹</span>
+              <input class="form-control" id="due_payment" name="due_payment" type="number" placeholder="0" readonly />
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12 text-end">
+            <button type="submit" class="btn btn-primary btn-lg px-5">
+              <i class="bi bi-check-circle"></i> Submit
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+
+
+<script>
+const now = new Date();
+document.getElementById('appointment_date').value = now.toISOString().split('T')[0];
+document.getElementById('appointment_time').value = now.toTimeString().slice(0,5);
+</script>
+
+<script>  
+
+
+    $(document).ready(function() {        
+    
+     
+      $('#phone').on('input', function() {
+        var phone = $(this).val();
+
+        if (phone.length >= 10 && phone.length <= 10) {
+          $('#patientError').text('');
+          $.ajax({
+            url: '/billing/get_patient_by_phone',
+            method: 'GET',
+            data: { phone: phone },
+            success: function(response) {
+              console.log(response);
+              if (response.success) {
+                $('#name').val(response.patient.name);
+                $('#age').val(response.patient.age);
+                $('#gender').val(response.patient.gender);
+                $('#guardian_name').val(response.patient.guardian_name);
+                $('#guardian_phone').val(response.patient.guardian_phone);
+                $('#ayushman_card').val(response.patient.ayushman_card);
+                $('#aadhar_card').val(response.patient.aadhar_card);
+              } else {
+                $('#name').val('');
+                $('#age').val('');
+                $('#gender').val('');
+                $('#guardian_name').val('');
+                $('#guardian_phone').val('');
+                $('#ayushman_card').val('');
+                $('#aadhar_card').val('');
+              }
+            }
+          });
+        } else {
+          $('#patientError').text('Please enter a valid phone number.');
+        }
+      });
+
+
+      $('#bill_type').on('change', function() {
+        var selectedBillType = $(this).val();
+        console.log(selectedBillType);
+
+        var serviceSelect = $('select#service_type');
+        serviceSelect.empty();
+        serviceSelect.append('<option value="">Select Service Type</option>');
+
+        $.ajax({
+          url: '/services/get_service_type_by_bill_type/'+selectedBillType+'/',
+          method: 'GET',
+          success: function(response) {
+            console.log('bill_type_res',response);
+            if (response.length === 0) {
+              console.log('No service type found for the selected bill type.');
+              return;
+            }
+            var serviceSelect = $('select#service_type');
+            serviceSelect.empty();
+            serviceSelect.append('<option value="">Select Service Type</option>');
+            
+            $.each(response, function(index, service) {
+              // Include service_type, service_name, and charge in the option text and as data attributes
+              serviceSelect.append(
+                '<option value="' + service.service_type + '" ' +
+                'data-service-name="' + service.name + '" ' +
+                'data-charge="' + service.charge + '">' +
+                service.service_type + ' | ' + service.name + ' | ' + service.charge +
+                '</option>'
+              );
+            });
+            
+           
+          },
+        });
+      });
+
+      /*
+      $('#service_type').on('change', function() {
+        var selectedServiceType = $(this).val();
+        console.log(selectedServiceType);
+
+        $.ajax({
+          url: '/services/get_service_by_service_type/'+selectedServiceType+'/',
+          method: 'GET',
+          success: function(response) {
+            console.log('service_res',response);
+            
+            // Map the response to include label, value, and charge
+            var serviceData = response.map(function(service) {
+              return {
+                label: service.name,
+                value: service.name,
+                charge: service.charge
+              };
+            });
+
+            // Assuming you have a row with class 'service-row' containing the inputs
+            var firstRow = $('#serviceTable tbody tr:first-child');
+            firstRow.find('td.service-cell').html(`
+              <input class="form-control service" id="service" name="service[]" type="text" style="width: 250px;" placeholder="Enter or search Service Name">`);
+            firstRow.find('td.cost-cell').html(`
+              <input class="form-control cost" name="cost[]" type="number" style="width: 70px" />`);
+            // Initialize autocomplete
+            $('#service').autocomplete({
+              source: serviceData,
+              minLength: 1,
+              select: function(event, ui) {
+                // Set the selected value
+                $(this).val(ui.item.value);
+                // Set the corresponding charge in the cost input
+                //$('#cost').val(ui.item.charge);
+                //return false; // Prevent default behavior
+                $(this).closest('tr').find("input[name='cost[]']").val(ui.item.charge);
+                $(this).closest('tr').find("input[name='price[]']").val(ui.item.charge);
+                $(this).closest('tr').find("input[name='amount[]']").val(ui.item.charge);
+                $('#subtotal').val(ui.item.charge);
+                $('#total_payment').val(ui.item.charge);
+                $('#due_payment').val(ui.item.charge);
+                $('#sgst_tax').val(0);
+                $('#cgst').val(0);
+                $('#discount_percentage').val(0);
+                $('#round_off').val(0);
+                calculateRow($(this).closest('tr'));
+                calculateTotal();
+                return false;
+              }
+            });
+
+            $('#service').attr('autocomplete', 'on');
+
+          },
+          error: function(xhr, status, error) {
+            console.error('Error fetching services:', error);
+          }
+          
+        });
+
+      });
+      */
+   
+    });
+
+    function initializeServiceAutocomplete(selector) {
+      $(selector).autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: '/services/get_service_by_service_type/' + $('#service_type').val() + '/',
+            method: 'GET',
+            success: function (data) {
+              const mappedData = data.map(service => ({
+                label: service.name,
+                value: service.name,
+                charge: service.charge
+              }));
+              response(mappedData);
+            }
+          });
+        },
+        select: function (event, ui) {
+            const row = $(this).closest('tr');
+            const cost = parseFloat(ui.item.charge) || 0;
+            const qty = 1;
+            const basePrice = cost * qty;
+            const tax = basePrice * 0.18;
+            const totalPrice = basePrice + tax;
+
+            row.find('.cost').val(cost.toFixed(2));
+            row.find('.qty').val(qty);
+            row.find('.price').val(basePrice.toFixed(2));     // base price
+            row.find('.tax').val(tax.toFixed(2));              // tax amount
+            row.find('.amount').val(totalPrice.toFixed(2));    // total amount incl. tax
+
+            calculateRowAmount(row);       // Recalculate this row
+            calculateAllAmounts();         // Recalculate entire summary section
+        },
+        minLength: 1
+      });
+    }
+
+    // Initialize for existing row on page load
+    $(document).ready(function () {
+      initializeServiceAutocomplete('.service');
+
+      // Add new row
+      $('#addRowBtn').on('click', function () {
+        const newRow = `
+          <tr>
+            <td class="text-center">#</td>
+            <td><input class="form-control service " name="service[]" type="text" style="width: 220px;" placeholder="Enter or search Service Name"></td>
+            <td><input class="form-control cost  text-end" name="cost[]" type="number" style="width: 90px" /></td>
+            <td><input class="form-control qty  text-end" name="qty[]" type="number" min="1" value="1" style="width: 90px" /></td>
+            <td><input class="form-control price  text-end" name="price[]" type="text" readonly style="width: 90px" /></td>
+            <td class="text-center"><span class="text-muted">9%</span></td>
+            <td class="text-center"><span class="text-muted">9%</span></td>
+            <td><input class="form-control amount  text-end" name="amount[]" type="text" readonly style="width: 110px" /></td>
+            <td class="text-center">
+              <button type="button" class="btn btn-outline-danger btn-sm remove-row">
+                <i class="bi bi-trash"></i> Delete
+              </button>
+            </td>
+          </tr>
+        `;
+        $('#serviceTable tbody').append(newRow);
+        
+        // Apply autocomplete on the newly added .service input
+        initializeServiceAutocomplete('#serviceTable tbody tr:last .service');
+      });
+
+      // Delete row
+      $('#serviceTable').on('click', '.remove-row', function () {
+        $(this).closest('tr').remove();
+      });
+    });
+
+    
+    function calculateRowAmount(row) {
+      const cost = parseFloat(row.find('.cost').val()) || 0;
+      const qty = parseFloat(row.find('.qty').val()) || 1;
+      const basePrice = cost * qty;
+      const tax = basePrice * 0.18; // 18% tax
+      const totalPrice = basePrice + tax;
+
+      console.log(basePrice);
+      console.log(tax);
+      console.log(totalPrice);
+
+      row.find('.price').val(basePrice.toFixed(2)); // base price (without tax)
+      row.find('.amount').val(totalPrice.toFixed(2)); // total price (with tax)
+
+      return totalPrice;
+    }
+
+    function calculateAllAmounts() {
+      let subtotal = 0;
+      $('#serviceTable tbody tr').each(function () {
+        subtotal += calculateRowAmount($(this));
+      });
+
+      const sgstPercent = parseFloat($('#sgst_tax').val()) || 0;
+      const cgstPercent = parseFloat($('#cgst').val()) || 0;
+      const discountPercent = parseFloat($('#discount_percentage').val()) || 0;
+      const roundOff = parseFloat($('#round_off').val()) || 0;
+      const paid = parseFloat($('#paid_payment').val()) || 0;
+
+      const sgst = (subtotal * sgstPercent) / 100;
+      const cgst = (subtotal * cgstPercent) / 100;
+      const discountAmount = (subtotal * discountPercent) / 100;
+
+      const grandTotal = subtotal + sgst + cgst - discountAmount - roundOff;
+      const dues = grandTotal - paid;
+
+      $('#subtotal').val(subtotal.toFixed(2));
+      $('#total_payment').val(grandTotal.toFixed(2));
+      $('#due_payment').val(dues.toFixed(2));
+      
+    }
+
+    // Recalculate when qty or cost changes
+    $('#serviceTable').on('input', '.qty, .cost', function () {
+      calculateAllAmounts();
+    });
+
+    // Recalculate when taxes/discounts/round-off/paid are updated
+    $('#discount_percentage, #round_off, #paid_payment').on('input', function () {
+      calculateAllAmounts();
+    });
+
+    // Recalculate after adding new row
+    $('#addRowBtn').on('click', function () {
+      setTimeout(calculateAllAmounts, 100); // allow DOM to update
+    });
+
+    // Recalculate after removing row
+    $('#serviceTable').on('click', '.remove-row', function () {
+      setTimeout(calculateAllAmounts, 100);
+    });
+
+    // Initial calc on page load
+    $(document).ready(function () {
+      setTimeout(calculateAllAmounts, 200);
+    });
+
+
+</script>
+
+{% endblock %}

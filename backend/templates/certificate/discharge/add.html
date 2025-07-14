@@ -1,0 +1,159 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="px-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 text-light">
+                Add Discharge Certificate
+            </h5>
+        </div>
+        <div class="card-body">
+            <form id="dischargeForm" method="post" enctype="multipart/form-data" autocomplete="off">
+                {% csrf_token %}
+
+                <div class="row g-4">
+                    <div class="col-md-2">
+                        <label class="form-label" for="patient_mobile">Patient Mobile <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                            <input type="number" class="form-control" id="patient_mobile" name="patient_mobile" placeholder="Enter Patient Mobile No." required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="patient_name">Patient Name <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                            <input type="text" class="form-control" id="patient_name" name="patient_name" placeholder="Enter Patient Name" required>
+                            <input type="hidden" id="patient_id" value="" name="patient">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="admission_date">Admission Date <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar-fill"></i></span>
+                            <input type="date" class="form-control" id="admission_date" name="admission_date" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="discharge_date">Discharge Date <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar-check-fill"></i></span>
+                            <input type="date" class="form-control" id="discharge_date" name="discharge_date" required>
+                        </div>
+                    </div>
+                    <!-- Row 2 -->
+                    <div class="col-md-2">
+                        <label class="form-label" for="state">State <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-geo"></i></span>
+                            <select class="form-select" id="state" name="state" required>
+                                <option value="">Select State</option>
+                                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                <option value="Assam">Assam</option>
+                                <option value="Bihar">Bihar</option>
+                                <option value="Chhattisgarh">Chhattisgarh</option>
+                                <option value="Goa">Goa</option>
+                                <option value="Gujarat">Gujarat</option>
+                                <option value="Haryana">Haryana</option>
+                                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                <option value="Jharkhand">Jharkhand</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Kerala">Kerala</option>
+                                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                                <option value="Manipur">Manipur</option>
+                                <option value="Meghalayah">Meghalayah</option>
+                                <option value="Mizoram">Mizoram</option>
+                                <option value="Odisha">Odisha</option>
+                                <option value="Punjab">Punjab</option>
+                                <option value="Rajasthan">Rajasthan</option>
+                                <option value="Sikkim">Sikkim</option>
+                                <option value="Tamil">Tamil Nadu</option>
+                                <option value="Tripura">Tripura</option>
+                                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                <option value="Uttarakhand">Uttarakhand</option>
+                                <option value="West Bengal">West Bengal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="district">District</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-pin-map-fill"></i></span>
+                            <input type="text" class="form-control" id="district" name="district" placeholder="Enter District">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="city">City</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-pin-map-fill"></i></span>
+                            <input type="text" class="form-control" id="city" name="city" placeholder="Enter City">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="pincode">Pin Code</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-geo"></i></span>
+                            <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Enter Pincode">
+                        </div>
+                    </div>
+                    <!-- Row 3 -->
+                    <div class="col-md-2">
+                        <label class="form-label" for="discharge_certificate">Discharge Certificate (if physical copy)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-file-earmark-text-fill"></i></span>
+                            <input type="file" class="form-control" id="discharge_certificate" name="discharge_certificate" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary px-4">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function() { 
+            $('#patient_mobile').on('input', function() {
+                var phone = $(this).val();
+
+                if (phone.length >= 10 && phone.length <= 10) {
+                $('#patientError').text('');
+                $.ajax({
+                    url: '/billing/get_patient_by_phone',
+                    method: 'GET',
+                    data: { phone: phone },
+                    success: function(response) {
+                    console.log(response);
+                    if (response.success) {
+                        $('#patient_id').val(response.patient.id);
+                        $('#patient_name').val(response.patient.name);
+                        $('#address').text(response.patient.address);
+                        $("input[name='gender'][value='" + response.patient.gender + "']").prop('checked', true);
+                        $('#guardian_name').val(response.patient.guardian_name);
+                        $('#city').val(response.patient.city);
+                    } else {
+                        $('#patient_id').val('');
+                        $('#patient_name').val('');
+                        $('#age').val('');
+                        $('#address').text('');
+                        $('#guardian_name').val('');
+                        $('#city').val('');
+                    }
+                    }
+                });
+                } else {
+                $('#patientError').text('Please enter a valid phone number.');
+                }
+            });
+        }); 
+</script>
+
+{% endblock %}

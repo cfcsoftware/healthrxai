@@ -1,0 +1,321 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<!--     <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addIPDpatientsModal">
+    Add IPD Patient
+</button> -->
+
+<div class="mx-4">   
+    <div class="card border-0">        
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4 class="mb-0 text-start w-100">
+                IDP List
+            </h4>
+        </div>
+      <div class="card-body px-0">
+        <div class="table-responsive">
+          <table id="example" class="table text-start table-striped table-hover align-middle" style="white-space:nowrap;">
+            <thead class="table-secondary text-start text-dark" style="white-space:nowrap;">
+                        <tr class="text-center">
+                            <th></th>
+                            <th class="text-center">Sr.</th>
+                            <th class="text-center">IPD ID</th>
+                            <th class="text-center">Patient Name</th>
+                            <th class="text-center">Cosultant Doctor</th>
+                            <th class="text-center">Appointment</th>
+                            <th class="text-center">Symptoms</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ipd in all_ipd %}
+                        <tr class="text-center align-middle">
+                            <td></td>
+                            <td scope="row">{{ forloop.counter }}</td>
+                            <td color="primary">{{ipd.ipd_record_id}}</td>
+                            <td>{{ ipd.patient.name }}</td>
+                            <td>{{ ipd.doctor.name }}</td>
+                            <td>{{ ipd.appointment.appointment_record_id }}</td>
+                            <td>{{ ipd.symptoms }}</td>
+                            <td>Admitted</td>
+                            <td>
+                                {% if 'ipd-edit' in request.session.user_permissions %}
+                                <a href="/ipd/update/{{ipd.id}}" class="btn btn-primary">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                {% endif %}
+                                
+                                {% if 'ipd-delete' in request.session.user_permissions %}
+                                <!-- <a href="/ipd/delete/{{ipd.id}}" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i>
+                                </a> -->
+                                {% endif %}
+
+                                {% if 'ipd-view' in request.session.user_permissions %}
+                                <a href="/ipd/view/{{ipd.id}}" class="btn btn-info btn-sm">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="addIPDpatientsModal" tabindex="-1" aria-labelledby="addIPDpatientsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header ">
+        <h5 class="modal-title text-center" id="addIPDpatientsModalLabel">Add IPD Patient</h5>
+            <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+            <div class="modal-body">
+                <form action="/ipd/ipd" method="POST">
+                    {% csrf_token %}
+                    <div class="container mt-3">
+                        <div class="row mb-3">
+
+                            <!-- IPD Appointment -->
+                            <div class="col-md-4">
+                                <label for="appointment" class="form-label">Appointment <span class="text-danger">*</span></label>
+                                <select class="form-control" name="appointment" id="appointment" required>
+                                    <option value="">Select</option>
+                                    {% for appointment in appointments %}
+                                    <option value="{{ appointment.id }}" >{{ appointment.appointment_record_id }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Patient -->
+                            <div class="col-md-4">
+                                <label for="patient" class="form-label">Patient Name <span class="text-danger">*</span></label>
+                                <select class="form-control" name="patient" id="patient" required>
+                                    <option value="">Select</option>
+                                    {% for patient in patients %}
+                                    <option value="{{ patient.id }}"  >{{ patient.name }}</option>
+                                    {% endfor %}  
+                                </select>
+                            </div>
+                            <!-- Consultant Doctor -->
+                            <div class="col-md-4">
+                                <label for="doctor" class="form-label">Consultant Doctor <span class="text-danger">*</span></label>
+                                <select class="form-control" name="doctor" id="doctor" required>
+                                    <option value="">Select</option>
+                                    {% for doctor in doctors %}
+                                    <option value="{{ doctor.id }}" >{{ doctor.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                        </div>
+                
+                        <div class="row mb-3">
+                            <div class="col-md-2">
+                                <label for="height" class="form-label">Height</label>
+                                <input type="text" class="form-control" name="height" id="height">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="weight" class="form-label">Weight</label>
+                                <input type="text" class="form-control" name="weight" id="weight">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="bp" class="form-label">BP</label>
+                                <input type="text" class="form-control" name="bp" id="bp">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="pulse" class="form-label">Pulse</label>
+                                <input type="text" class="form-control" name="pulse" id="pulse">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="temperature" class="form-label">Temperature</label>
+                                <input type="text" class="form-control" name="temperature" id="temperature">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="respiration" class="form-label">Respiration(Breath)</label>
+                                <input type="text" class="form-control" name="respiration" id="respiration">
+                            </div>
+                        </div>
+                    
+                        <!-- Symptoms -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="symptoms" class="form-label">Symptoms<span class="text-danger">*</span></label>
+                                <select class="form-select" name="symptoms" id="symptoms" required>
+                                    <option value="">Select</option>
+                                    <option value="Fever">Fever</option>
+                                    <option value="Cough">Cough</option>
+                                    <option value="Headache">Headache</option>
+                                    <option value="Chest Pain">Chest Pain</option>
+                                    <option value="Abdominal Pain">Abdominal Pain</option>
+                                    <option value="Nausea">Nausea</option>
+                                    <option value="Dizziness">Dizziness</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label for="notes" class="form-label"> Description</label>
+                                <textarea class="form-control" name="notes" id="notes" rows="3"></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="previous_medical_issue" class="form-label">Previous Medical Issue</label>
+                                <textarea class="form-control" name="previous_medical_issue" id="previous_medical_issue" rows="3"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Bed Details -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="floor" class="form-label">Floor<span class="text-danger">*</span></label>
+                                <select class="form-select" name="floor" id="floor" required>
+                                    <option value="">Select</option>
+                                    <option value="Ground Floor">Ground Floor</option>
+                                    <option value="1st Floor">1st Floor</option>
+                                    <option value="2nd Floor">2nd Floor</option>
+                                    <option value="3rd Floor">3rd Floor</option>
+                                    <option value="4th Floor">4th Floor</option>
+                                    <option value="5th Floor">5th Floor</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="bed_no" class="form-label">Bed No.<span class="text-danger">*</span></label>
+                                <select class="form-select" name="bed_no" id="bed_no" required>
+                                    <option value="">Select</option>
+                                    <option value="GF - 001">GF - 001</option>
+                                    <option value="GF - 002">GF - 002</option>
+                                    <option value="GF - 003">GF - 003</option>
+                                    <option value="GF - 004">GF - 004</option>
+                                    <option value="GF - 005">GF - 005</option>
+                                    <option value="1F - 001">1F - 001</option>
+                                    <option value="1F - 002">1F - 002</option>
+                                    <option value="1F - 003">1F - 003</option>
+                                    <option value="1F - 004">1F - 004</option>
+                                    <option value="1F - 005">1F - 005</option>
+                                    <option value="2F - 001">2F - 001</option>
+                                    <option value="2F - 002">2F - 002</option>
+                                    <option value="2F - 003">2F - 003</option>
+                                    <option value="2F - 004">2F - 004</option>
+                                    <option value="2F - 005">2F - 005</option>
+                                    <option value="3F - 001">3F - 001</option>
+                                    <option value="3F - 002">3F - 002</option>
+                                    <option value="3F - 003">3F - 003</option>
+                                    <option value="3F - 004">3F - 004</option>
+                                    <option value="3F - 005">3F - 005</option>
+                                    <option value="4F - 001">4F - 001</option>
+                                    <option value="4F - 002">4F - 002</option>
+                                    <option value="4F - 003">4F - 003</option>
+                                    <option value="4F - 004">4F - 004</option>
+                                    <option value="4F - 005">4F - 005</option>
+                                    <option value="5F - 001">5F - 001</option>
+                                    <option value="5F - 002">5F - 002</option>
+                                    <option value="5F - 003">5F - 003</option>
+                                    <option value="5F - 004">5F - 004</option>
+                                    <option value="5F - 005">5F - 005</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="ward" class="form-label">Ward<span class="text-danger">*</span></label>
+                                <select class="form-select" name="ward" id="ward" required>
+                                    <option value="">Select</option>
+                                    <option value="General Ward">General Ward</option>
+                                    <option value="Standard Ward">Standard Ward</option>
+                                    <option value="ICU Ward">ICU Ward</option>
+                                </select>
+                            </div>
+                            
+                        </div>
+                        
+                        <!-- TPA and Live Consultation -->
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="casualty" class="form-label">Casualty</label>
+                                <select class="form-select" name="casualty" id="casualty">
+                                    <option value="">Select</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="old_patient" class="form-label">Old Patient</label>
+                                <select class="form-select" name="old_patient" id="old_patient">
+                                    <option value="">Select</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="tpa" class="form-label">TPA(Insurance Name)</label>
+                                <input type="text" class="form-control" name="tpa" id="tpa">
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div> 
+        </form>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#appointment").change(function () {
+            var appointmentId = $(this).val(); // Get selected appointment's ID
+            
+            if (appointmentId) {
+                $.ajax({
+                    url: "/opd/get-patient-doctor/" + appointmentId, 
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data) {
+                            $("#patient option").each(function () {
+                                if ($(this).val() == data.patient_id) {
+                                    $(this).prop("selected", true);
+                                } else {
+                                    $(this).prop("selected", false);
+                                }
+                            });
+    
+                            $("#doctor option").each(function () {
+                                if ($(this).val() == data.doctor_id) {
+                                    $(this).prop("selected", true);
+                                } else {
+                                    $(this).prop("selected", false);
+                                }
+                            });
+                        } else {
+                            $("#patient").val(""); // Clear selection if no data found
+                            $("#doctor").val("");
+                        }
+                    },
+                    error: function () {
+                        alert("Error fetching patient & doctor. Please try again.");
+                    }
+                });
+            } else {
+                $("#patient").val(""); // Clear selection if no appointment is selected
+                $("#doctor").val("");
+            }
+        });
+    });
+    
+</script>
+
+
+{% endblock %}

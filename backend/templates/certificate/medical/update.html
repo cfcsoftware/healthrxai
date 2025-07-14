@@ -1,0 +1,113 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="px-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 text-light">
+                
+                Update Medical Certificate
+            </h5>
+        </div>
+        <div class="card-body">
+            <form id="medicalForm" method="post" enctype="multipart/form-data" autocomplete="off">
+                {% csrf_token %}
+                <input type="hidden" name="certificate_id" value="{{ certificate.id }}">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <label class="form-label" for="patient_mobile">Patient Mobile <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                            <input type="number" class="form-control" id="patient_mobile" name="patient_mobile" placeholder="Enter Patient Mobile No." value="{{ certificate.patient_mobile }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="patient_name">Patient Name <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                            <input type="text" class="form-control" id="patient_name" name="patient_name" placeholder="Enter Patient Name" value="{{ certificate.patient_name }}" required>
+                            <input type="hidden" id="patient_id" value="{{ certificate.patient_id }}" name="patient">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="examination_date">Examination Date <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar-fill"></i></span>
+                            <input type="date" class="form-control" id="examination_date" name="examination_date" required value="{{ certificate.examination_date|date:'Y-m-d' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="medical_status">Medical Status <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-activity"></i></span>
+                            <input type="text" class="form-control" id="medical_status" name="medical_status" placeholder="e.g. Fit/Unfit" value="{{ certificate.medical_status }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="purpose">Purpose</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-pin-map-fill"></i></span>
+                            <input type="text" class="form-control" id="purpose" name="purpose" placeholder="Enter Purpose" value="{{ certificate.purpose }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" for="validity">Validity</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-hourglass-split"></i></span>
+                            <input type="text" class="form-control" id="validity" name="validity" placeholder="Enter Validity" value="{{ certificate.validity }}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="medical_certificate">Medical Certificate (if you have a physical copy)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-file-earmark-text-fill"></i></span>
+                            <input type="file" class="form-control" id="medical_certificate" name="medical_certificate" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                        </div>
+                        {% if certificate.medical_certificate %}
+                            <small>Current file: <a href="{{ certificate.medical_certificate.url }}" target="_blank">View</a></small>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary px-4">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+      
+<script>
+    $(document).ready(function() { 
+        $('#patient_mobile').on('input', function() {
+            var phone = $(this).val();
+            if (phone.length == 10) {
+                $('#patientError').text('');
+                $.ajax({
+                    url: '/billing/get_patient_by_phone',
+                    method: 'GET',
+                    data: { phone: phone },
+                    success: function(response) {
+                        if (response.success) {
+                            $('#patient_id').val(response.patient.id);
+                            $('#patient_name').val(response.patient.name);
+                            $('#address').text(response.patient.address);
+                            $("input[name='gender'][value='" + response.patient.gender + "']").prop('checked', true);
+                            $('#guardian_name').val(response.patient.guardian_name);
+                        } else {
+                            $('#patient_id').val('');
+                            $('#patient_name').val('');
+                            $('#age').val('');
+                            $('#address').text('');
+                            $('#guardian_name').val('');
+                        }
+                    }
+                });
+            } else {
+                $('#patientError').text('Please enter a valid phone number.');
+            }
+        });
+    }); 
+</script>
+
+{% endblock %}

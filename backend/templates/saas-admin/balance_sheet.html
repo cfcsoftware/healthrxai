@@ -1,0 +1,35 @@
+{% extends "saas-admin/base.html" %}
+{% load static %}
+
+
+{% block content %} 
+<div class="container mt-4">
+    <h2 class="mb-4">Balance-Sheet</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tenant in tenants %}
+          <tr>
+            <td>{{ tenant.name }}</td>
+            <td>{{ tenant.email }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+  <script>
+    new DataTable('#example', {
+      layout: {
+          top1: 'searchPanes'
+      }
+    });
+  </script>
+
+{% endblock %}

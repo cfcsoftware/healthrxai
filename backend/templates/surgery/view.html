@@ -1,0 +1,151 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="mx-4">
+    <div class="card shadow-sm border-0 mb-4 bg-primary">
+        <div class="card-body py-3 px-4 d-flex justify-content-between align-items-center">
+            <h3 class="mb-0 text-light fw-bold">
+                <i class="bi bi-activity me-2"></i>Surgery Details
+            </h3>
+            <a href="/surgery/surgery" class="btn btn-primary">
+                <i class="bi bi-arrow-left me-1"></i> Back
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow border-0">
+        <div class="card-body p-4">
+          <div class="row">
+            <!-- Left Column -->
+            <div class="col-lg-6">
+              <!-- Patient Information -->
+              <h5 class="mb-3 text-violet"><i class="bi bi-person-circle me-2"></i>Patient Information</h5>
+              <table class="table table-bordered table-striped">
+                <tbody>
+                  <tr><th>Patient</th><td>{{ surgery.patient.name }}</td></tr>
+                  <tr><th>Patient ID</th><td>{{ surgery.patient.patient_record_id }}</td></tr>
+                  <tr><th>Age</th><td>{{ surgery.age }}</td></tr>
+                  <tr><th>Gender</th><td>{{ surgery.gender|title }}</td></tr>
+                  <tr><th>Address</th><td>{{ surgery.patient.address }}</td></tr>
+                  <tr><th>Contact</th><td>{{ surgery.patient.phone }}</td></tr>
+                  <tr><th>Blood Group</th><td>{{ surgery.patient.blood_group }}</td></tr>
+                  <tr><th>Emergency Contact</th><td>{{ surgery.patient.emergency_contact }}</td></tr>
+                  <tr><th>Allergies</th><td>{{ surgery.patient.allergies }}</td></tr>
+                  <tr><th>Medical History</th><td>{{ surgery.patient.medical_history }}</td></tr>
+                  <tr><th>Insurance Details</th><td>{{ surgery.patient.insurance_details }}</td></tr>
+                  <tr><th>Admission Date</th><td>{{ surgery.patient.admission_date|date:"M d, Y" }}</td></tr>
+                </tbody>
+              </table>
+      
+                <!-- Surgery Images -->
+                <h5 class="mt-4 mb-3 text-violet"><i class="bi bi-image me-2"></i>Surgery Images</h5>
+
+                {% if surgery.surgery_images and surgery.surgery_images|length > 0 %}
+                <div class="d-flex flex-wrap gap-2">
+                {% for image_url in surgery.surgery_images %}
+                    {% if image_url %}
+                    <div style="width: 100px; height: 100px; overflow: hidden; border: 1px solid #ddd; border-radius: 6px;">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal{{ forloop.counter }}">
+                        <img src="{{ image_url }}" alt="Surgery Image" style="width: 100%; height: 100%; object-fit: cover;">
+                    </a>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="imageModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="imageModalLabel{{ forloop.counter }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content bg-dark">
+                        <div class="modal-body p-0 text-center">
+                            <img src="{{ image_url }}" alt="Full Image" class="img-fluid" style="max-height: 90vh; width: auto;">
+                        </div>
+                        <div class="modal-footer justify-content-center bg-dark border-0">
+                            <button type="button" class="btn btn-violet btn-sm" data-bs-dismiss="modal">Close</button>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">No images uploaded for this surgery.</p>
+                {% endif %}
+
+      
+              <!-- Payment & Insurance -->
+              <h5 class="mt-4 mb-3 text-violet"><i class="bi bi-cash-coin me-2"></i>Payment & Insurance</h5>
+              <table class="table table-bordered table-striped">
+                <tbody>
+                  <tr>
+                    <th>Payment Status</th>
+                    <td>
+                      {% if surgery.payment_status == "1" or surgery.payment_status == "Paid" %}
+                      <span class="badge bg-success">Paid</span>
+                      {% elif surgery.payment_status == "2" or surgery.payment_status == "Pending" %}
+                      <span class="badge bg-warning text-dark">Pending</span>
+                      {% else %}
+                      <span class="badge bg-secondary">Unknown</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  <tr><th>Insurance Details</th><td>{{ surgery.insurance_details|linebreaksbr }}</td></tr>
+                </tbody>
+              </table>
+            </div>
+      
+            <!-- Right Column -->
+            <div class="col-lg-6">
+              <!-- Surgery Team -->
+              <h5 class="mb-3 text-violet"><i class="bi bi-person-badge me-2"></i>Surgery Team</h5>
+              <table class="table table-bordered table-striped">
+                <tbody>
+                  <tr><th>Surgeon</th><td>{{ surgery.doctor.name }} ({{ surgery.doctor.phone }})</td></tr>
+                  <tr><th>Anesthesiologist</th><td>{{ surgery.anesthesiologist_name }}</td></tr>
+                  <tr>
+                    <th>Assistant Surgeon(s)</th>
+                    <td>
+                      {% if surgery.assistant_surgeon_details %}
+                      {{ surgery.assistant_surgeon_details|join:", " }}
+                      {% else %}
+                      <span class="text-muted">No assistant surgeons listed.</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+      
+              <!-- Surgery Details -->
+              <h5 class="mt-4 mb-3 text-violet"><i class="bi bi-clipboard2-pulse me-2"></i>Surgery Details</h5>
+              <table class="table table-bordered table-striped">
+                <tbody>
+                  <tr><th>Surgery Type</th><td>{{ surgery.surgery_type }}</td></tr>
+                  <tr><th>Surgery Code</th><td>{{ surgery.surgery_code }}</td></tr>
+                  <tr><th>Department</th><td>{{ surgery.surgery_department }}</td></tr>
+                  <tr><th>Scheduled Date & Time</th><td>{{ surgery.scheduled_datetime|date:"M d, Y H:i" }}</td></tr>
+                  <tr><th>Expected Duration</th><td>{{ surgery.expected_duration }}</td></tr>
+                  <tr><th>Surgery Room</th><td>{{ surgery.surgery_room }}</td></tr>
+                  <tr><th>Surgery Description</th><td>{{ surgery.surgery_description|linebreaksbr }}</td></tr>
+                </tbody>
+              </table>
+      
+              <!-- Pre/Post Surgery -->
+              <h5 class="mt-4 mb-3 text-violet"><i class="bi bi-clipboard2-check me-2"></i>Pre/Post Surgery & Tests</h5>
+              <table class="table table-bordered table-striped">
+                <tbody>
+                  <tr><th>Pre-Surgery Instructions</th><td>{{ surgery.pre_surgery_notes|linebreaksbr }}</td></tr>
+                  <tr><th>Required Equipment & Tools</th><td>{{ surgery.required_equipment|linebreaksbr }}</td></tr>
+                  <tr><th>Required Tests</th><td>{{ surgery.required_tests }}</td></tr>
+                  <tr><th>Test Status</th><td>{{ surgery.test_status }}</td></tr>
+                  <tr><th>Post-Surgery Notes</th><td>{{ surgery.post_surgery_notes|linebreaksbr }}</td></tr>
+                  <tr><th>Medications Prescribed</th><td>{{ surgery.medications_prescribed|linebreaksbr }}</td></tr>
+                  <tr><th>Follow-up Date</th><td>{{ surgery.follow_up_date|date:"M d, Y" }}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+</div>
+
+{% endblock %}

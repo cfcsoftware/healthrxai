@@ -1,0 +1,56 @@
+{% extends "saas-admin/base.html" %}
+{% load static %}
+{% block content %}   
+
+<div class="container">
+    <h2 class="main-title">Super-Admin Dashboard</h2>
+    <div class="row stat-cards">
+      <div class="col-md-6 col-xl-3">
+        <article class="stat-cards-item">
+          <div class="stat-cards-icon primary">
+            <i data-feather="bar-chart-2" aria-hidden="true"></i>
+          </div>
+          <div class="stat-cards-info">
+            <p class="stat-cards-info__num">25,600</p>
+            <p class="stat-cards-info__title">Total Clients</p>
+          </div>
+        </article>
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <article class="stat-cards-item">
+          <div class="stat-cards-icon warning">
+            <i data-feather="file" aria-hidden="true"></i>
+          </div>
+          <div class="stat-cards-info">
+            <p class="stat-cards-info__num">42</p>
+            <p class="stat-cards-info__title">Total Users</p>
+          </div>
+        </article>
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <article class="stat-cards-item">
+          <div class="stat-cards-icon purple">
+            <i data-feather="file" aria-hidden="true"></i>
+          </div>
+          <div class="stat-cards-info">
+            <p class="stat-cards-info__num">468</p>
+            <p class="stat-cards-info__title">Total Domains</p>
+          </div>
+        </article>
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <article class="stat-cards-item">
+          <div class="stat-cards-icon success">
+            <i data-feather="feather" aria-hidden="true"></i>
+          </div>
+          <div class="stat-cards-info">
+            <p class="stat-cards-info__num">₹14,78,286</p>
+            <p class="stat-cards-info__title">Total Earnings</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock content %}

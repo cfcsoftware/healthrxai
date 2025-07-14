@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Final Invoice</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      background-color: #f4f6f9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .invoice-box {
+      max-width: 950px;
+      margin: 40px auto;
+      padding: 30px 40px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .invoice-header {
+      border-bottom: 2px solid #6851d6;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+    }
+
+    .invoice-title {
+      font-size: 30px;
+      font-weight: 700;
+      color: #6851d6;
+    }
+
+    .logo {
+      max-height: 60px;
+      margin-right: 15px;
+    }
+
+    .table th {
+      background-color: #f1ecfc;
+      font-weight: 600;
+    }
+
+    .table td, .table th {
+      vertical-align: middle !important;
+      text-align: center;
+    }
+
+    .text-purple {
+      color: #6851d6;
+      font-weight: 600;
+    }
+
+    @media print {
+      .btn-download {
+        display: none !important;
+      }
+
+      @page {
+        size: A4;
+        margin: 20mm;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="invoice-box" id="invoice">
+    <!-- Header -->
+    <div class="invoice-header d-flex justify-content-between align-items-start">
+      <div>
+        <div class="invoice-title">Final Bill Summary</div>
+        <p class="mb-1">Invoice #: <strong>{{billing.billing_record_id}}</strong></p>
+        <p class="mb-0">Date: <strong>{{billing.created_at}}</strong></p>
+      </div>
+      <div class="text-end">
+        <img src="{{request.session.profile_image|default:'https://healthsrx.com/static/images/main_logo.png'}}" class="logo mb-2" alt="Logo">
+        <h6 class="mb-0">{{request.session.username}}</h6>
+        <p class="mb-0">{{request.session.address}}</p>
+        <p class="mb-0">{{request.session.email}}</p>
+      </div>
+    </div>
+
+    <!-- Patient Details -->
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <h6>Patient Details:</h6>
+        <p class="mb-0"><strong>{{billing.patient.name}}</strong></p>
+        <p class="mb-0">Mobile: {{billing.patient.phone}}</p>
+        <p class="mb-0">Age/Gender: {{billing.patient.age}} / {{billing.patient.gender}}</p>
+        <p class="mb-0">Category: {{billing.patient.category}}</p>
+        <p class="mb-0">Aadhar: {{billing.patient.aadhar_card}}</p>
+        <p class="mb-0">Ayushman: {{billing.patient.ayushman_card}}</p>
+      </div>
+      <div class="col-md-3 text-md-end">
+        <h6>Admission Details:</h6>
+        <p class="mb-0">Admitted On: {{billing.admission_date}}</p>
+        <p class="mb-0">Discharge Status: {{billing.patient_status}}</p>
+        <p class="mb-0">Admission Purpose: {{billing.admission_purpose}}</p>
+        <p class="mb-0">Package: {{billing.package_Details}}</p>
+        <p class="mb-0">Payment Mode: {{billing.payment_type}}</p>
+        <p class="mb-0">Remarks: {{billing.remarks}}</p>
+      </div>
+    </div>
+
+    <!-- Consultant Doctor -->
+    <div class="mb-4">
+      <h6>Consultant/Surgeon:</h6>
+      <p>{{billing.doctor_name}}</p>
+    </div>
+
+    <!-- Itemized Billing Table -->
+    <table class="table table-bordered mb-4">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Bill No.</th>
+          <th>Bill Type</th>
+          <th>Patient</th>
+          <th>Bill Amount</th>
+          <th>Disc.(%)</th>
+          <th>Paid</th>
+          <th>Due</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% if billing.billing_details.billing_info %}
+        {% for item in billing.billing_details.billing_info %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ item.billing_record_id }}</td>
+          <td>{{ item.bill_type }}</td>
+          <td>{{ item.patient_name }}</td>
+          <td>{{ item.subtotal }}</td>
+          <td>{{ item.discount_percentage }}</td>
+          <td>{{ item.amount_paid }}</td>
+          <td>{{ item.amount_due }}</td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="8" class="text-center">No billing details available.</td>
+        </tr>
+      {% endif %}
+      </tbody>
+    </table>
+
+    <!-- Billing Summary -->
+    <table class="table table-borderless">
+      <tbody>
+        <tr>
+          <th class="text-end w-75">IPD Bed Charges / IPD Misc. Charges / IPD Service Charges:</th>
+          <td class="text-end">{{billing.ipd_bed_charges}} / {{billing.ipd_misc_charges}} / {{billing.ipd_service_charges}}</td>
+        </tr>
+        <tr>
+          <th class="text-end text-purple">Total Bill Amount:</th>
+          <td class="text-end text-purple">{{billing.total_bill_amount}}</td>
+        </tr>
+        <tr>
+          <th class="text-end text-purple">Final Discount (Rs.):</th>
+          <td class="text-end text-purple">{{billing.final_discount}}</td>
+        </tr>
+        <tr>
+          <th class="text-end text-purple">Paid Amount:</th>
+          <td class="text-end text-purple">{{billing.total_paid_amount}}</td>
+        </tr>
+        <tr>
+          <th class="text-end text-danger">Final Billing Amount:</th>
+          <td class="text-end text-danger fw-bold">{{billing.final_billing_amount}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="mt-4">
+      <h6>Note:</h6>
+      <p class="text-muted">Please retain this bill for your records. Contact the billing desk in case of any discrepancies.</p>
+    </div>
+
+    <div class="text-end">
+      <button class="btn btn-secondary btn-download" onclick="window.print()">Print Invoice</button>
+      <button class="btn btn-primary btn-download" style="background-color: #6851d6; border-color: #6851d6;" onclick="downloadPDF()">Download PDF</button>
+    </div>
+  </div>
+
+  <script>
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('p', 'pt', 'a4');
+      const elementHTML = document.getElementById('invoice');
+
+      await doc.html(elementHTML, {
+        callback: function (doc) {
+          doc.save("final_bill_invoice.pdf");
+        },
+        x: 10,
+        y: 10,
+        width: 580,
+        windowWidth: 900
+      });
+    }
+  </script>
+</body>
+</html>
