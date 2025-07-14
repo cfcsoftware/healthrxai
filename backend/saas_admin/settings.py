@@ -151,6 +151,7 @@ DATABASES = {
 
 # OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
+OPENAI_API_KEY = config("OPENAI_API_KEY", default="", cast=str)
 
 # Domain work
 
