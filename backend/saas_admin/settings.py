@@ -131,11 +131,7 @@ ASGI_APPLICATION = "saas_admin.asgi.application"
 
 
 DATABASES = {
-    "default": config(
-        "DATABASE_URL",
-        default="postgres://postgres:postgres@127.0.0.1:5432/healthrxuser",
-        cast=db_url,
-    )
+    "default": config("DATABASE_URL",cast=db_url,)
 }
 
 # Override engine to support django-tenants
