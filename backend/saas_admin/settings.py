@@ -14,7 +14,6 @@ from datetime import timedelta
 from dotenv import load_dotenv
 from pathlib import Path
 import configparser
-from dj_database_url import parse as db_url
 from decouple import config, Csv
 
 load_dotenv(dotenv_path=".env")
@@ -127,7 +126,7 @@ DATABASES = {
         # live
         'NAME': 'healthrx_db',
         'USER': 'healthrxuser',
-        'PASSWORD': 'Healthrx@#2025', 
+        'PASSWORD': 'Healthrxai@#2025', 
         'HOST':'69.10.53.38',  
         'PORT': '5432',     
         
