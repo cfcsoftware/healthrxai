@@ -14,7 +14,7 @@ from datetime import timedelta
 from dotenv import load_dotenv
 from pathlib import Path
 import configparser
-from dj_database_url import parse as db_url
+# from dj_database_url import parse as db_url
 from decouple import config, Csv
 
 load_dotenv(dotenv_path=".env")
@@ -130,14 +130,16 @@ ASGI_APPLICATION = "saas_admin.asgi.application"
 # }
 
 
+import dj_database_url
+
+DATABASE_URL = config("DATABASE_URL", default="postgres://healthrxuser:Healthrx@127.0.0.1:5432/healthrx_db")
+
 DATABASES = {
-    "default": config("DATABASE_URL",cast=db_url,)
+    "default": dj_database_url.parse(DATABASE_URL)
 }
 
-# Override engine to support django-tenants
+# Required for django-tenants
 DATABASES["default"]["ENGINE"] = "django_tenants.postgresql_backend"
-
-# Optional: Enable atomic requests
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 
