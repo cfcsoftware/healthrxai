@@ -14,7 +14,7 @@ from datetime import timedelta
 from dotenv import load_dotenv
 from pathlib import Path
 import configparser
-# from dj_database_url import parse as db_url
+from dj_database_url import parse as db_url
 from decouple import config, Csv
 
 load_dotenv(dotenv_path=".env")
@@ -113,34 +113,28 @@ ROOT_URLCONF = "saas_admin.urls"
 WSGI_APPLICATION = "saas_admin.wsgi.application"
 ASGI_APPLICATION = "saas_admin.asgi.application"
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django_tenants.postgresql_backend",
-        
-#         # Local
-#         # "NAME": os.getenv("DATABASE_NAME"),
-#         # "USER": os.getenv("DATABASE_USER"),
-#         # "PASSWORD": os.getenv("DATABASE_PASSWORD"), 
-#         # "HOST": os.getenv("DATABASE_HOST"),
-#         # "PORT": os.getenv("DATABASE_PORT"),  
-        
-#         'ATOMIC_REQUESTS': True 
-        
-#     }
-# }
-
-
-import dj_database_url
-
-DATABASE_URL = config("DATABASE_URL", default="postgres://healthrxuser:Healthrxai@#2025@69.10.53.38/healthrx_db")
-
 DATABASES = {
-    "default": dj_database_url.parse(DATABASE_URL)
-}
+    "default": {
+        "ENGINE": "django_tenants.postgresql_backend",
+        
+        # Local
+        # "NAME": os.getenv("DATABASE_NAME"),
+        # "USER": os.getenv("DATABASE_USER"),
+        # "PASSWORD": os.getenv("DATABASE_PASSWORD"), 
+        # "HOST": os.getenv("DATABASE_HOST"),
+        # "PORT": os.getenv("DATABASE_PORT"),
 
-# Required for django-tenants
-DATABASES["default"]["ENGINE"] = "django_tenants.postgresql_backend"
-DATABASES["default"]["ATOMIC_REQUESTS"] = True
+        # live
+        'NAME': 'healthrx_db',
+        'USER': 'healthrxuser',
+        'PASSWORD': 'Healthrx@#2025', 
+        'HOST':'69.10.53.38',  
+        'PORT': '5432',     
+        
+        'ATOMIC_REQUESTS': True 
+        
+    }
+}
 
 
 # Email settings
@@ -155,8 +149,7 @@ DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 
 
-OPENAI_API_KEY = config("OPENAI_API_KEY", default="", cast=str)
-
+# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 
 # Domain work
