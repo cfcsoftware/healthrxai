@@ -132,7 +132,7 @@ ASGI_APPLICATION = "saas_admin.asgi.application"
 
 import dj_database_url
 
-DATABASE_URL = config("DATABASE_URL", default="postgres://healthrxuser:Healthrx@127.0.0.1:5432/healthrx_db")
+DATABASE_URL = config("DATABASE_URL", default="postgres://healthrxuser:Healthrxai@#2025@127.0.0.1:5432/healthrx_db")
 
 DATABASES = {
     "default": dj_database_url.parse(DATABASE_URL)
