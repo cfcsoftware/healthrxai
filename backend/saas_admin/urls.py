@@ -25,6 +25,7 @@ from django.contrib import admin
 urlpatterns = [
     # CMS URLs - MUST come first to handle root path redirection
     path('', include('cms.urls')),
+    path('', include('users.urls')), 
     
     # Main client URLs (includes website URLs)
     path("", include("clients.urls")),
