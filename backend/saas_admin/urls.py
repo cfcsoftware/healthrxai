@@ -24,45 +24,45 @@ from django.contrib import admin
 
 urlpatterns = [
     # CMS URLs - MUST come first to handle root path redirection
-    path('backend/', include('cms.urls')),
+    path('', include('cms.urls')),
     
     # Main client URLs (includes website URLs)
-    path("backend/", include("clients.urls")),
+    path("", include("clients.urls")),
     
     # API and search URLs
     path("api/", include("notifications.urls")),
     path("search/", include("search.urls")),
 
     # HMS module URLs
-    path('backend/', include('dashboard.urls')),
-    path('backend/patients/', include('patients.urls')),
-    path('backend/appointments/', include('appointments_list.urls')),
-    path('backend/ambulance/', include('ambulance.urls')),
-    path('backend/opd/', include('opd_module.urls')),
-    path('backend/ipd/', include('ipd_module.urls')),
-    path('backend/pathology/', include('pathology_module.urls')),
-    path('backend/staff/', include('staff_management.urls')),
-    path('backend/departments/', include('departments.urls')),
-    path('backend/billing/', include('billing_counter.urls')),
-    path('backend/bed-management/', include('bed_management.urls')),
-    path('backend/blood-bank/', include('blood_bank.urls')),
-    path('backend/certificate/', include('certificate_module.urls')),
+    path('', include('dashboard.urls')),
+    path('patients/', include('patients.urls')),
+    path('appointments/', include('appointments_list.urls')),
+    path('ambulance/', include('ambulance.urls')),
+    path('opd/', include('opd_module.urls')),
+    path('ipd/', include('ipd_module.urls')),
+    path('pathology/', include('pathology_module.urls')),
+    path('staff/', include('staff_management.urls')),
+    path('departments/', include('departments.urls')),
+    path('billing/', include('billing_counter.urls')),
+    path('bed-management/', include('bed_management.urls')),
+    path('blood-bank/', include('blood_bank.urls')),
+    path('certificate/', include('certificate_module.urls')),
 
     path('notifications/', include('notifications.urls')),
-    path('backend/ops/', include('opd_module.urls')),
-    path('backend/pharmacy/', include('pharmacy_module.urls')),
-    path('backend/radiology/', include('radiology_module.urls')),
-    path('backend/mails/', include('mail_box.urls')),
-    path('backend/notice/', include('notice_services.urls')),
-    path('backend/research/', include('research_module.urls')),   
-    path('backend/reports/', include('reports.urls')),
-    path('backend/', include('settings.urls')),
-    path('backend/surgery/', include('surgery_module.urls')),
-    path('backend/services/', include('services.urls')),
-    path('backend/visitors/', include('visitor_management.urls')),   
+    path('ops/', include('opd_module.urls')),
+    path('pharmacy/', include('pharmacy_module.urls')),
+    path('radiology/', include('radiology_module.urls')),
+    path('mails/', include('mail_box.urls')),
+    path('notice/', include('notice_services.urls')),
+    path('research/', include('research_module.urls')),   
+    path('reports/', include('reports.urls')),
+    path('', include('settings.urls')),
+    path('surgery/', include('surgery_module.urls')),
+    path('services/', include('services.urls')),
+    path('visitors/', include('visitor_management.urls')),   
     
     path('admin/', admin.site.urls),
-    path('backend/ckeditor/', include('ckeditor_uploader.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 
 
 ]
