@@ -1,8 +1,43 @@
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import { toast } from "sonner";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    if (!email.includes('@')) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setIsLoading(true);
+    console.log('Starting login process...');
+    
+    try {
+      console.log('Calling login function with:', { email });
+      await login({ email, password });
+      console.log('Login successful, navigating to dashboard');
+      toast.success("Login successful!");
+      navigate("/saas/dashboard");
+    } catch (error: any) {
+      console.error('Login error:', error);
+      toast.error(error.message || "Login failed. Please check your credentials.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-gradient-to-tr from-[#0f172a] via-[#1e293b] to-[#334155]">
@@ -78,7 +113,7 @@ export default function LoginPage() {
             Access your hospital dashboard securely
           </p>
 
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm text-blue-200 font-medium mb-1">
                 Email Address <span className="text-red-400">*</span>

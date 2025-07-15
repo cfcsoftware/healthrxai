@@ -1,8 +1,22 @@
-export const getTenant = (): string => {
-  const { hostname } = window.location;
+export const getTenant = (): string | null => {
+  const hostname = window.location.hostname;
+
+  // Catch localhost cases
   if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return 'localhost';
+    return null;
   }
-  const subdomain = hostname.split('.')[0];
-  return subdomain || 'default';
+
+  const parts = hostname.split('.');
+
+  // Dev mode: cityhospital.localhost → ["cityhospital", "localhost"]
+  if (hostname.endsWith('.localhost') && parts.length === 2) {
+    return parts[0]; // "cityhospital"
+  }
+
+  // Production: cityhospital.healthrxai.com → ["cityhospital", "healthrxai", "com"]
+  if (parts.length >= 3) {
+    return parts[0];
+  }
+
+  return null;
 };
