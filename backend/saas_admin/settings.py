@@ -29,8 +29,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 
-# ALLOWED_HOSTS = ["*",'localhost', '127.0.0.1',"healthsrx.com","www.healthsrx.com","https://healthsrx.com","https://www.healthsrx.com"]
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
+ALLOWED_HOSTS = ['healthrxai.com', 'www.healthrxai.com','*']
 
 
 # DEBUG = os.getenv("DEBUG")
