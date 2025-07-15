@@ -32,10 +32,10 @@ urlpatterns = [
 
     
     # get domain
-    path('get-domain', get_tenant_domain, name='get_tenant_domain'),
+    path('backend/get-domain', get_tenant_domain, name='get_tenant_domain'),
 
-    path("tenant/register", TenantRegister.as_view(), name="tenant-register"),
-    path("check-tenant", CheckTenant.as_view(), name="check-tenant"),
+    path("backend/tenant/register", TenantRegister.as_view(), name="tenant-register"),
+    path("backend/check-tenant", CheckTenant.as_view(), name="check-tenant"),
     re_path(r"^swagger(?P<format>\.json|\.yaml)$",schema_view.without_ui(cache_timeout=0),name="schema-json"),
     path("docs/",schema_view.with_ui("swagger", cache_timeout=0),name="schema-swagger-ui"),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
