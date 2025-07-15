@@ -235,13 +235,9 @@ STATIC_URL = "/static/"
 # STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static'),
-# ]
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "frontend"),
+    os.path.join(BASE_DIR, 'static'),
 ]
-
 
 
 MEDIA_URL = '/media/'
@@ -263,8 +259,7 @@ DOCUMENTS_PATH = "/opt/myproject/myproject/media"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        # "DIRS": [BASE_DIR / "templates"],
-        "DIRS": [os.path.join(BASE_DIR, "frontend")],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -277,10 +272,10 @@ TEMPLATES = [
     },
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://healthsrx.com",
-    "https://www.healthsrx.com",
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     "https://healthsrx.com",
+#     "https://www.healthsrx.com",
+# ]
 
 
 LOGGING = {

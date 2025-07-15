@@ -1,10 +1,10 @@
-import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useTenantStore } from './store/useTenantStore';
 import { getTenant } from './utils/getTenant';
 import { TenantRouter } from './tenants';
-import { AdminRoutes } from './admin/routes';
-import HealthrxAI from './tenants/HealthrxAI';
+// import { AdminRoutes } from './admin/routes';
+// import HealthrxAI from './tenants/HealthrxAI';
 import LoginPage from './pages/LoginPage';
 import Home from './pages/home';
 import Features from './pages/feature';
@@ -26,7 +26,7 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
         {/* <Route path="/" element={<HealthrxAI />} /> */}
-        <Route path="/saas/*" element={<AdminRoutes />} />
+        {/* <Route path="/saas/*" element={<AdminRoutes />} /> */}
         <Route path="/*" element={<TenantRouter />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<Home />} />

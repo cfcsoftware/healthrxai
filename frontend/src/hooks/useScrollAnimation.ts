@@ -70,7 +70,7 @@ export const useParallaxScroll = (speed: number = 0.5) => {
   return { elementRef, offset };
 };
 
-export const useStaggeredAnimation = (items: any[], delay: number = 100) => {
+export const useStaggeredAnimation = (items: unknown[], delay: number = 100) => {
   const [visibleItems, setVisibleItems] = useState<number[]>([]);
   const containerRef = useRef<HTMLElement>(null);
 
