@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { toast } from "sonner";
+
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +32,7 @@ export default function LoginPage() {
       await login({ email, password });
       console.log('Login successful, navigating to dashboard');
       toast.success("Login successful!");
-      navigate("/saas/dashboard");
+      navigate("/tenant/dashboard");
     } catch (error: any) {
       console.error('Login error:', error);
       toast.error(error.message || "Login failed. Please check your credentials.");
