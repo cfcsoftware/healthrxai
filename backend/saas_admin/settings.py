@@ -23,13 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY = os.getenv("SECRET_KEY")
 SECRET_KEY = config("SECRET_KEY", default="", cast=str)
 
+FORCE_SCRIPT_NAME = '/backend'
+USE_X_FORWARDED_HOST = True
+
+
 # cloudflare settings
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 
 
-ALLOWED_HOSTS = ['healthrxai.com', 'www.healthrxai.com','*']
+ALLOWED_HOSTS = ['healthrxai.com', 'www.healthrxai.com','*', 'localhost']
 
 
 # DEBUG = os.getenv("DEBUG")
@@ -116,18 +120,18 @@ DATABASES = {
         "ENGINE": "django_tenants.postgresql_backend",
         
         # Local
-        "NAME": os.getenv("DATABASE_NAME"),
-        "USER": os.getenv("DATABASE_USER"),
-        "PASSWORD": os.getenv("DATABASE_PASSWORD"), 
-        "HOST": os.getenv("DATABASE_HOST"),
-        "PORT": os.getenv("DATABASE_PORT"),
+        # "NAME": os.getenv("DATABASE_NAME"),
+        # "USER": os.getenv("DATABASE_USER"),
+        # "PASSWORD": os.getenv("DATABASE_PASSWORD"), 
+        # "HOST": os.getenv("DATABASE_HOST"),
+        # "PORT": os.getenv("DATABASE_PORT"),
 
         # live
-        # 'NAME': 'healthrx_db',
-        # 'USER': 'healthrxuser',
-        # 'PASSWORD': 'Healthrxai@#2025', 
-        # 'HOST':'69.10.53.38',  
-        # 'PORT': '5432',     
+        'NAME': 'healthrx_db',
+        'USER': 'healthrxuser',
+        'PASSWORD': 'Healthrxai@#2025', 
+        'HOST':'69.10.53.38',  
+        'PORT': '5432',     
         
         'ATOMIC_REQUESTS': True 
         
@@ -162,7 +166,7 @@ CLOUDFLARE_API_TOKEN = os.getenv("CF_API_TOKEN", "_DllvFzkgB0xbGUAAVN8sVgBjfJPcK
 INSTALLED_APPS += ["django_hosts"]
 ROOT_HOSTCONF = 'saas_admin.hosts'
 DEFAULT_HOST = 'www'
-PARENT_HOST = 'healthsrx.com'
+PARENT_HOST = 'healthrxai.com'
 
 DATABASE_ROUTERS = ("django_tenants.routers.TenantSyncRouter",)
 
@@ -175,8 +179,15 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = False  # turn this off
+CORS_ALLOW_CREDENTIALS = True   # keep this on
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
@@ -240,8 +251,8 @@ STATICFILES_DIRS = [
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/opt/myproject/myproject/media/'
-DOCUMENTS_PATH = "/opt/myproject/myproject/media"
+MEDIA_ROOT = '/home/django_user/healthrxai/backend/media/'
+DOCUMENTS_PATH = "/home/django_user/healthrxai/backend/media/"
 
 
 # Environment-aware media root configuration
@@ -271,10 +282,22 @@ TEMPLATES = [
     },
 ]
 
-# CSRF_TRUSTED_ORIGINS = [
-#     "https://healthsrx.com",
-#     "https://www.healthsrx.com",
-# ]
+CSRF_TRUSTED_ORIGINS = [
+     "https://healthrxai.com",
+     "https://www.healthrxai.com",
+     "localhost:5174",
+     "https://*.healthrxai.com",
+     "http://localhost",
+     "http://localhost:3000",
+     "http://localhost:5173",
+     "http://localhost:5174",
+     "http://127.0.0.1",
+     "http://127.0.0.1:3000",
+     "http://127.0.0.1:5173",
+     "http://127.0.0.1:5174",
+     "https://healthrxai.com",
+     "https://www.healthrxai.com",
+]
 
 
 LOGGING = {
