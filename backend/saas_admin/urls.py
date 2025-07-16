@@ -23,7 +23,6 @@ from django.contrib import admin
 
 
 urlpatterns = [
-    path("backend/", include("users.urls")), 
     # CMS URLs - MUST come first to handle root path redirection
     path('', include('cms.urls')),
     
