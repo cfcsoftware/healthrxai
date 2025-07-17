@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useAuth } from "../../../hooks/useAuth"; 
 
 export default function SaasAdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  // Dummy login handler for SaaS admin
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -24,16 +25,19 @@ export default function SaasAdminLoginPage() {
 
     setIsLoading(true);
 
-    // Simulate login
-    setTimeout(() => {
-      setIsLoading(false);
-      if (email === "admin@healthrxai.com" && password === "admin123") {
-        toast.success("Login successful!");
-        navigate("/saas-admin/dashboard");
+    try {
+      await login({ email, password });
+      toast.success("Login successful!");
+      navigate("/saas/dashboard"); // ✅ Redirect after successful login
+    } catch (error) {
+      if (error && typeof error === "object" && "message" in error) {
+        toast.error((error as { message?: string }).message || "Login failed");
       } else {
-        toast.error("Invalid credentials. Please try again.");
+        toast.error("Login failed");
       }
-    }, 1200);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

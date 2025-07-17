@@ -242,7 +242,7 @@ class TenantListView(generics.ListCreateAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         if request.GET.get('api') == 'true':
-            return JsonResponse(serializer.data)
+            return JsonResponse(serializer.data, safe=False)
         else:
             return render(request, 'saas-admin/tenants.html', {'tenants': serializer.data})
 
@@ -258,9 +258,11 @@ class DomainListView(generics.ListCreateAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         if request.GET.get('api') == 'true':
-            return JsonResponse(serializer.data)
+            return JsonResponse(serializer.data, safe=False)
         else:
             return render(request, 'saas-admin/domains.html', {'tenants': serializer.data})
+
+
 
 
 from icecream import ic
@@ -304,7 +306,7 @@ class CustomUserListView(generics.ListCreateAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         if request.GET.get('api') == 'true':
-            return JsonResponse(serializer.data)
+            return JsonResponse(serializer.data, safe=False)
         else:
             return render(request, 'saas-admin/users.html', {'tenants': serializer.data})
     # for the super admin (saas login) end

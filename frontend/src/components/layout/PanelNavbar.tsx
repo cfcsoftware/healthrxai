@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const userImage =
   "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid&w=740";
@@ -10,6 +12,8 @@ const AVATAR_SIZE = 30;
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   // Close dropdown on outside click
@@ -87,14 +91,16 @@ const Navbar = () => {
                   </a>
                 </li>
                 <li>
-                  <button
-                    className="w-full text-left block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                    onClick={() => {
-                      // TODO: Add logout logic here
-                    }}
-                  >
-                    Logout
-                  </button>
+
+                <button
+                  className="w-full text-left block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                  onClick={() => {
+                    logout(); 
+                    navigate('/');
+                  }}
+                >
+                  Logout
+                </button>
                 </li>
               </ul>
             </div>
