@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import TenantLayout from '../layouts/TenantLayout';
 import Dashboard from '../pages/tenant/Dashboard/dashboard';
 import PatientsList from '../pages/tenant/Patients/patients';
