@@ -265,7 +265,7 @@ class DomainListView(generics.ListCreateAPIView):
 
 
 
-from icecream import ic
+
 
 
 @csrf_exempt
@@ -306,7 +306,7 @@ class CustomUserListView(generics.ListCreateAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         if request.GET.get('api') == 'true':
-            return JsonResponse(serializer.data, safe=False)
+            return JsonResponse(serializer.data, safe=False)  # this i changes to false
         else:
             return render(request, 'saas-admin/users.html', {'tenants': serializer.data})
     # for the super admin (saas login) end
