@@ -21,7 +21,6 @@ const TenantRoutes = () => {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="patients" element={<PatientsList />} />
       </Route>
-
     </Routes>
   );
 };
