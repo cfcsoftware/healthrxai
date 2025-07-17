@@ -182,7 +182,7 @@ export default function Navbar() {
       {/* Right Side Buttons */}
       <div className="flex gap-3 items-center text-sm">
         <Link
-          to="/demo"
+          to="https://calendly.com/cfcsoftwares/30min"
           className="bg-white font-medium text-black px-4 py-2 rounded-lg shadow-md hover:opacity-50 transition-colors transition-all duration-200"
         >
           Book Demo →

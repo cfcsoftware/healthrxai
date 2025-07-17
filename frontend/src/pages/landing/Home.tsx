@@ -129,16 +129,16 @@ const Home = () => {
             </p>
             <div className="flex justify-center items-center gap-4 flex-wrap">
               <a
-                href="#demo"
+                href="https://calendly.com/cfcsoftwares/30min"
                 className="bg-white font-medium text-black px-4 py-2 rounded-lg shadow-md hover:opacity-50 transition-colors transition-all duration-200"
               >
                 Book a Demo →
               </a>
               <a
-                href="#build-ai"
+                href="https://calendly.com/cfcsoftwares/30min"
                 className="text-blue-50 bg-transparent text-md font-medium flex justify-center px-2 xl:px-4 border-0 relative font-inter z-10 hover:text-opacity-70"
               >
-                Build AI →
+                Build with AI →
               </a>
             </div>
           </div>
@@ -174,7 +174,7 @@ const Home = () => {
               src="https://healthsrx.com/static/images/main_logo2.png"
               alt="Global Atlantic"
               className="h-8 object-contain"
-            />
+            />  
             <img
               src="https://healthsrx.com/static/images/main_logo2.png"
               alt="Howard Hughes"
@@ -204,7 +204,7 @@ const Home = () => {
             </p>
 
             <a
-              href="#demo"
+              href="https://calendly.com/cfcsoftwares/30min"
               className="bg-purple-500 hover:bg-purple-700 font-normal text-sm text-white px-4 py-3 rounded-lg shadow-md transition-colors transition-all duration-200"
             >
               Book a Demo →

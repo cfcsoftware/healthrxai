@@ -44,12 +44,12 @@ const statusColor: Record<string, string> = {
   Inactive: "bg-gray-100 text-gray-500",
 };
 
-const TransactionList = () => {
+const DomainList = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-6 md:p-10">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-1">Transactions</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-1">Tenants</h1>
         </div>
       </div>
 
@@ -151,4 +151,4 @@ const TransactionList = () => {
   );
 };
 
-export default TransactionList;
+export default DomainList;

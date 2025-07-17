@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY = os.getenv("SECRET_KEY")
 SECRET_KEY = config("SECRET_KEY", default="", cast=str)
 
-FORCE_SCRIPT_NAME = '/backend'
+FORCE_SCRIPT_NAME = '/server'
 USE_X_FORWARDED_HOST = True
 
 
