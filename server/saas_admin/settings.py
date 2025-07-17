@@ -120,18 +120,18 @@ DATABASES = {
         "ENGINE": "django_tenants.postgresql_backend",
         
         # Local
-        "NAME": os.getenv("DATABASE_NAME"),
-        "USER": os.getenv("DATABASE_USER"),
-        "PASSWORD": os.getenv("DATABASE_PASSWORD"), 
-        "HOST": os.getenv("DATABASE_HOST"),
-        "PORT": os.getenv("DATABASE_PORT"),
+        # "NAME": os.getenv("DATABASE_NAME"),
+        # "USER": os.getenv("DATABASE_USER"),
+        # "PASSWORD": os.getenv("DATABASE_PASSWORD"), 
+        # "HOST": os.getenv("DATABASE_HOST"),
+        # "PORT": os.getenv("DATABASE_PORT"),
 
         # live
-        # 'NAME': 'healthrx_db',
-        # 'USER': 'healthrxuser',
-        # 'PASSWORD': 'Healthrxai@#2025', 
-        # 'HOST':'69.10.53.38',  
-        # 'PORT': '5432',     
+        'NAME': 'healthrx_db',
+        'USER': 'healthrxuser',
+        'PASSWORD': 'Healthrxai@#2025', 
+        'HOST':'69.10.53.38',  
+        'PORT': '5432',     
         
         'ATOMIC_REQUESTS': True 
         
@@ -282,22 +282,22 @@ TEMPLATES = [
     },
 ]
 
-# CSRF_TRUSTED_ORIGINS = [
-#      "https://healthrxai.com",
-#      "https://www.healthrxai.com",
-#      "localhost:5174",
-#      "https://*.healthrxai.com",
-#      "http://localhost",
-#      "http://localhost:3000",
-#      "http://localhost:5173",
-#      "http://localhost:5174",
-#      "http://127.0.0.1",
-#      "http://127.0.0.1:3000",
-#      "http://127.0.0.1:5173",
-#      "http://127.0.0.1:5174",
-#      "https://healthrxai.com",
-#      "https://www.healthrxai.com",
-# ]
+CSRF_TRUSTED_ORIGINS = [
+     "https://healthrxai.com",
+     "https://www.healthrxai.com",
+     "localhost:5174",
+     "https://*.healthrxai.com",
+     "http://localhost",
+     "http://localhost:3000",
+     "http://localhost:5173",
+     "http://localhost:5174",
+     "http://127.0.0.1",
+     "http://127.0.0.1:3000",
+     "http://127.0.0.1:5173",
+     "http://127.0.0.1:5174",
+     "https://healthrxai.com",
+     "https://www.healthrxai.com",
+]
 
 
 LOGGING = {
