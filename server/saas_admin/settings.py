@@ -251,8 +251,8 @@ STATICFILES_DIRS = [
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/home/django_user/healthrxai/backend/media/'
-DOCUMENTS_PATH = "/home/django_user/healthrxai/backend/media/"
+MEDIA_ROOT = '/home/django_user/healthrxai/server/media/'
+DOCUMENTS_PATH = "/home/django_user/healthrxai/server/media/"
 
 
 # Environment-aware media root configuration
