@@ -2,9 +2,10 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useTenantStore } from './store/useTenantStore';
 import { getTenant } from './utils/getTenant';
-import { TenantRouter } from './tenants';
-import LoginPage from './pages/LoginPage';
-import Home from './pages/home';
+
+import LoginPage from './pages/tenant/auth/Login';
+import SaasAdminLoginPage from './pages/saas/auth/Login';
+import Home from './pages/landing/Home';
 
 
 const AppRouter = () => {
@@ -18,8 +19,8 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/*" element={<TenantRouter />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/saas/login" element={<SaasAdminLoginPage />} />
         <Route path="/" element={<Home />} />
       </Routes>
     </BrowserRouter>
