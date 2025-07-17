@@ -1,6 +1,6 @@
 "use client";
 
-import Navbar from "./Navbar";
+import Navbar from "../layout/Navbar";
 import Footer from "./Footer";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
