@@ -43,7 +43,7 @@ def get_tenant_domain(request):
                 new_url = f'http://{domain.domain}:8000'
             else:
                 new_url = f'https://{domain.domain}'            
-            return JsonResponse({"success": True, "domain": new_url}, status=200)
+            return JsonResponse({"success": True, "domain": new_url,"hospital_name": tenant.username}, status=200)
         else:
             return JsonResponse({"success": False, "message": "No domain found for the given tenant"}, status=404)
     except Tenant.DoesNotExist:
