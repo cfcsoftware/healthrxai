@@ -1,41 +1,3 @@
-"""
-This module contains views related to tenant management in the application.
-
-It includes:
-- A public view function to check the availability of the service.
-- An API view to handle the registration of new tenants.
-- An API view to check if a tenant exists in the system.
-
-Views:
-1. `index`:
-    - Handles HTTP GET requests.
-    - Provides a public endpoint to confirm that the service is reachable.
-    - Returns a JSON response with a message indicating that the user is at the public view.
-
-2. `TenantRegister`:
-    - Handles HTTP POST requests to register a new tenant.
-    - Uses `TenantRegisterSerializer` to validate and save tenant data.
-    - Logs the registration attempt and errors if validation fails.
-    - On successful registration, returns a JSON response containing a success message, tenant URL, and user data.
-    - On failure, returns a JSON response with validation errors.
-    - Also, creates a new index on elastic search server for isolated quick searching.
-
-3. `CheckTenant`:
-    - Handles HTTP GET requests to verify if a tenant exists.
-    - Retrieves the `username` from query parameters to check the presence of a tenant with that schema name.
-    - Logs the check attempt and returns a JSON response indicating whether the tenant exists or not.
-
-Logging:
-- Logs are configured to track the flow of tenant registration and existence checks, including errors.
-
-Dependencies:
-- Django's `JsonResponse` for public view responses.
-- Django REST Framework's `APIView`, `Response`, and `status` for API views.
-- `TenantRegisterSerializer` for serializing and validating tenant data.
-- `Tenant` model to query and check tenant existence.
-- Python's `logging` module for logging information and errors.
-"""
-
 from django.http import JsonResponse
 from rest_framework.views import APIView
 import logging, json
@@ -109,16 +71,10 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 class TenantRegister(APIView):
     def get(self, request):
-        """
-        Render the tenant registration page or return a message for GET requests.
-        """
         logger.info("Rendering tenant registration page.")
         return render(request, 'authentication/tenant_register.html', {})
 
     def post(self, request):
-        """
-        Handle the tenant registration process.
-        """
         logger.info("Registering new tenant!")
         serializer = TenantRegisterSerializer(
             data=request.data, context={"request": request}
@@ -182,7 +138,6 @@ class TenantRegister(APIView):
 
 
 def create_index_for_tenant(tenant_name):
-    """Create an Elasticsearch index for a new tenant."""
     blog_document = BlogDocument.for_tenant(tenant_name)
 
     # Create the index
