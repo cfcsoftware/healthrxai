@@ -11,8 +11,17 @@ const navLinks = [
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 21V13h6v8" />
       <path strokeLinecap="round" strokeLinejoin="round" d="M21 21H3" />
     </svg>
-  ) },
-  { to: '/saas/all-users', label: 'Users', icon: (
+    ) },
+    { to: '/saas/register-a-hospital', label: 'Add Hospital', icon: (
+    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+      <rect x="4" y="7" width="16" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 11v6M9 14h6" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V5a4 4 0 0 1 8 0v2" />
+    </svg>
+    ) },
+
+    
+    { to: '/saas/all-users', label: 'Users', icon: (
     <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M16 7a4 4 0 11-8 0 4 4 0 018 0zm6 13v-2a4 4 0 00-3-3.87M6 10a4 4 0 100-8 4 4 0 000 8z" />
     </svg>
