@@ -8,34 +8,7 @@ const users = [
     joined: "2024-05-12",
     status: "Active",
   },
-  {
-    name: "John Doe",
-    email: "john@sunmed.org",
-    hospital: "Sunrise Medical Center",
-    joined: "2024-05-10",
-    status: "Active",
-  },
-  {
-    name: "Dr. Emily Green",
-    email: "emily@greenvalley.clinic",
-    hospital: "Green Valley Clinic",
-    joined: "2024-05-09",
-    status: "Pending",
-  },
-  {
-    name: "Michael Brown",
-    email: "michael@metrohealth.net",
-    hospital: "Metro Health",
-    joined: "2024-05-08",
-    status: "Active",
-  },
-  {
-    name: "Sarah Lee",
-    email: "sarah@lakesidehosp.com",
-    hospital: "Lakeside Hospital",
-    joined: "2024-05-07",
-    status: "Inactive",
-  },
+
 ];
 
 const statusColor: Record<string, string> = {

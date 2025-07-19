@@ -7,6 +7,7 @@ import SubscriptionList from '../pages/saas/subscription';
 import TransactionList from '../pages/saas/transaction';
 import TenantList from '../pages/saas/tenantList';
 import DomainList from '../pages/saas/domainList';
+import SupportLeadList from '../pages/saas/supportLeads';
 import { useAuth } from "../hooks/useAuth";
 
 const SaasRoutes = () => {
@@ -28,6 +29,9 @@ const SaasRoutes = () => {
           <Route path="all-domains" element={<DomainList />} />
           <Route path="all-transactions" element={<TransactionList />} />
           <Route path="all-subscription" element={<SubscriptionList />} />
+          <Route path="enquiries" element={<SupportLeadList />} />
+
+
         </Route>
       ) : (
         // Catch all other `/saas/*` routes if not logged in

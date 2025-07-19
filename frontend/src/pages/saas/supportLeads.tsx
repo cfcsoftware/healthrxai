@@ -7,16 +7,14 @@ import SearchInput from "../../components/common/SearchInput";
 type User = {
   id: number;
   email: string;
-  username: string | null;
-  is_tenant_admin: boolean;
-  is_staff: boolean;
-  is_active: boolean;
-  date_joined: string;
-  tenant: number;
+  fullname: string | null;
+  contact: number;
+  message: string;
+  createdat: Date;
 };
 
 
-const UserList = () => {
+const SupportLeadList = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [search, setSearch] = useState("");
@@ -47,8 +45,8 @@ const UserList = () => {
       setFilteredUsers(
         users.filter(
           (user) =>
-            (user.username &&
-              user.username.toLowerCase().includes(search.toLowerCase())) ||
+            (user.fullname &&
+              user.fullname.toLowerCase().includes(search.toLowerCase())) ||
             user.email.toLowerCase().includes(search.toLowerCase())
         )
       );
@@ -66,10 +64,9 @@ const UserList = () => {
       "users.csv",
       ["Username", "Email", "Joined", "Status"],
       filteredUsers.map((u) => [
-        u.username ?? "",
+        u.fullname ?? "",
         u.email,
-        new Date(u.date_joined).toLocaleDateString(),
-        u.is_active ? "Active" : "Inactive",
+        new Date(u.createdat).toLocaleDateString(),
       ])
     );
   };
@@ -87,7 +84,7 @@ const UserList = () => {
     <div className="min-h-screen bg-gray-50 p-6 md:p-10">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
         <h1 className="text-3xl font-extrabold text-gray-900 mb-1 tracking-tight">
-          User Management
+          All Enquiries
         </h1>
         <div className="flex flex-col md:flex-row w-full md:w-auto md:items-center gap-3 mt-2 md:mt-0">
           <div className="flex gap-2">
@@ -129,18 +126,17 @@ const UserList = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
               {paginatedUsers.map((user) => {
-                const status = user.is_active ? "Active" : "Inactive";
                 return (
                   <tr key={user.id} className="hover:bg-gray-50 transition">
                     <td className="px-6 py-4 whitespace-nowrap flex items-center gap-3">
                       <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-700 font-bold text-lg uppercase">
-                        {getInitials(user.username)}
+                        {getInitials(user.fullname)}
                       </span>
-                      <span className="font-medium text-gray-900">{user.username}</span>
+                      <span className="font-medium text-gray-900">{user.fullname}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-800">{user.email}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                      {new Date(user.date_joined).toLocaleDateString(undefined, {
+                      {new Date(user.createdat).toLocaleDateString(undefined, {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
@@ -181,4 +177,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default SupportLeadList;
