@@ -139,7 +139,7 @@ const statusColor = {
   Inactive: "bg-gray-100 text-gray-500",
 };
 
-const hospitalDashboard = () => {
+const HospitalDashboard = () => {
   return (
     <div className="p-2 min-h-screen">
       <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -328,4 +328,4 @@ const hospitalDashboard = () => {
   );
 };
 
-export default hospitalDashboard;
+export default HospitalDashboard;

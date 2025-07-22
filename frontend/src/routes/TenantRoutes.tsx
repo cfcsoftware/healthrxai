@@ -23,7 +23,7 @@ const TenantRoutes = () => {
       {/* Protected routes 
       {isAuthenticated ? ( */}
       <Route element={<TenantLayout />}>
-        <Route path="dashboard" element={<HospitalDashboard />} />
+        <Route path="dashboard" element={<HospitalDashboard />} /> 
         <Route path="patients" element={<PatientsList />} />
       </Route>
 
