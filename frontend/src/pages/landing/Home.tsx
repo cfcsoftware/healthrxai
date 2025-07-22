@@ -1,11 +1,11 @@
-import LayoutWrapper from "../../components/layout/LayoutWrapper";
 import chartImage from "../../assets/react.svg";
-import openai from "../../assets/openai.webp";
-import adept from "../../assets/adept.webp";
-import meta from "../../assets/meta.webp";
-import cohere from "../../assets/cohere.png";
-import anthropic from "../../assets/anthropic.webp";
-import mapImg from "../../assets/donovan.webp"; 
+// import openai from "../../assets/openai.webp";
+// import adept from "../../assets/adept.webp";
+// import meta from "../../assets/meta.webp";
+// import cohere from "../../assets/cohere.png";
+// import anthropic from "../../assets/anthropic.webp";
+// import mapImg from "../../assets/donovan.webp"; 
+import HomeLayout from "../../layouts/HomeLayout";
 
 const modules = [
   {
@@ -105,43 +105,73 @@ const stats = [
 
 const Home = () => {
   return (
-    <LayoutWrapper>
-      <div className="min-h-screen">
+    <HomeLayout>
+      <div className="min-h-screen bg-[#0F0F1B] ">
         {/* Hero Banner */}
-        <section className="relative h-[100vh] grid place-items-end justify-center text-white text-center overflow-hidden pb-15 bg-black/95">
-          <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-            <div className="relative flex items-center justify-center w-full">
-              <h1 className="relative z-10 text-[3.75rem] sm:text-[6rem] leading-[1.1] font-extralight">
-                <span
-                  className="bg-gradient-to-r from-purple-400 via-pink-300 to-white bg-clip-text text-transparent 
-                 animate-gradient-x drop-shadow-[0_2px_32px_rgba(128,0,255,0.25)]"
-                >
-                  Empowering
-                </span>
-                <br />
-                Healthcare With AI
-              </h1>
-            </div>
-            <p className="text-lg mx-auto mt-6 mb-8 text-white font-medium">
-              Scale delivers proven data, evaluations, and outcomes to AI labs,
-              <br />
-              governments, and the Fortune 500.
-            </p>
-            <div className="flex justify-center items-center gap-4 flex-wrap">
-              <a
-                href="https://calendly.com/cfcsoftwares/30min"
-                className="bg-white font-medium text-black px-4 py-2 rounded-lg shadow-md hover:opacity-50 transition-colors transition-all duration-200"
-              >
-                Book a Demo →
-              </a>
-              <a
-                href="https://calendly.com/cfcsoftwares/30min"
-                className="text-blue-50 bg-transparent text-md font-medium flex justify-center px-2 xl:px-4 border-0 relative font-inter z-10 hover:text-opacity-70"
-              >
-                Build with AI →
-              </a>
-            </div>
-          </div>
+        <section className="relative h-[85vh] grid place-items-end justify-center text-white text-center overflow-hidden pb-15 ">
+          <div className="relative z-10 max-w-7xl mx-auto py-35 px-6 text-center">
+  <div className="relative flex items-center justify-center w-full">
+    <h1 className="relative z-10 text-[3.75rem] sm:text-[4rem] leading-[1.1] font-extralight">
+      <span
+        className="bg-gradient-to-r from-purple-400 via-pink-300 to-white bg-clip-text text-transparent 
+         animate-gradient-x drop-shadow-[0_2px_32px_rgba(128,0,255,0.25)]"
+      >
+        Revolutionize Healthcare with
+      </span>
+      <br />
+      AI-Driven Hospital Automation
+    </h1>
+  </div>
+
+  <p className="text-lg mx-auto mt-6 mb-8 text-white font-medium max-w-4xl">
+    HealthRx AI is an intelligent, secure, and fully integrated Hospital Management System (HMS) that empowers hospitals with AI diagnostics, smart nurse robots, predictive disease insights, blockchain-grade security,and real-time operational control.
+  </p>
+
+  {/* CTA Buttons */}
+  <div className="flex justify-center items-center gap-4 flex-wrap mb-8">
+    <a
+      href="https://calendly.com/cfcsoftwares/30min"
+      className="bg-white font-semibold text-black px-6 py-3 rounded-lg shadow hover:opacity-80 transition"
+    >
+      Request Live Demo
+    </a>
+    <a
+      href="#contact-sales"
+      className="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-indigo-700 transition"
+    >
+      Talk to Sales
+    </a>
+    <a
+      href="/brochure.pdf"
+      className="bg-gray-800 text-white font-semibold px-6 py-3 rounded-lg hover:bg-gray-700 transition"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Download Brochure
+    </a>
+  </div>
+
+  {/* Highlights Section */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-white mt-10">
+    <div className="flex items-center justify-center gap-3">
+      <span className="text-2xl">🏥</span>
+      <span className="text-md font-medium">100+ Hospitals Transformed</span>
+    </div>
+    <div className="flex items-center justify-center gap-3">
+      <span className="text-2xl">🔐</span>
+      <span className="text-md font-medium">Blockchain-Grade Security</span>
+    </div>
+    <div className="flex items-center justify-center gap-3">
+      <span className="text-2xl">🤖</span>
+      <span className="text-md font-medium">AI Nurse Robot Integration</span>
+    </div>
+    <div className="flex items-center justify-center gap-3">
+      <span className="text-2xl">☁️</span>
+      <span className="text-md font-medium">Cloud & On-Premise Ready</span>
+    </div>
+  </div>
+</div>
+
 
           {/* <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white/80 to-transparent pointer-events-none" /> */}
         </section>
@@ -156,179 +186,221 @@ const Home = () => {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 items-center justify-items-center px-4 max-w-6xl mx-auto">
             <img
-              src="https://healthsrx.com/static/images/main_logo2.png"
+              src="/1.png"
               alt="Cisco"
               className="h-8 object-contain"
             />
             <img
-              src="https://healthsrx.com/static/images/main_logo2.png"
+              src="/2.png"
               alt="TIME"
               className="h-8 object-contain"
             />
             <img
-              src="https://healthsrx.com/static/images/main_logo2.png"
+              src="/1.png"
               alt="DLA Piper"
               className="h-8 object-contain"
             />
             <img
-              src="https://healthsrx.com/static/images/main_logo2.png"
+              src="/2.png"
               alt="Global Atlantic"
               className="h-8 object-contain"
             />  
             <img
-              src="https://healthsrx.com/static/images/main_logo2.png"
+              src="/1.png"
               alt="Howard Hughes"
               className="h-8 object-contain"
             />
             <img
-              src="https://healthsrx.com/static/images/main_logo2.png"
+              src="/2.png"
               alt="Cengage"
               className="h-8 object-contain"
             />
           </div>
         </section>
 
-        <section className="bg-black text-white text-center py-24 px-4">
-          <div className="max-w-3xl mx-auto">
-            <div className="inline-block px-4 py-2 mb-6 rounded-full text-sm tracking-widest font-light bg-purple-900/20 text-purple-300">
-              AI FOR THE ENTERPRISE
-            </div>
-
-            <h2 className="text-4xl md:text-5xl font-semibold mb-4">
-              Full-Stack AI Solutions
+      <section className="bg-gradient-to-b from-[#0f0f0f] to-[#1a1a1a] text-white py-20 px-6">
+  <div className="max-w-6xl mx-auto text-center">
+    <h2 className="text-4xl md:text-5xl font-semibold mb-6">
+      <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-300">
+        About HealthRx AI
+      </span>
+    </h2>
+    <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-10">
+      HealthRx AI is an end-to-end healthcare automation platform designed to power the digital
+      backbone of modern hospitals, clinics, and diagnostic labs.
+    </p>
+    <div className="text-left max-w-4xl mx-auto space-y-5 text-gray-400 text-md leading-relaxed">
+      <p>
+        Combining <span className="text-white font-medium">Artificial Intelligence</span>, 
+        <span className="text-white font-medium"> Blockchain</span>, 
+        <span className="text-white font-medium"> IoT</span>, and 
+        <span className="text-white font-medium"> Cloud-native architecture</span>, 
+        HealthRx AI modernizes patient care, simplifies workflows, and ensures clinical and operational excellence.
+      </p>
+      <p>
+        Our platform replaces fragmented systems with a single intelligent solution — scalable across locations, secure by design, and future-ready.
+      </p>
+    </div>
+  </div>
+</section>
+       <section>
+  <div className="bg-black text-white py-24 px-4">
+    <div className="container">
+      <div className="flex flex-col md:flex-row items-start p-10 gap-10">
+        {/* Left Side Text Content */}
+        <div className="space-y-6 w-full md:w-1/2">
+          {/* Header */}
+          <div className="border-b border-neutral-800 pb-5">
+            <h2 className="text-3xl font-semibold mb-2">
+              Modules That Power Every Department
             </h2>
-
-            <p className="text-lg md:text-xl text-white/80 mb-8">
-              Outcomes delivered with world-class data, models, agents, and
-              deployment.
+            <p className="text-gray-400">
+              A unified platform covering operational, clinical, and financial functions.
             </p>
-
-            <a
-              href="https://calendly.com/cfcsoftwares/30min"
-              className="bg-purple-500 hover:bg-purple-700 font-normal text-sm text-white px-4 py-3 rounded-lg shadow-md transition-colors transition-all duration-200"
-            >
-              Book a Demo →
-            </a>
           </div>
-        </section>
-        <section>
-          <div className="bg-black text-white py-24 px-4">
-            <div className="container">
-              <div className="flex flex-col md:flex-row items-start bg-black text-white p-10 gap-10">
-                {/* Left Side Text Content */}
-                <div className="space-y-5 w-full md:w-1/2">
-                  <div className="border-b border-b-neutral-900 pb-5">
-                    <h2 className="text-2xl font-normal mb-2">
-                      Fine-Tuning and RLHF
-                    </h2>
-                    <p className="font-normal">
-                      Adapt best-in-class foundation models to your business and
-                      your specific data to build sustainable, successful AI
-                      programs and data from your enterprise.
-                    </p>
-                  </div>
 
-                  <div className="border-b border-b-neutral-900 pb-5">
-                    <h2 className="text-2xl font-normal mb-2">
-                      Foundation Models
-                    </h2>
-                    <p className="font-normal">
-                      Scale partners or integrates with all of the leading AI
-                      models, from open-source to closed-source, including
-                      OpenAI, Google, Meta, Cohere, and more.
-                    </p>
-                  </div>
-
-                  <div>
-                    <h2 className="text-2xl font-normal mb-2">
-                      Enterprise Data
-                    </h2>
-                    <p className="font-normal">
-                      Scale's Data Engine enables you to integrate your
-                      enterprise data into the fold of these models, providing
-                      the base for long-term strategic differentiation.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right Side Image */}
-                <div className="w-full md:w-1/2 flex justify-center items-center">
-                  <img
-                    src={chartImage}
-                    alt="3D AI Chart"
-                    className="w-full max-w-[500px] h-auto object-contain"
-                  />
-                </div>
-              </div>
-            </div>
+          {/* Core Operational Modules */}
+          <div className="border-b border-neutral-800 pb-5">
+            <h3 className="text-2xl font-medium text-cyan-400 mb-2">
+              Core Operational Modules
+            </h3>
+            <ul className="list-disc list-inside space-y-1 text-gray-300">
+              <li>✔ Patient Registration & Scheduling</li>
+              <li>✔ OPD/IPD Workflow</li>
+              <li>✔ Billing & TPA Integration</li>
+              <li>✔ Pharmacy, Laboratory & Radiology</li>
+              <li>✔ Discharge Summary & Case History</li>
+              <li>✔ Ward, Bed & OT Management</li>
+              <li>✔ Inventory & Biomedical Equipment</li>
+            </ul>
           </div>
-        </section>
-        <section className="bg-black text-white py-16">
-          <div className="container mx-auto text-center">
-            <p className="text-sm tracking-widest text-white uppercase mb-10">
-              Generative AI Providers We Partner With:
-            </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 justify-center px-4">
-              <div className="rounded-xl border border-white/10 py-10 px-4 flex items-center justify-center">
-                <img src={openai} alt="" />
-              </div>
-              <div className="rounded-xl border border-white/10 py-10 px-4 flex items-center justify-center">
-                <img src={adept} alt="" />
-              </div>
-              <div className="rounded-xl border border-white/10 py-10 px-4 flex items-center justify-center">
-                <img src={meta} alt="" />
-              </div>
-              <div className="rounded-xl border border-white/10 py-10 px-4 flex items-center justify-center">
-                <img src={cohere} alt="" />
-              </div>
-              <div className="rounded-xl border border-white/10 py-10 px-4 flex items-center justify-center">
-                <img src={anthropic} alt="" />
-              </div>
-            </div>
+          {/* Clinical Intelligence Modules */}
+          <div className="border-b border-neutral-800 pb-5">
+            <h3 className="text-2xl font-medium text-cyan-400 mb-2">
+              Clinical Intelligence Modules
+            </h3>
+            <ul className="list-disc list-inside space-y-1 text-gray-300">
+              <li>✔ EMR/EHR with AI-Powered Insights</li>
+              <li>✔ Teleconsultation with e-Prescription</li>
+              <li>✔ Diet Planning, Nursing Notes, and Vitals</li>
+              <li>✔ Queue & Visitor Management</li>
+              <li>✔ In-App & WhatsApp Alerts</li>
+            </ul>
           </div>
-        </section>
-         <div className="bg-black text-white py-16 px-6">
-      <div className="max-w-6xl mx-auto text-center space-y-4">
-        <button className="px-4 py-1 bg-[#1a1a1a] text-sm tracking-widest text-indigo-400 rounded-full uppercase">
-          Apply AI
-        </button>
-        <h2 className="text-4xl md:text-5xl font-semibold">Agentic Solutions</h2>
-        <p className="text-gray-300 max-w-2xl mx-auto text-lg">
-          Transform your data and expertise into agentic solutions that continuously improve with human interaction.
-        </p>
-      </div>
 
-      <div className="container mx-auto mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Card 1 */}
-        <div className="bg-gradient-to-br from-[#0c0c0c] to-[#0c0c0c] rounded-2xl border border-[#212227] p-10">
-          <p className="text-xs tracking-widest uppercase mb-5">Public Sector</p>
-          <h3 className="text-2xl font-medium mb-4">
-            Agentic Solutions for Defense and Intelligence
-          </h3>
-          <p className="text-gray-400 mb-4">
-            Orchestrate agent workflows for decision advantage.
-          </p>
-          <div className="overflow-hidden rounded-xl">
-            <img src={mapImg} alt="Defense Intelligence" className="w-full h-auto object-cover" />
+          {/* Administrative & Financial Modules */}
+          <div>
+            <h3 className="text-2xl font-medium text-cyan-400 mb-2">
+              Administrative & Financial Modules
+            </h3>
+            <ul className="list-disc list-inside space-y-1 text-gray-300">
+              <li>✔ HR, Staff & Roster Management</li>
+              <li>✔ Payroll, Leave & Appraisal</li>
+              <li>✔ Asset & AMC Tracking</li>
+              <li>✔ Financial Reporting & Audit Compliance</li>
+            </ul>
           </div>
         </div>
 
-        {/* Card 2 */}
-        <div className="bg-gradient-to-br from-[#0c0c0c] to-[#0c0c0c] rounded-2xl border border-[#212227]  p-10">
-          <p className="text-xs tracking-widest uppercase mb-5">Enterprise</p>
-          <h3 className="text-2xl font-medium mb-4">
-            Agentic Solutions for Enterprise AI Transformation
-          </h3>
-          <p className="text-gray-400 mb-4">
-            Deeply personalize products and automate knowledge work.
-          </p>
-          <div className="overflow-hidden rounded-xl">
-            <img src={mapImg} alt="Enterprise AI" className="w-full h-auto object-cover" />
-          </div>
+        {/* Right Side Image */}
+        <div className="w-full md:w-1/2 flex justify-center items-center">
+          <img
+            src={chartImage}
+            alt="Department Modules Chart"
+            className="w-full max-w-[500px] h-auto object-contain"
+          />
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+        <section className="bg-black text-white py-16">
+  <div className="container mx-auto px-4 text-center">
+    <h2 className="text-3xl md:text-4xl font-semibold mb-6">
+      🤖 Introducing AI-Powered Nurse Robots
+    </h2>
+    <p className="text-lg text-gray-300 mb-8 max-w-3xl mx-auto">
+      The future of patient care is here. HealthRx AI seamlessly integrates with AI-powered nurse robots to enhance safety, optimize staff workload, and deliver 24/7 care automation.
+    </p>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto text-left">
+      <div className="bg-white/5 p-6 rounded-lg">
+        <p>✔ In-ward patient movement</p>
+      </div>
+      <div className="bg-white/5 p-6 rounded-lg">
+        <p>✔ Medicine delivery & dosage tracking</p>
+      </div>
+      <div className="bg-white/5 p-6 rounded-lg">
+        <p>✔ Routine checks and ward rounds</p>
+      </div>
+      <div className="bg-white/5 p-6 rounded-lg">
+        <p>✔ Collecting vitals & syncing with EMR</p>
+      </div>
+      <div className="bg-white/5 p-6 rounded-lg">
+        <p>✔ Voice-controlled patient interaction</p>
+      </div>
+      <div className="bg-white/5 p-6 rounded-lg">
+        <p>✔ Autonomous pharmacy dispatch within hospital</p>
+      </div>
+    </div>
+
+    <p className="text-md text-gray-400 mt-10 max-w-3xl mx-auto">
+      Empower your hospital with next-gen robotics, combining real-time intelligence and automation—only with HealthRx AI.
+    </p>
+  </div>
+</section>
+
+       <div className="bg-black text-white py-16 px-6">
+  <div className="max-w-6xl mx-auto text-center space-y-4">
+    <button className="px-4 py-1 bg-[#1a1a1a] text-sm tracking-widest text-indigo-400 rounded-full uppercase">
+      Predictive AI
+    </button>
+    <h2 className="text-4xl md:text-5xl font-semibold">
+      Early Disease Detection & Forecasting
+    </h2>
+    <p className="text-gray-300 max-w-3xl mx-auto text-lg">
+      Our intelligent prediction engine continuously learns from clinical data, vitals, history, and lifestyle indicators to enable proactive, AI-powered healthcare.
+    </p>
+  </div>
+
+  <div className="container mx-auto mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
+  {/* Card 1 */}
+  <div className="bg-gradient-to-br from-[#0c0c0c] to-[#0c0c0c] rounded-2xl border border-[#212227] p-10">
+    <h3 className="text-2xl font-medium mb-4">
+      Blockchain-Powered Data Security
+    </h3>
+    <p className="text-gray-400 mb-4">
+      Security and transparency are built into the DNA of HealthRx AI using advanced blockchain infrastructure.
+    </p>
+    <ul className="text-gray-400 list-disc list-inside space-y-1">
+      <li>Blockchain encryption for tamper-proof medical records</li>
+      <li>Complete audit trails for every action</li>
+      <li>Role-Based Access Control (RBAC)</li>
+    </ul>
+  </div>
+
+  {/* Card 2 */}
+  <div className="bg-gradient-to-br from-[#0c0c0c] to-[#0c0c0c] rounded-2xl border border-[#212227] p-10">
+    <h3 className="text-2xl font-medium mb-4">
+      Immutable Compliance & Traceability
+    </h3>
+    <p className="text-gray-400 mb-4">
+      Your data is not just protected — it’s immutable, traceable, and fully compliant.
+    </p>
+    <ul className="text-gray-400 list-disc list-inside space-y-1">
+      <li>Immutable logs & timestamped transaction history</li>
+      <li>Compliant with HIPAA, GDPR, NABH & HL7/FHIR standards</li>
+    </ul>
+  </div>
+</div>
+
+
+  <p className="text-gray-400 text-center mt-12 max-w-3xl mx-auto text-md">
+    Doctors receive real-time alerts and AI-generated suggestions for early diagnosis, reducing readmissions and improving clinical outcomes.
+  </p>
+</div>
 
         {/* Unified Section: Modules, Testimonials, Partners, Stats */}
         <section className="relative py-20 px-8 bg-black text-white overflow-hidden">
@@ -1264,7 +1336,204 @@ const Home = () => {
           }
         `}
       </style>
-    </LayoutWrapper>
+    
+<section className="bg-[#0f0f0f] text-white py-20 px-6">
+  <div className="max-w-6xl mx-auto text-center mb-12">
+    <div className="inline-block px-4 py-1 bg-[#1a1a1a] text-sm tracking-widest text-indigo-400 rounded-full uppercase mb-4">
+       Modules
+    </div>
+    <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4">
+      Modules That Power Every Department
+    </h2>
+    <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+      Streamline hospital operations, boost clinical intelligence, and ensure financial transparency with end-to-end modular solutions.
+    </p>
+  </div>
+
+  <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-left text-sm sm:text-base">
+    {/* Core Operational Modules */}
+    <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-gray-800 shadow-lg">
+      <h3 className="text-lg font-semibold text-indigo-400 mb-4">Core Operational Modules</h3>
+      <ul className="space-y-3 text-gray-300">
+        <li>✔ Patient Registration & Scheduling</li>
+        <li>✔ OPD/IPD Workflow</li>
+        <li>✔ Billing & TPA Integration</li>
+        <li>✔ Pharmacy, Laboratory & Radiology</li>
+        <li>✔ Discharge Summary & Case History</li>
+        <li>✔ Ward, Bed & OT Management</li>
+        <li>✔ Inventory & Biomedical Equipment</li>
+      </ul>
+    </div>
+
+    {/* Clinical Intelligence Modules */}
+    <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-gray-800 shadow-lg">
+      <h3 className="text-lg font-semibold text-indigo-400 mb-4">Clinical Intelligence Modules</h3>
+      <ul className="space-y-3 text-gray-300">
+        <li>✔ EMR/EHR with AI-Powered Insights</li>
+        <li>✔ Teleconsultation with e-Prescription</li>
+        <li>✔ Diet Planning, Nursing Notes, and Vitals</li>
+        <li>✔ Queue & Visitor Management</li>
+        <li>✔ In-App & WhatsApp Alerts</li>
+      </ul>
+    </div>
+
+    {/* Administrative & Financial Modules */}
+    <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-gray-800 shadow-lg">
+      <h3 className="text-lg font-semibold text-indigo-400 mb-4">Administrative & Financial Modules</h3>
+      <ul className="space-y-3 text-gray-300">
+        <li>✔ HR, Staff & Roster Management</li>
+        <li>✔ Payroll, Leave & Appraisal</li>
+        <li>✔ Asset & AMC Tracking</li>
+        <li>✔ Financial Reporting & Audit Compliance</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section className="bg-[#0e0e0e] text-white py-20 px-6">
+  <div className="max-w-6xl mx-auto text-center mb-12">
+    <div className="inline-block px-4 py-1 bg-[#1a1a1a] text-sm tracking-widest text-indigo-400 rounded-full uppercase mb-4">
+      🤖 AI Nurse Robots
+    </div>
+    <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4">
+      Introducing AI-Powered Nurse Robots
+    </h2>
+    <p className="text-gray-400 max-w-3xl mx-auto text-lg">
+      The future of patient care is here. HealthRx AI seamlessly integrates with intelligent nurse robots
+      to automate critical in-ward functions and elevate 24/7 care delivery.
+    </p>
+  </div>
+
+  <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+    <ul className="space-y-4 text-gray-300 text-base">
+      <li>✔ In-ward patient movement</li>
+      <li>✔ Medicine delivery & dosage tracking</li>
+      <li>✔ Routine checks and ward rounds</li>
+    </ul>
+    <ul className="space-y-4 text-gray-300 text-base">
+      <li>✔ Collecting vitals & syncing with EMR</li>
+      <li>✔ Voice-controlled patient interaction</li>
+      <li>✔ Autonomous pharmacy dispatch within hospital</li>
+    </ul>
+  </div>
+
+  <div className="text-center mt-12 max-w-3xl mx-auto text-gray-400 text-lg">
+    Enhance safety, optimize staff workload, and deliver intelligent automation across wards —
+    powered by HealthRx AI & Robotics.
+  </div>
+</section>
+
+<section className="bg-gradient-to-br from-[#0e0e0e] to-[#121212] text-white py-20 px-6">
+  <div className="max-w-6xl mx-auto text-center mb-12">
+    <div className="inline-block px-4 py-1 bg-[#0e0e0e] text-sm tracking-widest text-green-400 rounded-full uppercase mb-4">
+      🧠 Predictive Intelligence
+    </div>
+    <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4">
+      Predictive AI for Early Disease Detection
+    </h2>
+    <p className="text-gray-400 max-w-3xl mx-auto text-lg">
+      Our intelligent prediction engine analyzes vitals, history, lifestyle patterns, and clinical data to deliver real-time alerts and actionable insights — enabling doctors to act before symptoms worsen.
+    </p>
+  </div>
+
+  <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+    <ul className="space-y-4 text-gray-300 text-base">
+      <li>✔ Predict chronic disease onset (e.g., diabetes, cardiac risks)</li>
+      <li>✔ Detect potential outbreaks in ICU/wards</li>
+    </ul>
+    <ul className="space-y-4 text-gray-300 text-base">
+      <li>✔ Suggest preventive diagnostics for high-risk patients</li>
+      <li>✔ Forecast patient admission trends for capacity planning</li>
+    </ul>
+  </div>
+
+  <div className="text-center mt-12 max-w-3xl mx-auto text-gray-400 text-lg">
+    Reduce readmissions, empower early interventions, and improve outcomes with AI-powered foresight.
+  </div>
+</section>
+
+<section className="bg-gradient-to-b from-black to-[#0f0f0f] text-white py-20 px-6">
+  <div className="max-w-6xl mx-auto text-center mb-12">
+    <div className="inline-block px-4 py-1 bg-[#1a1a1a] text-sm tracking-widest text-cyan-400 rounded-full uppercase mb-4">
+      🔐 Blockchain Security
+    </div>
+    <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4">
+      Unbreakable Security with Blockchain Technology
+    </h2>
+    <p className="text-gray-400 max-w-3xl mx-auto text-lg">
+      Security and transparency are built into the DNA of HealthRx AI. Every transaction, access, and update is protected by decentralized integrity.
+    </p>
+  </div>
+
+  <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+    <ul className="space-y-4 text-gray-300 text-base">
+      <li>✔ Blockchain Encryption for tamper-proof medical records</li>
+      <li>✔ Complete Audit Trails for every action</li>
+      <li>✔ Role-Based Access Control (RBAC)</li>
+    </ul>
+    <ul className="space-y-4 text-gray-300 text-base">
+      <li>✔ Immutable Logs & Timestamped Transaction History</li>
+      <li>✔ Fully Compliant with HIPAA, GDPR, NABH, and HL7/FHIR Standards</li>
+    </ul>
+  </div>
+
+  <div className="text-center mt-12 text-sm text-gray-500">
+    Built for trust. Built for compliance. Built for the future.
+  </div>
+</section>
+
+<section className="bg-[#0d0d0d] text-white py-20 px-6">
+  <div className="max-w-6xl mx-auto text-center mb-12">
+    <div className="inline-block px-4 py-1 bg-[#1f1f1f] text-sm tracking-widest text-cyan-400 rounded-full uppercase mb-4">
+      📊 AI Dashboards
+    </div>
+    <h2 className="text-4xl md:text-5xl font-semibold mb-4">
+      AI Dashboards & Custom Analytics
+    </h2>
+    <p className="text-gray-400 max-w-3xl mx-auto text-lg">
+      Tailored dashboards for every stakeholder, powered by real-time data and AI-driven insights.
+    </p>
+  </div>
+
+  <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-gray-300 text-base">
+    <ul className="space-y-4">
+      <li>✔ Hospital Admins – Revenue, KPIs, Staff Productivity</li>
+      <li>✔ Doctors – Patient Queue, Lab Reports, Prescriptions</li>
+      <li>✔ Lab – Sample Tracking, Auto-Reports, AI Flags</li>
+    </ul>
+    <ul className="space-y-4">
+      <li>✔ Finance – Claims, Billing Cycle, Cost Analysis</li>
+      <li>✔ Inventory – Medicine Levels, Expiry Alerts</li>
+    </ul>
+  </div>
+
+  <div className="text-center mt-12 text-sm text-gray-500">
+    Visualize operations. Personalize decision-making. Act instantly.
+  </div>
+
+  {/* Testimonials Section */}
+  <div className="mt-20 text-center">
+    <h3 className="text-2xl font-semibold mb-6 text-white">💬 Trusted by Healthcare Leaders</h3>
+    <div className="max-w-4xl mx-auto grid gap-10 md:grid-cols-2 text-left">
+      <div className="bg-[#1a1a1a] p-6 rounded-lg shadow-md">
+        <p className="text-gray-300 italic mb-4">
+          "From robotic assistance to predictive analytics, HealthRx AI made our hospital futuristic."
+        </p>
+        <span className="font-medium text-white">– Dr. Sanjeev Kulkarni, Chairman, AlphaCare Hospital</span>
+      </div>
+      <div className="bg-[#1a1a1a] p-6 rounded-lg shadow-md">
+        <p className="text-gray-300 italic mb-4">
+          "The disease prediction system helped reduce patient readmissions by 25%."
+        </p>
+        <span className="font-medium text-white">– Dr. Ayesha Mittal, CMO, MedEra Multi-Specialty</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+    </HomeLayout>
   );
 };
 

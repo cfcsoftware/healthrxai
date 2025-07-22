@@ -14,7 +14,7 @@ export default function Navbar() {
           aria-label="Home"
         >
           <img
-            src="https://healthsrx.com/static/images/main_logo2.png"
+            src="/logo.png"
             alt="HealthRxAI Logo"
             className="h-10 w-auto"
             style={{ display: "block" }}
@@ -25,7 +25,7 @@ export default function Navbar() {
       {/* Navigation Links */}
       <div className="hidden md:flex gap-3">
         <Link
-          to="/Home"
+          to="/"
           className="text-blue-50 bg-transparent text-sm font-medium flex justify-center px-2 xl:px-4 border-0 relative font-inter z-10 hover:text-opacity-70"
         >
           Home
@@ -120,30 +120,14 @@ export default function Navbar() {
 
         {/* Pricing Dropdown */}
         <div className="relative group">
-          <button className="text-blue-50 bg-transparent text-sm font-medium flex justify-center px-2 xl:px-4 border-0 relative font-inter z-10 hover:text-opacity-70">
-            Pricing
-          </button>
-          <div className="absolute left-0 top-full mt-2 min-w-[220px] bg-gray-950 text-white rounded-lg shadow-xl opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 pointer-events-none group-hover:pointer-events-auto group-focus-within:pointer-events-auto transition-all duration-200 z-40 animate-fade-in-down">
-            <Link
-              to="/pricing/monthly-yearly"
-              className="block px-6 py-3 rounded-t-lg hover:opacity-60 transition-colors duration-150"
-            >
-              Monthly / Yearly Plans
-            </Link>
-            <Link
-              to="/pricing/enterprise"
-              className="block px-6 py-3 rounded-t-lg hover:opacity-60 transition-colors duration-150"
-            >
-              Enterprise Licensing
-            </Link>
-            <Link
-              to="/pricing/custom-deployment"
-              className="block px-6 py-3 rounded-t-lg hover:opacity-60 transition-colors duration-150"
-            >
-              Custom Deployment
-            </Link>
-          </div>
+           <Link
+          to="/pricing"
+          className="text-blue-50 bg-transparent text-sm font-medium flex justify-center px-2 xl:px-4 border-0 relative font-inter z-10 hover:text-opacity-70"
+        >
+          Pricing
+        </Link>
         </div>
+        
 
         {/* Resources Dropdown */}
         <div className="relative group">
@@ -164,7 +148,7 @@ export default function Navbar() {
               Case Studies
             </Link>
             <Link
-              to="/resources/documentation"
+              to="/resources/documentation-priduct"
               className="block px-6 py-3 rounded-t-lg hover:opacity-60 transition-colors duration-150"
             >
               Product Documentation
@@ -176,17 +160,20 @@ export default function Navbar() {
               Whitepapers / Ebooks
             </Link>
           </div>
+          
         </div>
+       
+            <Link
+          to="/contact"
+          className="text-blue-50 bg-transparent text-sm font-medium flex justify-center px-2 xl:px-4 border-0 relative font-inter z-10 hover:text-opacity-70"
+        >
+          Contact
+        </Link>
       </div>
 
       {/* Right Side Buttons */}
       <div className="flex gap-3 items-center text-sm">
-        <Link
-          to="https://calendly.com/cfcsoftwares/30min"
-          className="bg-white font-medium text-black px-4 py-2 rounded-lg shadow-md hover:opacity-50 transition-colors transition-all duration-200"
-        >
-          Book Demo →
-        </Link>
+      
         <Link
           to="/login"
           className="text-blue-50 bg-transparent text-sm font-medium flex justify-center px-2 xl:px-4 border-0 relative font-inter z-10 hover:text-opacity-70"

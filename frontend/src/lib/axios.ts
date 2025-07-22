@@ -1,3 +1,4 @@
+// src/lib/axios.ts
 import axios from 'axios';
 import { getTenant } from '../utils/getTenant';
 
@@ -24,6 +25,8 @@ if (
   // fallback for no tenant/subdomain
   baseURL = 'https://healthrxai.com/server';
 }
+console.log('[axios] Using baseURL:', baseURL);
+
 
 const api = axios.create({
   baseURL,
