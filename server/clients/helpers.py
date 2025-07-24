@@ -27,13 +27,41 @@ This file provides a utility function for generating JWT tokens, which are used 
 """
 #helpers.py
 from rest_framework_simplejwt.tokens import RefreshToken
+from .models import RolePermission,UserRole
 
+# def get_tokens_for_user(user):
+#     refresh = RefreshToken.for_user(user)
+#     return {
+#         # 'user': str(user),
+#         # 'user_id': str(user.id),
+#         "refresh": str(refresh),
+#         "access": str(refresh.access_token),
+#     }
+
+
+
+# new one for react setting is below
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
+
+    # Get role & permissions safely
+    user_role = UserRole.objects.filter(user=user).select_related("role").first()
+    if user_role:
+        permissions = [p.permission.code for p in RolePermission.objects.filter(role=user_role.role)]
+        role_id = user_role.role.id
+        role_name = user_role.role.name
+    else:
+        permissions = []
+        role_id = None
+        role_name = None
+
+    # Embed custom claims
+    refresh["user_permissions"] = permissions
+    refresh["role_id"] = role_id
+    refresh["role_name"] = role_name
+
     return {
-        # 'user': str(user),
-        # 'user_id': str(user.id),
         "refresh": str(refresh),
         "access": str(refresh.access_token),
     }

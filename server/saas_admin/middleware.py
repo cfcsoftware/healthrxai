@@ -49,23 +49,53 @@ class JWTAuthMiddleware:
 from django.http import HttpResponseForbidden
 from functools import wraps
 
+
+# new one for react setting is below
+
 def permission_required(permission_code):
-    """
-    Decorator to check if the user has the required permission.
-    """
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
-            # Get the user's role ID and permissions from the session
-            role_id = request.session.get('role_id')
-            role_name = request.session.get('role_name')
-            user_permissions = request.session.get('user_permissions', [])
-
-            # Check if the user has the required permission
-            if permission_code not in user_permissions:
-                return HttpResponseForbidden("You do not have permission to access this page.")
-
-            return view_func(request, *args, **kwargs)
+            # Get JWT token from Authorization header
+            auth_header = request.headers.get('Authorization')
+            if not auth_header:
+                return HttpResponseForbidden("No token found.")
+            
+            try:
+                token = auth_header.split()[1]  # "Bearer <token>"
+                payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+                user_permissions = payload.get("user_permissions", [])
+                
+                if permission_code not in user_permissions:
+                    return HttpResponseForbidden("You do not have permission to access this page.")
+                
+                return view_func(request, *args, **kwargs)
+            
+            except Exception as e:
+                print("Permission check error:", e)
+                return HttpResponseForbidden("Invalid or expired token.")
+            
         return _wrapped_view
     return decorator
+
+
+# def permission_required(permission_code):
+#     """
+#     Decorator to check if the user has the required permission.
+#     """
+#     def decorator(view_func):
+#         @wraps(view_func)
+#         def _wrapped_view(request, *args, **kwargs):
+#             # Get the user's role ID and permissions from the session
+#             role_id = request.session.get('role_id')
+#             role_name = request.session.get('role_name')
+#             user_permissions = request.session.get('user_permissions', [])
+
+#             # Check if the user has the required permission
+#             if permission_code not in user_permissions:
+#                 return HttpResponseForbidden("You do not have permission to access this page.")
+
+#             return view_func(request, *args, **kwargs)
+#         return _wrapped_view
+#     return decorator
 

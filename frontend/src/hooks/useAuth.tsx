@@ -1,3 +1,5 @@
+// src/hooks/useAuth.tsx
+
 import { useState, useEffect } from 'react';
 import { authService } from '../services/authService';
 

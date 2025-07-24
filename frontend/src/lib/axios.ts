@@ -25,8 +25,6 @@ if (
   // fallback for no tenant/subdomain
   baseURL = 'https://healthrxai.com/server';
 }
-console.log('[axios] Using baseURL:', baseURL);
-
 
 const api = axios.create({
   baseURL,
@@ -34,7 +32,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem("accessToken");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

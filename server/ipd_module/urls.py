@@ -4,7 +4,7 @@ from .views import *
 urlpatterns = [
     
     # IPD Module
-    path('list', ipd_list, name='ipd_list'),
+    path('ipd/list', ipd_list, name='ipd_list'),
     path("update/<int:pk>", ipd_update, name="ipd_update"),
     path('delete/<int:id>', ipd_delete, name='ipd_delete'),
     path('view/<int:id>', ipd_view, name='ipd_view'),

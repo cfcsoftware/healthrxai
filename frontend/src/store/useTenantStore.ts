@@ -1,3 +1,6 @@
+// src/store/useTenantStore.ts
+
+
 import { create } from 'zustand';
 import { getTenant } from '../utils/getTenant';
 

@@ -3,6 +3,16 @@ import { Routes, Route } from 'react-router-dom';
 import TenantLayout from '../layouts/TenantLayout';
 import HospitalDashboard from '../pages/tenant/Dashboard/dashboard';
 import PatientsList from '../pages/tenant/Patients/patients';
+import BillingList from '../pages/tenant/Billings/generalBillingList';
+import FinalBillingList from '../pages/tenant/Billings/finalBillingList';
+import AppointmentList from '../pages/tenant/Appointments/appointmentList';
+import IPDList from '../pages/tenant/IpdModule/ipdList';
+import BedList from '../pages/tenant/Bedmodule/bedview';
+// import PatientsList from '../pages/tenant/Patients/patients';
+// import PatientsList from '../pages/tenant/Patients/patients';
+
+
+
 
 import { useTenantStore } from '../store/useTenantStore';
 import { getTenant } from '../utils/getTenant';
@@ -25,6 +35,62 @@ const TenantRoutes = () => {
       <Route element={<TenantLayout />}>
         <Route path="dashboard" element={<HospitalDashboard />} /> 
         <Route path="patients" element={<PatientsList />} />
+         <Route path="billing/general-bills" element={<BillingList />} /> 
+        <Route path="billing/final-bills" element={<FinalBillingList />} /> 
+         <Route path="appointments" element={<AppointmentList />} /> 
+        <Route path="ipd-data" element={<IPDList />} /> 
+        <Route path="beds/list" element={<BedList />} />  
+      {/*  <Route path="patients" element={<PatientsList />} />
+        <Route path="dashboard" element={<HospitalDashboard />} /> 
+        <Route path="patients" element={<PatientsList />} />
+        <Route path="dashboard" element={<HospitalDashboard />} /> 
+        <Route path="patients" element={<PatientsList />} />        
+        <Route path="dashboard" element={<HospitalDashboard />} /> 
+        <Route path="patients" element={<PatientsList />} />
+        <Route path="dashboard" element={<HospitalDashboard />} /> 
+        <Route path="patients" element={<PatientsList />} />   */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
       </Route>
 
     {/* ) : (

@@ -37,10 +37,130 @@ const navLinks = [
 
     ]
   },
+
+  { 
+    label: 'Billings', 
+    icon: (
+      <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+        <rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16 3v4M8 3v4" />
+      </svg>
+    ),
+    dropdown: [
+      { to: '/billing/general-bills', label: 'General', icon: (
+        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
+        </svg>
+      ) },
+      { to: '/billing/final-bills', label: 'Final', icon: (
+        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16 3v4M8 3v4" />
+        </svg>
+      ) },
+
+    ]
+  },
+  { to: '/appointments', label: 'Appointments', icon: (
+    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-8 9 8" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 21V13h6v8" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21H3" />
+    </svg>
+  ) },
+  { to: '/ipd-data', label: 'IPD Module', icon: (
+    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-8 9 8" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 21V13h6v8" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21H3" />
+    </svg>
+  ) },
+  { to: '/beds/list', label: 'Bed Module', icon: (
+    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-8 9 8" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 21V13h6v8" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21H3" />
+    </svg>
+  ) },
+  { 
+    label: 'Pharmacy', 
+    icon: (
+      <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+        <rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16 3v4M8 3v4" />
+      </svg>
+    ),
+    dropdown: [
+      { to: '/billing/general-bills', label: 'General', icon: (
+        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
+        </svg>
+      ) },
+      { to: '/billing/final-bills', label: 'Final', icon: (
+        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16 3v4M8 3v4" />
+        </svg>
+      ) },
+
+    ]
+  },
+  { 
+    label: 'Pathology', 
+    icon: (
+      <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+        <rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16 3v4M8 3v4" />
+      </svg>
+    ),
+    dropdown: [
+      { to: '/billing/general-bills', label: 'General', icon: (
+        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
+        </svg>
+      ) },
+      { to: '/billing/final-bills', label: 'Final', icon: (
+        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16 3v4M8 3v4" />
+        </svg>
+      ) },
+
+    ]
+  },
+  { 
+    label: 'Radiology', 
+    icon: (
+      <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+        <rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16 3v4M8 3v4" />
+      </svg>
+    ),
+    dropdown: [
+      { to: '/billing/general-bills', label: 'General', icon: (
+        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
+        </svg>
+      ) },
+      { to: '/billing/final-bills', label: 'Final', icon: (
+        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16 3v4M8 3v4" />
+        </svg>
+      ) },
+
+    ]
+  },
+
+
   // Add more links here as needed
 ];
 
-const logoUrl = "/logo.png";
+const logoUrl = "/logo-dark.png";
 
 const TenantSidebar = () => {
   const location = useLocation();
@@ -69,7 +189,7 @@ const TenantSidebar = () => {
         <img
           src={logoUrl}
           alt="Logo"
-          className="h-20 w-auto object-contain drop-shadow-lg transition-transform duration-500 hover:scale-105"
+          className="h-20 w-50 object-contain drop-shadow-lg transition-transform duration-500 hover:scale-100"
         />
       </div>
       {/* Sidebar content with scroll */}

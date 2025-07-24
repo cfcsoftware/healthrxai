@@ -31,6 +31,9 @@ def bed_management(request):
         }
 
         print("Grouped Beds:", context["grouped_beds"])
+        
+        if request.GET.get('api')=='true':
+            return JsonResponse({'data': context})
 
         return TemplateResponse(request, 'bed-management/list.html', context)
 

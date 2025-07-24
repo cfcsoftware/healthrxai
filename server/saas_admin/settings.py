@@ -282,13 +282,16 @@ TEMPLATES = [
     },
 ]
 
+
 CSRF_TRUSTED_ORIGINS = [
     "https://healthrxai.com",
     "https://www.healthrxai.com",
     "https://*.healthrxai.com",
     "http://localhost",
+    "http://*.localhost:8000",
     "http://localhost:3000",
     "http://localhost:5173",
+    "http://*.localhost:5173",
     "http://localhost:5174",
     "http://127.0.0.1",
     "http://127.0.0.1:3000",

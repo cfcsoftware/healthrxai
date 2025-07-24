@@ -72,7 +72,7 @@ def patient_add(request):
         phone = request.POST.get('phone')
         
         if not phone:
-            return JsonResponse({"error": "Enter the Patient Mobile number."})
+            return JsonResponse({"error": "Enter the Patient phone number."})
         first_four_letter = name[:3].upper() if name else ''
         last_patient = Patient.objects.order_by('-id').first()
         

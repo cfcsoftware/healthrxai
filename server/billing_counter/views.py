@@ -475,6 +475,8 @@ def get_billing_details_by_patient_id(request, patient_id):
 def final_bill(request):   
         bills = FinalBilling.objects.all().order_by('-updated_at')
         final_bills = FinalBillSerializer(bills, many=True) 
+        if request.GET.get('api')=='true':
+            return JsonResponse({'response':200, "final_bills": final_bills.data})
         return TemplateResponse(request, 'billing-counter/final-billing-list.html', {"final_bills": final_bills.data})
 
     

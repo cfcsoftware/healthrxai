@@ -1,93 +1,140 @@
 import React, { useState } from "react";
 import HomeLayout from "../../layouts/HomeLayout";
 
-type ValidityOption = "1 Month" | "6 Months" | "1 Year" | "Lifetime";
+type Currency = "INR" | "USD";
+type BillingCycle = "monthly" | "yearly";
 
-const validityOptions: ValidityOption[] = [
-  "1 Month",
-  "6 Months",
-  "1 Year",
-  "Lifetime",
-];
+type Plan = {
+  name: string;
+  prices: {
+    monthly: { INR: string; USD: string };
+    yearly: { INR: string; USD: string };
+  };
+  features: string[];
+  popular?: boolean;
+};
 
-const plans = [
+const plans: Plan[] = [
   {
     name: "Basic",
     prices: {
-      "1 Month": "₹999",
-      "6 Months": "₹5,999",
-      "1 Year": "₹9,999",
-      "Lifetime": "₹29,999",
+      monthly: { INR: "₹4,999", USD: "$60" },
+      yearly: { INR: "₹49,999", USD: "$600" },
     },
-    features: ["EMR Access", "Appointments", "Billing", "1 Branch, 5 Users"],
+    features: [
+      "OPD/IPD Management",
+      "Patient Registration & Appointments",
+      "EMR/EHR Access",
+      "Billing & Payments",
+      "1 Branch, 10 Users",
+    ],
   },
   {
-    name: "Gold",
+    name: "Professional",
     prices: {
-      "1 Month": "₹1,999",
-      "6 Months": "₹8,999",
-      "1 Year": "₹14,999",
-      "Lifetime": "₹39,999",
+      monthly: { INR: "₹9,999", USD: "$120" },
+      yearly: { INR: "₹99,999", USD: "$1,200" },
     },
     features: [
       "All Basic Features",
-      "Lab + Pharmacy",
-      "WhatsApp Reminders",
-      "Multi Branch, 25 Users",
+      "Lab & Radiology Integration",
+      "Pharmacy + Inventory",
+      "Telemedicine + WhatsApp Alerts",
+      "Multi-branch, 50 Users",
     ],
     popular: true,
   },
   {
-    name: "Platinum",
+    name: "Enterprise",
     prices: {
-      "1 Month": "₹2,999",
-      "6 Months": "₹11,999",
-      "1 Year": "₹19,999",
-      "Lifetime": "₹49,999",
+      monthly: { INR: "Custom", USD: "Custom" },
+      yearly: { INR: "Custom", USD: "Custom" },
     },
     features: [
-      "All Gold Features",
-      "AI Smart Analytics",
-      "Insurance Integration",
-      "Unlimited Users",
+      "All Professional Features",
+      "AI Smart Diagnostics",
+      "Insurance & TPA Claims",
+      "Dedicated Support Manager",
+      "Unlimited Users & Branches",
     ],
   },
 ];
 
-const PricingPage: React.FC = () => {
-  const [validity, setValidity] = useState<ValidityOption>("1 Month");
+const Pricing: React.FC = () => {
+  const [currency, setCurrency] = useState<Currency>("INR");
+  const [billingCycle, setBillingCycle] = useState<BillingCycle>("monthly");
 
   return (
     <HomeLayout>
       <section className="min-h-screen bg-black text-white py-20 px-4 md:px-10">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-[#00CFFF] mb-4">
-            Flexible Pricing for Every Practice
+            Transparent, Scalable Pricing
           </h1>
           <p className="text-gray-400 text-lg mb-10">
-            Choose the plan and duration that fits your healthcare goals.
+            Choose the plan that fits your healthcare organization's needs.
           </p>
 
-          {/* Validity Toggle */}
-          <div className="flex flex-wrap justify-center gap-4 mb-14">
-            {validityOptions.map((option) => (
+          {/* Toggle Controls */}
+          <div className="flex flex-col md:flex-row justify-center gap-4 mb-14">
+            {/* Currency Toggle */}
+            <div className="flex items-center gap-3">
+              <span className="text-sm">Currency:</span>
               <button
-                key={option}
-                onClick={() => setValidity(option)}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition ${
-                  validity === option
+                onClick={() => setCurrency("INR")}
+                className={`px-4 py-2 rounded-lg ${
+                  currency === "INR"
                     ? "bg-[#00CFFF] text-black"
                     : "bg-gray-800 hover:bg-gray-700"
                 }`}
               >
-                {option}
+                ₹ INR
               </button>
-            ))}
-          </div>
+              <button
+                onClick={() => setCurrency("USD")}
+                className={`px-4 py-2 rounded-lg ${
+                  currency === "USD"
+                    ? "bg-[#00CFFF] text-black"
+                    : "bg-gray-800 hover:bg-gray-700"
+                }`}
+              >
+                $ USD
+              </button>
+            </div>
 
-          {/* Pricing Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {plans.map((plan) => (
+            {/* Billing Cycle Toggle */}
+            <div className="flex items-center gap-3">
+              <span className="text-sm">Billing:</span>
+              <button
+                onClick={() => setBillingCycle("monthly")}
+                className={`px-4 py-2 rounded-lg ${
+                  billingCycle === "monthly"
+                    ? "bg-[#00CFFF] text-black"
+                    : "bg-gray-800 hover:bg-gray-700"
+                }`}
+              >
+                Monthly
+              </button>
+              <button
+                onClick={() => setBillingCycle("yearly")}
+                className={`px-4 py-2 rounded-lg ${
+                  billingCycle === "yearly"
+                    ? "bg-[#00CFFF] text-black"
+                    : "bg-gray-800 hover:bg-gray-700"
+                }`}
+              >
+                Yearly
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {plans.map((plan) => {
+            const price = plan.prices[billingCycle][currency];
+
+            return (
               <div
                 key={plan.name}
                 className={`rounded-2xl border p-8 shadow-lg transition-transform duration-300 hover:scale-[1.02] ${
@@ -98,8 +145,10 @@ const PricingPage: React.FC = () => {
               >
                 <h3 className="text-2xl font-semibold mb-2">{plan.name}</h3>
                 <p className="text-3xl font-bold mb-4">
-                  {plan.prices[validity]}
-                  <span className="text-sm text-gray-400 ml-1">({validity})</span>
+                  {price}{" "}
+                  {price !== "Custom" && (
+                    <span className="text-sm text-gray-400">/{billingCycle}</span>
+                  )}
                 </p>
                 <ul className="space-y-3 mb-6 text-gray-200 text-sm">
                   {plan.features.map((feature, idx) => (
@@ -115,17 +164,15 @@ const PricingPage: React.FC = () => {
                       : "bg-[#00CFFF] hover:bg-[#00b8eb]"
                   }`}
                 >
-                  {plan.prices[validity] === "Custom"
-                    ? "Contact Sales"
-                    : "Get Started"}
+                  {price === "Custom" ? "Contact Sales" : "Get Started"}
                 </button>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </section>
     </HomeLayout>
   );
 };
 
-export default PricingPage;
+export default Pricing;

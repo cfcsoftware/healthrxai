@@ -1,347 +1,288 @@
-// src/pages/tenant/LoginForm.tsx
-import React, { useState } from 'react';
-import { authService } from '../../../services/authService';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+const TenantLogin = () => {
+  const [hospitalId, setHospitalId] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-const TenantLoginForm = () => {
-  const [step, setStep] = useState<1 | 2>(1);
-  const [hospitalId, setHospitalId] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleHospitalSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
+  const handleLogin = async () => {
+    setError("");
+    setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:8000/get-domain', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hospital_id: hospitalId })
+
+      // Handle localhost and live environments for API base URL
+      const isLocalhost =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
+      const apiBaseUrl = isLocalhost
+        ? "http://localhost:8000"
+        : "https://healthrxai.com";
+
+      const getDomainRes = await fetch(`${apiBaseUrl}/server/get-domain`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ hospital_id: hospitalId }),
       });
 
-      const data = await res.json();
+      const domainData = await getDomainRes.json();
 
-      if (!data.success || !data.hospital_name) {
-        throw new Error('Invalid hospital ID.');
+      if (!domainData.success || !domainData.domain) {
+        setError("Invalid Hospital ID");
+        setIsLoading(false);
+        return;
       }
 
-      // Save tenant
-      localStorage.setItem('tenant', data.hospital_name);
-      setStep(2); // Move to login form
-    } catch (err: any) {
-      setError(err.message || 'Failed to resolve hospital ID');
+      const tenantDomain = domainData.domain; // 
+      const finaltenantDomain = `${tenantDomain}/server`
+      localStorage.setItem("finaltenantDomain",finaltenantDomain);
+
+
+      const loginRes = await fetch(`${tenantDomain}/server/login?api=true`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!loginRes.ok) {
+        setError("Invalid credentials or server error.");
+        setIsLoading(false);
+        return;
+      }
+
+      const loginData = await loginRes.json();
+
+
+      localStorage.setItem("accessToken", loginData.access_token.access);
+      localStorage.setItem("refreshToken", loginData.access_token.refresh);
+      localStorage.setItem("tenantId", loginData.tenant_id);
+      localStorage.setItem("roleId", loginData.role_id);
+      localStorage.setItem("roleName", loginData.role_name);
+      localStorage.setItem("tenantID", loginData.tenant_id);
+      localStorage.setItem("roleId", loginData.role_id);
+      localStorage.setItem("isTenantAdmin", loginData.is_tenant_admin);
+      localStorage.setItem("username", loginData.username);
+      localStorage.setItem("ProfileImg", loginData.profile_image);
+      
+      localStorage.setItem("userPermissions", loginData.user_permissions);
+
+
+      navigate("/dashboard");
+    } catch (err) {
+      console.error(err);
+      setError("Login failed. Please check your details.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const handleLoginSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+  // Accept uppercase in hospital id field and add eye button to toggle password visibility
+ 
+  // ...rest of your imports
 
-    try {
-      await authService.login({ email, password });
-      window.location.href = '/dashboard'; // or wherever you want to redirect
-    } catch (err: any) {
-      setError(err.message || 'Login failed.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // ...component code above
+
+  // Add state for password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded-xl shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-center">
-        {step === 1 ? 'Enter Hospital ID' : 'Tenant Login'}
-      </h2>
-
-      {error && <div className="mb-4 text-sm text-red-600">{error}</div>}
-
-      {step === 1 && (
-        <form onSubmit={handleHospitalSubmit} className="space-y-4">
-          <input
-            type="text"
-            value={hospitalId}
-            onChange={(e) => setHospitalId(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:ring focus:outline-none"
-            placeholder="Hospital ID (e.g. HRX1002)"
-            required
-          />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-blue-50 via-blue-100 to-blue-200 relative overflow-hidden">
+      {/* Decorative SVG background */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <svg
+          className="absolute left-0 top-0 w-1/2 h-1/2 opacity-20"
+          viewBox="0 0 400 400"
+          fill="none"
+        >
+          <circle cx="200" cy="200" r="200" fill="url(#hospitalGradient1)" />
+          <defs>
+            <linearGradient id="hospitalGradient1" x1="0" y1="0" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#3b82f6" />
+              <stop offset="1" stopColor="#06b6d4" />
+            </linearGradient>
+          </defs>
+          {/* Plus sign */}
+          <g>
+            <g className="animate-pulse" style={{ transformOrigin: "200px 200px" }}>
+              <rect
+                x="170"
+                y="100"
+                width="60"
+                height="200"
+                rx="18"
+                fill="#fff"
+                opacity="0.9"
+              >
+                <animate
+                  attributeName="opacity"
+                  values="0.7;1;0.7"
+                  dur="1.5s"
+                  repeatCount="indefinite"
+                />
+              </rect>
+              <rect
+                x="100"
+                y="170"
+                width="200"
+                height="60"
+                rx="18"
+                fill="#fff"
+                opacity="0.9"
+              >
+                <animate
+                  attributeName="opacity"
+                  values="0.7;1;0.7"
+                  dur="1.5s"
+                  repeatCount="indefinite"
+                />
+              </rect>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div className="relative z-10 w-full max-w-md bg-white/90 rounded-2xl shadow-xl p-8 flex flex-col gap-6 border border-blue-100 backdrop-blur-md transition-all duration-300">
+        <div className="flex flex-col items-center gap-2">
+          <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-blue-400 to-cyan-400 flex items-center justify-center shadow-lg mb-2">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <rect x="14" y="4" width="4" height="24" rx="2" fill="#fff" />
+              <rect x="4" y="14" width="24" height="4" rx="2" fill="#fff" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-blue-900 tracking-tight">Hospital Login</h2>
+          <p className="text-blue-500 text-sm">Sign in to your hospital workspace</p>
+        </div>
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={e => {
+            e.preventDefault();
+            if (!isLoading) handleLogin();
+          }}
+        >
+          <div className="flex flex-col gap-1">
+            <label htmlFor="hospitalId" className="text-sm font-medium text-blue-700">
+              Hospital ID
+            </label>
+            <input
+              id="hospitalId"
+              type="text"
+              value={hospitalId}
+              onChange={(e) => setHospitalId(e.target.value.toUpperCase())}
+              placeholder="e.g., HRX1000"
+              className="px-4 py-2 rounded-lg border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 bg-white uppercase"
+              autoComplete="off"
+              required
+              style={{ textTransform: "uppercase" }}
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="email" className="text-sm font-medium text-blue-700">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="px-4 py-2 rounded-lg border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 bg-white"
+              autoComplete="email"
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="password" className="text-sm font-medium text-blue-700">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="px-4 py-2 rounded-lg border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 bg-white w-full pr-10"
+                autoComplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                tabIndex={-1}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-400 hover:text-blue-600 focus:outline-none"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  // Eye open icon
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                ) : (
+                  // Eye closed icon
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.956 9.956 0 012.293-3.95m3.25-2.61A9.956 9.956 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.043 5.197M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
           <button
             type="submit"
-            disabled={loading}
-            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className={`w-full py-2 mt-2 rounded-lg bg-gradient-to-tr from-blue-500 to-cyan-500 text-white font-semibold shadow-md hover:from-blue-600 hover:to-cyan-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 flex items-center justify-center gap-2 ${
+              isLoading ? "opacity-60 cursor-not-allowed" : ""
+            }`}
+            disabled={isLoading}
           >
-            {loading ? 'Validating...' : 'Continue'}
+            {isLoading ? (
+              <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
-      )}
-
-      {step === 2 && (
-        <form onSubmit={handleLoginSubmit} className="space-y-4">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:ring focus:outline-none"
-            placeholder="Email"
-            required
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:ring focus:outline-none"
-            placeholder="Password"
-            required
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        {error && (
+          <div
+            className="transition-all duration-300 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-2 text-sm mt-2 animate-fade-in"
+            style={{ animation: "fade-in 0.3s" }}
           >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-      )}
+            {error}
+          </div>
+        )}
+      </div>
+      <style>
+        {`
+          @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px);}
+            to { opacity: 1; transform: translateY(0);}
+          }
+          .animate-fade-in {
+            animation: fade-in 0.3s;
+          }
+        `}
+      </style>
     </div>
   );
 };
 
-export default TenantLoginForm;
-
-
-
-
-
-
-
-// import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { toast } from "sonner";
-// // import { useAuth } from "../../../hooks/useAuth";
-// import api from '../../../lib/axios';
-// import axios from 'axios'; // native axios
-
-
-
-// export default function LoginPage() {
-//   const [hospitalID, setHospitalID] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const navigate = useNavigate();
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-
-//     if (!hospitalID || !email || !password) {
-//       toast.error("Please fill in all fields");
-//       return;
-//     }
-
-//     if (!email.includes('@')) {
-//       toast.error("Please enter a valid email address");
-//       return;
-//     }
-
-//     try {
-//       // gt the hospital_name from hospital ID......
-//       const domainRes = await api.post('/get-domain', { hospital_id: hospitalID });
-//       const domainData = domainRes.data;
-
-//       if (!domainData.success) {
-//         toast.error("Invalid Hospital ID");
-//         return;
-//       }
-
-//       let { domain } = domainData;
-//       if (!domain.endsWith('/server')) {
-//         domain = domain.replace(/\/$/, '') + '/server';
-//       }
-//       // Store the domain in localStorage for reuse
-//       localStorage.setItem('tenant_server_domain', domain);
-
-//       // Reuse the domain from localStorage for login API call
-//       const tenantDomain = localStorage.getItem('tenant_server_domain');
-//       if (!tenantDomain) {
-//         toast.error("Tenant server domain not found. Please try again.");
-//         return;
-//       }
-
-//       // Use the stored domain as the baseURL for login
-
-//       const loginRes = await axios.post(
-//         `${tenantDomain}/login?api=true`,
-//         { email, password },
-//         {
-//           withCredentials: true,
-//         }
-//       );
-//       console.log(loginRes)
-
-//       const loginData = loginRes.data;
-//       console.log(loginData)
-
-//       const accessToken = loginData.access_token?.access || loginData.access_token;
-//       localStorage.setItem('access_token', accessToken);
-//       // appening the token to the api instanvce to use again and gain....
-//       api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-
-//       // Save all relevant login data to localStorage
-//       localStorage.setItem('access_token', loginData.access_token?.access || loginData.access_token);
-//       localStorage.setItem('refresh_token', loginData.access_token?.refresh || '');
-//       localStorage.setItem('email', loginData.email || '');
-//       localStorage.setItem('username', loginData.username || '');
-//       localStorage.setItem('is_tenant_admin', JSON.stringify(loginData.is_tenant_admin ?? false));
-//       localStorage.setItem('tenant_id', loginData.tenant_id ? String(loginData.tenant_id) : '');
-//       localStorage.setItem('role_id', loginData.role_id ? String(loginData.role_id) : '');
-//       localStorage.setItem('role_name', loginData.role_name || '');
-//       localStorage.setItem('user_permissions', JSON.stringify(loginData.user_permissions || []));
-//       localStorage.setItem('profile_image', loginData.profile_image || '');
-//       toast.success("Welcome to you Smart AI Hospital.");
-
-//       navigate("/dashboard");
-//     } catch (error) {
-//       console.error("Login error:", error);
-
-//       let message = "Login failed. Please check your credentials.";
-//       if (
-//         error &&
-//         typeof error === "object" &&
-//         "response" in error &&
-//         typeof (error as { response?: { data?: { message?: unknown } } }).response?.data?.message === "string"
-//       ) {
-//         message = (error as { response?: { data?: { message?: string } } }).response?.data?.message ?? message;
-//       }
-
-//       toast.error(message);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-gradient-to-tr from-[#0f172a] via-[#1e293b] to-[#334155]">
-//       {/* Left Welcome Section */}
-//       <div className="relative overflow-hidden min-h-screen flex items-center justify-center">
-//         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/70 to-blue-700/80 backdrop-blur-[6px]"></div>
-//         <div className="relative z-10 flex flex-col items-center text-white text-center px-10 py-20 animate-fade-in-down">
-//           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight drop-shadow-2xl animate-fade-in">
-//             Welcome to <span className="text-blue-300">HealthRxAI</span>
-//           </h1>
-//           <p className="text-lg md:text-xl font-light mb-2 opacity-90 animate-fade-in-slow">
-//             Elevating Healthcare, Empowering You
-//           </p>
-//           <div className="w-24 h-1 bg-gradient-to-r from-blue-400 via-blue-200 to-blue-400 rounded-full mt-6 mx-auto animate-pulse"></div>
-//         </div>
-//         <style>{`
-//           @keyframes fadeInDown {
-//             0% { opacity: 0; transform: translateY(-30px);}
-//             100% { opacity: 1; transform: translateY(0);}
-//           }
-//           @keyframes fadeIn {
-//             0% { opacity: 0;}
-//             100% { opacity: 1;}
-//           }
-//           .animate-fade-in-down {
-//             animation: fadeInDown 1.1s cubic-bezier(0.4,0,0.2,1) both;
-//           }
-//           .animate-fade-in {
-//             animation: fadeIn 1.5s 0.2s both;
-//           }
-//           .animate-fade-in-slow {
-//             animation: fadeIn 2.2s 0.6s both;
-//           }
-//         `}</style>
-//       </div>
-
-//       {/* Right Login Form */}
-//       <div className="flex items-center justify-center bg-transparent p-6">
-//         <div className="w-full max-w-md bg-gradient-to-br from-white/10 via-blue-900/30 to-blue-800/40 backdrop-blur-xl p-10 rounded-2xl shadow-2xl border border-blue-900/30 animate-fade-in-down glassy-dark">
-//           <div className="flex justify-center mb-8">
-//             <img
-//               src="https://healthsrx.com/static/images/main_logo2.png"
-//               alt="HealthRx AI Logo"
-//               width={150}
-//               height={44}
-//               className="drop-shadow-xl animate-fade-in"
-//               style={{ filter: "drop-shadow(0 2px 16px rgba(59,130,246,0.18))" }}
-//             />
-//           </div>
-//           <h2 className="text-2xl font-bold text-center mb-2 text-blue-100 animate-fade-in">
-//             Sign in to your account
-//           </h2>
-//           <p className="text-sm text-blue-300/80 text-center mb-8 animate-fade-in-slow">
-//             Access your hospital dashboard securely
-//           </p>
-//           <form className="space-y-5" onSubmit={handleSubmit}>
-//             <div>
-//               <label className="block text-sm text-blue-200 font-medium mb-1">
-//                 Hospital ID <span className="text-red-400">*</span>
-//               </label>
-//               <input
-//                 type="text"
-//                 value={hospitalID}
-//                 onChange={(e) => setHospitalID(e.target.value.toUpperCase())}
-//                 className="w-full border border-blue-800/30 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow shadow-sm bg-white/10 text-blue-100 placeholder-blue-300/60 backdrop-blur-md"
-//                 placeholder="e.g.,HRX1001"
-//                 style={{ textTransform: "uppercase" }}
-//               />
-//             </div>
-//             <div>
-//               <label className="block text-sm text-blue-200 font-medium mb-1">
-//                 Email Address <span className="text-red-400">*</span>
-//               </label>
-//               <input
-//                 type="email"
-//                 value={email}
-//                 onChange={(e) => setEmail(e.target.value)}
-//                 className="w-full border border-blue-800/30 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow shadow-sm bg-white/10 text-blue-100 placeholder-blue-300/60 backdrop-blur-md"
-//                 placeholder="admin@examplehospital.com"
-//                 autoComplete="username"
-//               />
-//             </div>
-//             <div>
-//               <label className="block text-sm text-blue-200 font-medium mb-1">
-//                 Password <span className="text-red-400">*</span>
-//               </label>
-//               <input
-//                 type="password"
-//                 value={password}
-//                 onChange={(e) => setPassword(e.target.value)}
-//                 className="w-full border border-blue-800/30 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow shadow-sm bg-white/10 text-blue-100 placeholder-blue-300/60 backdrop-blur-md"
-//                 placeholder="••••••••"
-//                 autoComplete="current-password"
-//               />
-//             </div>
-//             <button
-//               type="submit"
-//               className="w-full bg-gradient-to-r from-blue-700/90 via-blue-600/90 to-blue-500/90 hover:from-blue-800 hover:to-blue-600 text-white py-2.5 rounded-lg font-semibold shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-2xl animate-pulse-soft backdrop-blur-md border border-blue-900/30"
-//             >
-//               Sign In
-//             </button>
-//           </form>
-//           <style>{`
-//             @keyframes pulseSoft {
-//               0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.18); }
-//               70% { box-shadow: 0 0 0 14px rgba(59,130,246,0); }
-//               100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
-//             }
-//             .animate-pulse-soft {
-//               animation: pulseSoft 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-//             }
-//             .glassy-dark {
-//               box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
-//               border: 1.5px solid rgba(59,130,246,0.12);
-//               background-clip: padding-box;
-//               backdrop-filter: blur(18px) saturate(140%);
-//               -webkit-backdrop-filter: blur(18px) saturate(140%);
-//             }
-//           `}</style>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+export default TenantLogin;

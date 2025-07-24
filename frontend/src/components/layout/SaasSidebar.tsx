@@ -87,13 +87,12 @@ const navLinks = [
   ) },
 ];
 
-const logoUrl = "/logo.png"; // Replace with your logo
+const logoUrl = "/logo-dark.png"; 
 
 const SaasSidebar = () => {
   const location = useLocation();
   const [openDropdown, setOpenDropdown] = useState(false);
 
-  // Helper to check if any dropdown link is active
   const isDropdownActive = (dropdown) =>
     dropdown && dropdown.some(({ to }) => location.pathname.startsWith(to));
 
@@ -116,7 +115,7 @@ const SaasSidebar = () => {
         <img
           src={logoUrl}
           alt="Logo"
-          className="h-25 w-auto object-contain drop-shadow-lg transition-transform duration-500 hover:scale-105"
+          className="h-25 w-50 object-contain drop-shadow-lg transition-transform duration-500 hover:scale-105"
         />
       </div>
       {/* Sidebar content with scroll */}
