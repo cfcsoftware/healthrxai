@@ -116,16 +116,16 @@ const navLinks = [
       </svg>
     ),
     dropdown: [
-      { to: '/billing/general-bills', label: 'General', icon: (
-        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
-        </svg>
-      ) },
       { to: '/billing/final-bills', label: 'Final', icon: (
         <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
           <rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
           <path strokeLinecap="round" strokeLinejoin="round" d="M16 3v4M8 3v4" />
+        </svg>
+      ) },
+      { to: '/pathology/tests/list', label: 'Tests', icon: (
+        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
         </svg>
       ) },
 
@@ -146,7 +146,7 @@ const navLinks = [
           <path strokeLinecap="round" strokeLinejoin="round" d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
         </svg>
       ) },
-      { to: '/billing/final-bills', label: 'Final', icon: (
+      { to: '/radiology/tests/list', label: 'Tests', icon: (
         <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
           <rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
           <path strokeLinecap="round" strokeLinejoin="round" d="M16 3v4M8 3v4" />

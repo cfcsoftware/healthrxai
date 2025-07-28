@@ -8,8 +8,8 @@ import FinalBillingList from '../pages/tenant/Billings/finalBillingList';
 import AppointmentList from '../pages/tenant/Appointments/appointmentList';
 import IPDList from '../pages/tenant/IpdModule/ipdList';
 import BedList from '../pages/tenant/Bedmodule/bedview';
-// import PatientsList from '../pages/tenant/Patients/patients';
-// import PatientsList from '../pages/tenant/Patients/patients';
+import PathologyTestList from '../pages/tenant/Pathology/Tests/testList';
+import RadiologyTestList from '../pages/tenant/Radiology/Tests/testList';
 
 
 
@@ -40,9 +40,9 @@ const TenantRoutes = () => {
          <Route path="appointments" element={<AppointmentList />} /> 
         <Route path="ipd-data" element={<IPDList />} /> 
         <Route path="beds/list" element={<BedList />} />  
+        <Route path="pathology/tests/list" element={<PathologyTestList />} /> 
+        <Route path="pathology/tests/list" element={<RadiologyTestList />} />
       {/*  <Route path="patients" element={<PatientsList />} />
-        <Route path="dashboard" element={<HospitalDashboard />} /> 
-        <Route path="patients" element={<PatientsList />} />
         <Route path="dashboard" element={<HospitalDashboard />} /> 
         <Route path="patients" element={<PatientsList />} />        
         <Route path="dashboard" element={<HospitalDashboard />} /> 
