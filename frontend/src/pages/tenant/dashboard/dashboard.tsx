@@ -1,331 +1,723 @@
+"use client";
+import React, { useState } from "react";
+import {
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Area,
+  AreaChart,
+} from "recharts";
+import {
+  Users,
+  DollarSign,
+  Activity,
+  Calendar,
+  User,
+  Filter,
+  Search,
+  MoreVertical,
+  Plus,
+  Download,
+  ArrowUp,
+  ArrowDown,
+  Eye,
+  Edit,
+  ChevronDown,
+  Bell,
+  Settings,
+  LogOut,
+  Menu,
+} from "lucide-react";
 
-const stats = [
+const monthlyData = [
+  { month: "Jan", patients: 1200, revenue: 45000, appointments: 850 },
+  { month: "Feb", patients: 1450, revenue: 52000, appointments: 1020 },
+  { month: "Mar", patients: 1600, revenue: 58000, appointments: 1150 },
+  { month: "Apr", patients: 1350, revenue: 49000, appointments: 980 },
+  { month: "May", patients: 1800, revenue: 65000, appointments: 1280 },
+  { month: "Jun", patients: 1650, revenue: 59000, appointments: 1190 },
+  { month: "Jul", patients: 1920, revenue: 72000, appointments: 1350 },
+  { month: "Aug", patients: 1750, revenue: 64000, appointments: 1220 },
+  { month: "Sep", patients: 1650, revenue: 58000, appointments: 1180 },
+  { month: "Oct", patients: 1850, revenue: 68000, appointments: 1300 },
+  { month: "Nov", patients: 1600, revenue: 55000, appointments: 1120 },
+  { month: "Dec", patients: 1950, revenue: 75000, appointments: 1400 },
+];
+
+const departmentData = [
+  { name: "Cardiology", value: 32, color: "#3B82F6" },
+  { name: "Pediatrics", value: 24, color: "#10B981" },
+  { name: "Emergency", value: 18, color: "#F59E0B" },
+  { name: "Surgery", value: 16, color: "#EF4444" },
+  { name: "Neurology", value: 10, color: "#8B5CF6" },
+];
+
+const recentTransactions = [
   {
-    label: "Hospitals Using",
-    value: "500+",
-    icon: (
-      <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-600 text-2xl shadow">
-        🏥
-      </span>
-    ),
-    change: "+5%",
-    changeType: "up",
+    id: 1,
+    patient: "John Doe",
+    department: "Cardiology",
+    doctor: "Dr. Smith",
+    admission: "2024-06-01",
+    status: "Admitted",
+    amount: 1200,
+    severity: "low",
   },
   {
-    label: "Beds Served",
-    value: "10K+",
-    icon: (
-      <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 text-green-600 text-2xl shadow">
-        🛏️
-      </span>
-    ),
-    change: "+2.1%",
-    changeType: "up",
+    id: 2,
+    patient: "Jane Smith",
+    department: "Pediatrics",
+    doctor: "Dr. Lee",
+    admission: "2024-06-10",
+    status: "Under Observation",
+    amount: 850,
+    severity: "medium",
   },
   {
-    label: "Reports Processed",
-    value: "1M+",
-    icon: (
-      <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-yellow-100 text-yellow-600 text-2xl shadow">
-        📄
-      </span>
-    ),
-    change: "+8.3%",
-    changeType: "up",
+    id: 3,
+    patient: "Michael Brown",
+    department: "Emergency",
+    doctor: "Dr. Carter",
+    admission: "2024-05-28",
+    status: "Critical",
+    amount: 2400,
+    severity: "high",
   },
   {
-    label: "Active Users",
-    value: "2,300",
-    icon: (
-      <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 text-purple-600 text-2xl shadow">
-        👤
-      </span>
-    ),
-    change: "-1.2%",
-    changeType: "down",
+    id: 4,
+    patient: "Sarah Johnson",
+    department: "Surgery",
+    doctor: "Dr. Wilson",
+    admission: "2024-06-05",
+    status: "Recovering",
+    amount: 3200,
+    severity: "low",
   },
   {
-    label: "Revenue (Monthly)",
-    value: "$120K",
-    icon: (
-      <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-pink-100 text-pink-600 text-2xl shadow">
-        💰
-      </span>
-    ),
-    change: "+12%",
-    changeType: "up",
+    id: 5,
+    patient: "David Chen",
+    department: "Neurology",
+    doctor: "Dr. Kumar",
+    admission: "2024-06-12",
+    status: "Stable",
+    amount: 1800,
+    severity: "medium",
   },
 ];
 
-const recentHospitals = [
+const recentSurgeries = [
   {
-    name: "City General Hospital",
-    domain: "citygen.com",
-    users: 120,
-    status: "Active",
-    joined: "2024-05-01",
+    id: 1,
+    type: "Knee Replacement",
+    doctor: "Dr. Adams",
+    date: "Today, 9:00 AM",
+    price: 8500,
+    status: "Scheduled",
+    urgency: "medium",
   },
   {
-    name: "Sunrise Medical Center",
-    domain: "sunmed.org",
-    users: 80,
-    status: "Active",
-    joined: "2024-04-15",
+    id: 2,
+    type: "Heart Bypass",
+    doctor: "Dr. Smith",
+    date: "Yesterday, 2:00 PM",
+    price: 15000,
+    status: "Completed",
+    urgency: "high",
   },
   {
-    name: "Green Valley Clinic",
-    domain: "greenvalley.clinic",
-    users: 45,
-    status: "Pending",
-    joined: "2024-05-10",
+    id: 3,
+    type: "Cataract Surgery",
+    doctor: "Dr. Lee",
+    date: "2 days ago, 11:30 AM",
+    price: 3200,
+    status: "Completed",
+    urgency: "low",
   },
   {
-    name: "Metro Health",
-    domain: "metrohealth.net",
-    users: 200,
-    status: "Active",
-    joined: "2024-03-22",
-  },
-  {
-    name: "Lakeside Hospital",
-    domain: "lakesidehosp.com",
-    users: 60,
-    status: "Inactive",
-    joined: "2024-02-10",
-  },
-];
-
-const recentUsers = [
-  {
-    name: "Dr. Alice Smith",
-    email: "alice@citygen.com",
-    hospital: "City General Hospital",
-    joined: "2024-05-12",
-    status: "Active",
-  },
-  {
-    name: "John Doe",
-    email: "john@sunmed.org",
-    hospital: "Sunrise Medical Center",
-    joined: "2024-05-10",
-    status: "Active",
-  },
-  {
-    name: "Dr. Emily Green",
-    email: "emily@greenvalley.clinic",
-    hospital: "Green Valley Clinic",
-    joined: "2024-05-09",
-    status: "Pending",
-  },
-  {
-    name: "Michael Brown",
-    email: "michael@metrohealth.net",
-    hospital: "Metro Health",
-    joined: "2024-05-08",
-    status: "Active",
-  },
-  {
-    name: "Sarah Lee",
-    email: "sarah@lakesidehosp.com",
-    hospital: "Lakeside Hospital",
-    joined: "2024-05-07",
-    status: "Inactive",
+    id: 4,
+    type: "Brain Tumor Removal",
+    doctor: "Dr. Patel",
+    date: "Today, 8:00 AM",
+    price: 22000,
+    status: "Scheduled",
+    urgency: "high",
   },
 ];
 
-const statusColor = {
-  Active: "bg-green-100 text-green-700",
-  Pending: "bg-yellow-100 text-yellow-700",
-  Inactive: "bg-gray-100 text-gray-500",
-};
+interface ChartCardProps {
+  title: string;
+  children: React.ReactNode;
+  actions?: React.ReactNode;
+}
 
-const HospitalDashboard = () => {
-  return (
-    <div className="p-2 min-h-screen">
-      <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+interface StatCardProps {
+  title: string;
+  value: string;
+  change: string;
+  icon: React.ElementType;
+  color: string;
+  trend: "up" | "down";
+}
+
+const StatCard: React.FC<StatCardProps> = ({
+  title,
+  value,
+  change,
+  icon: Icon,
+  color,
+  trend,
+}) => (
+  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center space-x-3">
+        <div className={`p-3 rounded-lg ${color}`}>
+          <Icon size={24} className="text-white" />
+        </div>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-1">Admin Dashboard</h1>
-        </div>
-        {/* <div className="flex gap-2">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium shadow hover:bg-blue-700 transition">
-            + Add Hospital
-          </button>
-          <button className="bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium shadow hover:bg-gray-100 transition">
-            View Analytics
-          </button>
-        </div> */}
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center hover:shadow-xl transition"
-          >
-            {stat.icon}
-            <div className="mt-4 text-2xl font-bold text-gray-900">{stat.value}</div>
-            <div className="text-gray-500 text-sm">{stat.label}</div>
-            <div className="mt-2 flex items-center text-xs">
-              {stat.changeType === "up" ? (
-                <span className="text-green-600 mr-1">▲</span>
-              ) : (
-                <span className="text-red-600 mr-1">▼</span>
-              )}
-              <span className={stat.changeType === "up" ? "text-green-600" : "text-red-600"}>
-                {stat.change}
-              </span>
-              <span className="ml-1 text-gray-400">this month</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Tables Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Recent Hospitals Table */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Recent Hospitals</h2>
-            <a href="/saas/tenants" className="text-blue-600 text-sm hover:underline font-medium">
-              View all
-            </a>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead>
-                <tr className="text-gray-500 border-b">
-                  <th className="py-2 px-3 text-left font-medium">Name</th>
-                  <th className="py-2 px-3 text-left font-medium">Domain</th>
-                  <th className="py-2 px-3 text-center font-medium">Users</th>
-                  <th className="py-2 px-3 text-center font-medium">Status</th>
-                  <th className="py-2 px-3 text-center font-medium">Joined</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentHospitals.map((hosp, idx) => (
-                  <tr key={hosp.domain} className={idx % 2 === 0 ? "bg-gray-50" : ""}>
-                    <td className="py-2 px-3 font-medium text-gray-900">{hosp.name}</td>
-                    <td className="py-2 px-3 text-blue-600">{hosp.domain}</td>
-                    <td className="py-2 px-3 text-center">{hosp.users}</td>
-                    <td className="py-2 px-3 text-center">
-                      <span
-                        className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${statusColor[hosp.status as keyof typeof statusColor]}`}
-                      >
-                        {hosp.status}
-                      </span>
-                    </td>
-                    <td className="py-2 px-3 text-center">{hosp.joined}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Recent Users Table */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Recent Users</h2>
-            <a href="/saas/users" className="text-blue-600 text-sm hover:underline font-medium">
-              View all
-            </a>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead>
-                <tr className="text-gray-500 border-b">
-                  <th className="py-2 px-3 text-left font-medium">Name</th>
-                  <th className="py-2 px-3 text-left font-medium">Email</th>
-                  <th className="py-2 px-3 text-left font-medium">Hospital</th>
-                  <th className="py-2 px-3 text-center font-medium">Joined</th>
-                  <th className="py-2 px-3 text-center font-medium">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentUsers.map((user, idx) => (
-                  <tr key={user.email} className={idx % 2 === 0 ? "bg-gray-50" : ""}>
-                    <td className="py-2 px-3 font-medium text-gray-900">{user.name}</td>
-                    <td className="py-2 px-3 text-blue-600">{user.email}</td>
-                    <td className="py-2 px-3">{user.hospital}</td>
-                    <td className="py-2 px-3 text-center">{user.joined}</td>
-                    <td className="py-2 px-3 text-center">
-                      <span
-                        className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${statusColor[user.status as keyof typeof statusColor]}`}
-                      >
-                        {user.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <p className="text-sm font-medium text-gray-600">{title}</p>
+          <p className="text-2xl font-bold text-gray-900">{value}</p>
         </div>
       </div>
-
-      {/* More sections: Analytics, Activity, etc. */}
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Analytics Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Platform Analytics</h3>
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Avg. Daily Users</span>
-              <span className="font-bold text-gray-900">1,200</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Avg. Reports/Day</span>
-              <span className="font-bold text-gray-900">4,500</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">System Uptime</span>
-              <span className="font-bold text-green-600">99.98%</span>
-            </div>
-          </div>
-          <div className="mt-4">
-            <button className="bg-blue-50 text-blue-700 px-4 py-2 rounded-lg font-medium hover:bg-blue-100 transition">
-              View Detailed Analytics
-            </button>
-          </div>
+      <div className="text-right">
+        <div
+          className={`flex items-center space-x-1 ${
+            trend === "up" ? "text-green-600" : "text-red-600"
+          }`}
+        >
+          {trend === "up" ? (
+            <ArrowUp size={16} />
+          ) : (
+            <ArrowDown size={16} />
+          )}
+          <span className="text-sm font-medium">{change}</span>
         </div>
-        {/* Activity Feed */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Recent Activity</h3>
-          <ul className="divide-y divide-gray-100">
-            <li className="py-2 flex items-start gap-2">
-              <span className="text-blue-500 text-lg">🏥</span>
-              <span>
-                <span className="font-medium">City General Hospital</span> joined the platform.
-                <span className="ml-2 text-xs text-gray-400">2 hours ago</span>
-              </span>
-            </li>
-            <li className="py-2 flex items-start gap-2">
-              <span className="text-green-500 text-lg">👤</span>
-              <span>
-                <span className="font-medium">Dr. Alice Smith</span> created a new report.
-                <span className="ml-2 text-xs text-gray-400">3 hours ago</span>
-              </span>
-            </li>
-            <li className="py-2 flex items-start gap-2">
-              <span className="text-yellow-500 text-lg">📄</span>
-              <span>
-                <span className="font-medium">Report #12345</span> processed successfully.
-                <span className="ml-2 text-xs text-gray-400">5 hours ago</span>
-              </span>
-            </li>
-            <li className="py-2 flex items-start gap-2">
-              <span className="text-pink-500 text-lg">💰</span>
-              <span>
-                <span className="font-medium">Monthly payment</span> received from <span className="font-medium">Metro Health</span>.
-                <span className="ml-2 text-xs text-gray-400">1 day ago</span>
-              </span>
-            </li>
-          </ul>
-        </div>
+        <p className="text-xs text-gray-500 mt-1">vs last month</p>
       </div>
     </div>
+  </div>
+);
+
+const ChartCard: React.FC<ChartCardProps> = ({ title, children, actions }) => (
+  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+    <div className="flex items-center justify-between mb-6">
+      <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+      {actions && <div className="flex items-center space-x-2">{actions}</div>}
+    </div>
+    {children}
+  </div>
+);
+
+interface StatusBadgeProps {
+  status: string;
+  severity?: string;
+}
+
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status, severity }) => {
+  const colors: Record<string, string> = {
+    Admitted: "bg-green-100 text-green-800",
+    "Under Observation": "bg-yellow-100 text-yellow-800",
+    Critical: "bg-red-100 text-red-800",
+    Recovering: "bg-blue-100 text-blue-800",
+    Stable: "bg-emerald-100 text-emerald-800",
+    Scheduled: "bg-orange-100 text-orange-800",
+    Completed: "bg-green-100 text-green-800",
+  };
+
+  return (
+    <span
+      className={`px-2 py-1 rounded-full text-xs font-medium ${
+        colors[status] || "bg-gray-100 text-gray-800"
+      }`}
+      title={severity}
+    >
+      {status}
+    </span>
   );
 };
 
-export default HospitalDashboard;
+const TopBar: React.FC<{
+  sidebarOpen: boolean;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  profileOpen: boolean;
+  setProfileOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  notificationOpen: boolean;
+  setNotificationOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({
+  sidebarOpen,
+  setSidebarOpen,
+  profileOpen,
+  setProfileOpen,
+  notificationOpen,
+  setNotificationOpen,
+}) => (
+  <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+    {/* Left Section */}
+    <div className="flex items-center space-x-4">
+      <button
+        className="p-2 rounded-lg hover:bg-gray-100 transition-colors lg:hidden"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+      >
+        <Menu size={20} />
+      </button>
+      <div className="flex items-center space-x-3">
+        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+          <span className="text-white font-bold text-sm">D</span>
+        </div>
+        <div className="hidden md:block">
+          <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-sm text-gray-500">Healthcare Management System</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Right Section */}
+    <div className="flex items-center space-x-4">
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+        <input
+          type="text"
+          placeholder="Search patients, doctors, or records..."
+          className="pl-10 pr-4 py-2 w-64 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+
+      {/* Notifications, Settings, Profile */}
+      <div className="flex items-center space-x-2">
+        <button
+          className="p-2 rounded-lg hover:bg-gray-100 transition-colors relative"
+          onClick={() => setNotificationOpen(!notificationOpen)}
+        >
+          <Bell size={20} />
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">
+            3
+          </span>
+        </button>
+
+        <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <Settings size={20} />
+        </button>
+
+        <div className="relative">
+          <button
+            className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            onClick={() => setProfileOpen(!profileOpen)}
+          >
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+              <span className="text-white font-semibold text-sm">A</span>
+            </div>
+            <span className="hidden md:block text-sm font-medium">Admin User</span>
+            <ChevronDown size={16} />
+          </button>
+
+          {profileOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+              <button className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center space-x-2">
+                <User size={16} />
+                <span>Profile</span>
+              </button>
+              <button className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center space-x-2">
+                <Settings size={16} />
+                <span>Settings</span>
+              </button>
+              <hr className="my-2 border-gray-200" />
+              <button className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center space-x-2 text-red-600">
+                <LogOut size={16} />
+                <span>Logout</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const RecentAppointments: React.FC = () => (
+  <ChartCard
+    title="Recent Appointments"
+    actions={
+      <button className="flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+        <Calendar size={16} />
+        <span>Schedule New</span>
+      </button>
+    }
+  >
+    <div className="space-y-3">
+      <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+            <User size={16} className="text-blue-600" />
+          </div>
+          <div>
+            <p className="font-medium text-gray-900">John Doe</p>
+            <p className="text-sm text-gray-500">Dental Checkup</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-sm font-medium text-gray-900">2:30 PM</p>
+          <p className="text-sm text-gray-500">Today</p>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+            <User size={16} className="text-green-600" />
+          </div>
+          <div>
+            <p className="font-medium text-gray-900">Jane Smith</p>
+            <p className="text-sm text-gray-500">Eye Examination</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-sm font-medium text-gray-900">10:15 AM</p>
+          <p className="text-sm text-gray-500">Tomorrow</p>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+            <User size={16} className="text-purple-600" />
+          </div>
+          <div>
+            <p className="font-medium text-gray-900">Michael Brown</p>
+            <p className="text-sm text-gray-500">Physical Therapy</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-sm font-medium text-gray-900">3:45 PM</p>
+          <p className="text-sm text-gray-500">Friday</p>
+        </div>
+      </div>
+    </div>
+  </ChartCard>
+);
+
+export default function AdminDashboard() {
+
+  const [timeRange, setTimeRange] = useState<"monthly" | "weekly" | "daily">(
+    "monthly"
+  );
+
+  return (
+    <div className="min-h-screen ">
+      
+
+      {/* Main Content */}
+      <div className="p-6 space-y-6 ">
+        {/* Welcome Section */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome back, Admin
+          </h1>
+          <p className="text-gray-600">
+            Here's what's happening with your healthcare system today.
+          </p>
+        </div>
+
+        {/* Key Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard
+            title="Total Patients"
+            value="12,458"
+            change="+12.5%"
+            icon={Users}
+            color="bg-blue-500"
+            trend="up"
+          />
+          <StatCard
+            title="Monthly Revenue"
+            value="$864,200"
+            change="+8.2%"
+            icon={DollarSign}
+            color="bg-emerald-500"
+            trend="up"
+          />
+          <StatCard
+            title="Appointments"
+            value="1,342"
+            change="+5.7%"
+            icon={Calendar}
+            color="bg-purple-500"
+            trend="up"
+          />
+          <StatCard
+            title="Active Sessions"
+            value="287"
+            change="-2.3%"
+            icon={Activity}
+            color="bg-orange-500"
+            trend="down"
+          />
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Monthly Analytics */}
+          <div className="lg:col-span-2">
+            <ChartCard
+              title="Monthly Analytics"
+              actions={
+                <select
+                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                  value={timeRange}
+                  onChange={(e) =>
+                    setTimeRange(
+                      e.target.value as "monthly" | "weekly" | "daily"
+                    )
+                  }
+                >
+                  <option value="monthly">Monthly</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="daily">Daily</option>
+                </select>
+              }
+            >
+              <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={monthlyData}>
+                  <defs>
+                    <linearGradient
+                      id="patientGradient"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="5%"
+                        stopColor="#3B82F6"
+                        stopOpacity={0.8}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor="#3B82F6"
+                        stopOpacity={0.1}
+                      />
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip
+                    formatter={(value: any) => [
+                      value.toLocaleString(),
+                      "Patients",
+                    ]}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="patients"
+                    stroke="#3B82F6"
+                    fillOpacity={1}
+                    fill="url(#patientGradient)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </ChartCard>
+          </div>
+
+          {/* Department Distribution */}
+          <div>
+            <ChartCard title="Department Distribution">
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={departmentData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {departmentData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value: any) => [`${value}%`, "Percentage"]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="mt-4 space-y-2">
+                {departmentData.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: item.color }}
+                      ></div>
+                      <span className="text-sm font-medium text-gray-700">
+                        {item.name}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      {item.value}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </ChartCard>
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Recent Surgeries */}
+          <ChartCard
+            title="Recent Surgeries"
+            actions={
+              <button className="flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <Plus size={16} />
+                <span>New Surgery</span>
+              </button>
+            }
+          >
+            <div className="space-y-3">
+              {recentSurgeries.map((surgery) => (
+                <div
+                  key={surgery.id}
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        surgery.urgency === "high"
+                          ? "bg-red-500"
+                          : surgery.urgency === "medium"
+                          ? "bg-yellow-500"
+                          : "bg-green-500"
+                      }`}
+                    ></div>
+                    <div>
+                      <p className="font-medium text-gray-900">
+                        {surgery.type}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {surgery.doctor} • {surgery.date}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <StatusBadge status={surgery.status} />
+                    <p className="text-sm font-medium text-gray-900 mt-1">
+                      ${surgery.price.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ChartCard>
+
+          {/* Recent Appointments */}
+          <RecentAppointments />
+        </div>
+
+        {/* Recent Transactions */}
+        <ChartCard
+          title="Recent Transactions"
+          actions={
+            <div className="flex items-center space-x-2">
+              <button className="flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <Filter size={16} />
+                <span>Filter</span>
+              </button>
+              <button className="flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <Download size={16} />
+                <span>Export</span>
+              </button>
+            </div>
+          }
+        >
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-4 font-medium text-gray-600">
+                    Patient
+                  </th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-600">
+                    Department
+                  </th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-600">
+                    Doctor
+                  </th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-600">
+                    Date
+                  </th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-600">
+                    Status
+                  </th>
+                  <th className="text-right py-3 px-4 font-medium text-gray-600">
+                    Amount
+                  </th>
+                  <th className="text-right py-3 px-4 font-medium text-gray-600">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentTransactions.map((transaction) => (
+                  <tr
+                    key={transaction.id}
+                    className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="py-3 px-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                          <User size={16} className="text-gray-600" />
+                        </div>
+                        <span className="font-medium text-gray-900">
+                          {transaction.patient}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-gray-600">
+                      {transaction.department}
+                    </td>
+                    <td className="py-3 px-4 text-gray-600">
+                      {transaction.doctor}
+                    </td>
+                    <td className="py-3 px-4 text-gray-600">
+                      {transaction.admission}
+                    </td>
+                    <td className="py-3 px-4">
+                      <StatusBadge
+                        status={transaction.status}
+                        severity={transaction.severity}
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-right font-medium text-gray-900">
+                      ${transaction.amount.toLocaleString()}
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <div className="flex items-center justify-end space-x-2">
+                        <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                          <Eye size={16} className="text-gray-600" />
+                        </button>
+                        <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                          <Edit size={16} className="text-gray-600" />
+                        </button>
+                        <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                          <MoreVertical size={16} className="text-gray-600" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </ChartCard>
+      </div>
+    </div>
+  );
+}

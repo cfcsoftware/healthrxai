@@ -10,6 +10,7 @@ import IPDList from '../pages/tenant/IpdModule/ipdList';
 import BedList from '../pages/tenant/Bedmodule/bedview';
 import PathologyTestList from '../pages/tenant/Pathology/Tests/testList';
 import RadiologyTestList from '../pages/tenant/Radiology/Tests/testList';
+import MailsAI from '../pages/tenant/mails/mailsAI';
 
 
 
@@ -49,6 +50,8 @@ const TenantRoutes = () => {
         <Route path="patients" element={<PatientsList />} />
         <Route path="dashboard" element={<HospitalDashboard />} /> 
         <Route path="patients" element={<PatientsList />} />   */}
+        <Route path="mails" element={<MailsAI />} />
+
 
 
 

@@ -14,12 +14,17 @@ const TenantLogin = () => {
     try {
 
       // Handle localhost and live environments for API base URL
+      // const apiBaseUrl = "https://healthrxai.com";
+
+
+
       const isLocalhost =
         window.location.hostname === "localhost" ||
         window.location.hostname === "127.0.0.1";
       const apiBaseUrl = isLocalhost
         ? "http://localhost:8000"
         : "https://healthrxai.com";
+
 
       const getDomainRes = await fetch(`${apiBaseUrl}/server/get-domain`, {
         method: "POST",

@@ -784,9 +784,39 @@ const EnterpriseNavbar = () => {
                 <a href="/login" className="px-4 py-2 text-slate-200 hover:text-white font-medium transition-colors">
                   Log In
                 </a>
-                <a href="https://calendly.com/cfcsoftwares/30min" className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 animate-pulse-gentle">
+
+                <a
+                  href="https://calendly.com/cfcsoftwares/30min"
+                  className="px-6 py-2 bg-white text-black-700 font-medium rounded-lg shadow-md hover:bg-blue-50 hover:text-blue-900 transition-all duration-200 animate-heartbeat"
+                  style={{ animationDuration: '10s' }}
+                >
                   Book a Demo
                 </a>
+                {/* Heartbeat animation keyframes (add to your global CSS or Tailwind config) */}
+                <style>
+                  {`
+                    @keyframes heartbeat {
+                      0% {
+                        transform: scale(1);
+                      }
+                      14% {
+                        transform: scale(1.15);
+                      }
+                      28% {
+                        transform: scale(1);
+                      }
+                      42% {
+                        transform: scale(1.15);
+                      }
+                      70% {
+                        transform: scale(1);
+                      }
+                    }
+                    .animate-heartbeat {
+                      animation: heartbeat 1.2s infinite;
+                    }
+                  `}
+                </style>
               </div>
 
               {/* Mobile Menu Button */}

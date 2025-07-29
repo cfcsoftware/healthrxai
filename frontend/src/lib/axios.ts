@@ -8,6 +8,13 @@ const tenant = getTenant();
 let baseURL: string;
 console.log('Detected tenant:', tenant);
 
+// if (tenant) {
+//   baseURL = `https://${tenant}.healthrxai.com/server`;
+// } else {
+//   baseURL = 'https://healthrxai.com/server';
+// }
+
+
 if (
   window.location.hostname === 'localhost' ||
   window.location.hostname === '127.0.0.1'
@@ -25,6 +32,8 @@ if (
   // fallback for no tenant/subdomain
   baseURL = 'https://healthrxai.com/server';
 }
+
+
 
 const api = axios.create({
   baseURL,
