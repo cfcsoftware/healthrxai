@@ -1,13 +1,12 @@
 import HomeLayout from "../../layouts/HomeLayout";
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown, Users, Calendar, Heart, Shield, Star, ArrowRight, Filter, Grid, List, Search, Brain, Activity, Stethoscope, Zap, Award, TrendingUp, Clock, CheckCircle, Eye, Database, Phone, FileText, Pill, Beaker, Scissors, Droplet, Truck, CreditCard, Package, MessageSquare, Settings, BarChart3, Bell, Globe, Upload, UserCheck, Clipboard, Baby, Video, Timer, Utensils, UserPlus, FileCheck, Scan, Languages } from 'lucide-react';
+import { ChevronDown, Users, Calendar, Heart, Shield, Star, ArrowRight,  Brain, Activity, Stethoscope, Zap, Award, TrendingUp, Clock, CheckCircle, Eye, Database, FileText, Pill, Beaker, Scissors, Droplet, Truck, CreditCard, Package, MessageSquare, Settings, BarChart3, Bell, Upload,  Clipboard, Baby, Video, Timer, Utensils, UserPlus, FileCheck, Scan, Languages } from 'lucide-react';
 
 const Home = () => {
   const [activeFeatureFilter, setActiveFeatureFilter] = useState('all');
   const [viewMode, setViewMode] = useState('grid');
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [isVisible, setIsVisible] = useState({});
-  const observerRef = useRef();
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   // Intersection Observer for scroll animations
   useEffect(() => {
@@ -15,10 +14,7 @@ const Home = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setIsVisible(prev => ({
-              ...prev,
-              [entry.target.id]: true
-            }));
+            entry.target.classList.add('is-visible');
           }
         });
       },
@@ -44,7 +40,7 @@ const Home = () => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  },);
 
   const allFeatures = [
     { id: 1, name: 'Patient Management', category: 'core', icon: Users, description: 'Complete patient lifecycle management with advanced analytics and real-time monitoring' },
@@ -199,7 +195,7 @@ const Home = () => {
       {/* About Product Section */}
       <section id="about" className="relative py-32 px-6" data-animate>
         <div className="max-w-7xl mx-auto">
-          <div className={`text-center mb-20 transition-all duration-1000 ${isVisible.about ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="text-center mb-20 transition-all duration-1000 opacity-100 translate-y-0">
             <h2 className="text-3xl md:text-4xl font-bold mb-8 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
               Next-Generation Healthcare Platform
             </h2>
@@ -249,7 +245,7 @@ const Home = () => {
       {/* Features Section */}
       <section id="features" className="relative py-32 px-6" data-animate>
         <div className="max-w-7xl mx-auto">
-          <div className={`text-center mb-20 transition-all duration-1000 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`text-center mb-20 transition-all duration-1000`}>
             <h2 className="text-3xl md:text-4xl font-bold mb-8 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
               40+ Integrated Solutions
             </h2>
@@ -688,7 +684,7 @@ const Home = () => {
       {/* Why Us Section */}
       <section className="relative py-32 px-6" data-animate>
         <div className="max-w-7xl mx-auto">
-          <div className={`text-center mb-20 transition-all duration-1000 ${isVisible.why ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`text-center mb-20 transition-all duration-1000`}>
             <h2 className="text-3xl md:text-4xl font-bold mb-8 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
               Why Industry Leaders Choose Us
             </h2>
@@ -756,7 +752,7 @@ const Home = () => {
       {/* Testimonials Section */}
       <section id="testimonials" className="relative py-32 px-6" data-animate>
         <div className="max-w-6xl mx-auto">
-          <div className={`text-center mb-20 transition-all duration-1000 ${isVisible.testimonials ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`text-center mb-20 transition-all duration-1000`}>
             <h2 className="text-3xl md:text-4xl font-bold mb-8 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
               Healthcare Leaders Speak
             </h2>
@@ -872,8 +868,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      <style jsx>{`
+      <style>{`
         @keyframes hero-enter {
           from {
             opacity: 0;
