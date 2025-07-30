@@ -1,4 +1,6 @@
-# [HealthRx AI - React + Django] (https://app-generator.dev/product/purity-dashboard/api-django/react/)
+# [HealthRx AI - React + Django] 
+
+(https://healthrxai.com)
 
 Full-Stack Seed project provided by **[App Generator](https://app-generator.dev/)** on top of **[Purity Dashboard](https://app-generator.dev/product/purity-dashboard/)** design from **[Creative-Tim](https://app-generator.dev/agency/creative-tim/)**. 
 The backend logic is provided by a simple, `easy-to-extend` **Django API Server** that manages the Authentication flow (login, registration, logout) using `JSON Web Tokens` (JWT).
