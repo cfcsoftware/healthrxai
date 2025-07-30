@@ -46,7 +46,6 @@ Smart robots for in-hospital medicine delivery
 This 360° accessibility improves coordination between departments and strengthens engagement with patients, especially in hybrid or remote care models.
 
 
-Full-Stack Seed project provided by **[App Generator](https://app-generator.dev/)** on top of **[Purity Dashboard](https://app-generator.dev/product/purity-dashboard/)** design from **[Creative-Tim](https://app-generator.dev/agency/creative-tim/)**. 
 The backend logic is provided by a simple, `easy-to-extend` **Django API Server** that manages the Authentication flow (login, registration, logout) using `JSON Web Tokens` (JWT).
 
 - 👉 [Saas Panel](https://healthrxai.com/saas/login) - Product Page
