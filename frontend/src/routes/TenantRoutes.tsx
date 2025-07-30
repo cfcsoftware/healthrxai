@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import TenantLayout from '../layouts/TenantLayout';
-import HospitalDashboard from '../pages/tenant/Dashboard/dashboard';
+import HospitalDashboard from '../pages/tenant/dashboard/dashboard';
 import PatientsList from '../pages/tenant/Patients/patients';
 import BillingList from '../pages/tenant/Billings/generalBillingList';
 import FinalBillingList from '../pages/tenant/Billings/finalBillingList';
