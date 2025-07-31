@@ -4,7 +4,7 @@ const TenantLogin = () => {
   const [hospitalId, setHospitalId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -40,7 +40,6 @@ const TenantLogin = () => {
         setIsLoading(false);
         return;
       }
-
       const tenantDomain = domainData.domain; // e.g., https://cityhospital.healthrxai.com/server
       const tenantSubdomain = new URL(tenantDomain).hostname.split(".")[0]; 
       localStorage.setItem("finaltenantDomain", tenantDomain);

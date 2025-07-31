@@ -139,11 +139,33 @@ export const authService = {
     }
   },
 
-  logout(): void {
-    tokenStorage.clearTokens();
-    localStorage.removeItem(USER_KEY);
-    console.log("User logged out successfully");
-  },
+logout(): void {
+  tokenStorage.clearTokens();
+  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem("tenantId");
+  localStorage.removeItem("finalTenantDomain");
+  console.log("User logged out successfully");
+
+  const hostname = window.location.hostname;
+
+  const isDevSubdomain = hostname.endsWith(".localhost") && hostname.split(".").length === 2;
+  const isTenantSubdomain =
+    hostname !== "localhost" &&
+    hostname !== "127.0.0.1" &&
+    hostname !== "healthrxai.com" &&
+    hostname !== "www.healthrxai.com";
+
+  if (isDevSubdomain) {
+    // e.g., clinic.localhost → redirect to localhost:5173
+    window.location.href = "http://localhost:5173";
+  } else if (isTenantSubdomain) {
+    // e.g., clinic.healthrxai.com → redirect to www.healthrxai.com
+    window.location.href = "https://www.healthrxai.com";
+  } else {
+    // Already on root domain, just reload or go to root
+    window.location.href = "/";
+  }
+},
 
   getToken(): string | null {
     return tokenStorage.getAccessToken();
